@@ -17,8 +17,18 @@ Group ID: C1
 
 Install docker engine on https://docs.docker.com/engine/install/
 
+Install pnpm by
+```bash
+npm install -g pnpm
+```
+
 
 # Usage
+
+## Server and Database
+The server and the database containers will work on http://localhost:8000 and http://localhost:5432 respectively.
+
+You may visit http://localhost:8000/docs to carry out api testing. 
 ```bash
 # Start the database server and the api server
 docker-compose up -d
@@ -30,4 +40,9 @@ docker-compose down
 docker-compose down -v
 ```
 
-Check the api services on http://localhost:8000/docs
+
+## Frontend
+```bash
+pnpm dev
+```
+
