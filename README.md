@@ -33,7 +33,11 @@ You may visit http://localhost:8000/docs to carry out api testing.
 # Start the database server and the api server in detached mode
 docker-compose up -d
 
-# Start the database server and the api server in detached mode
+# Start the database server and the api server (suggessted)
+docker-compose up 
+
+# check how many containers are running
+docker ps
 
 # Stop the database server and the api server
 docker-compose down
