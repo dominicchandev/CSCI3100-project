@@ -30,8 +30,10 @@ The server and the database containers will work on http://localhost:8000 and ht
 
 You may visit http://localhost:8000/docs to carry out api testing. 
 ```bash
-# Start the database server and the api server
+# Start the database server and the api server in detached mode
 docker-compose up -d
+
+# Start the database server and the api server in detached mode
 
 # Stop the database server and the api server
 docker-compose down
@@ -43,6 +45,10 @@ docker-compose down -v
 
 ## Frontend
 ```bash
+# Install dependencies to node_module
+pnpm install 
+
+# Start the frontend serivce in development mode
 pnpm dev
 ```
 
