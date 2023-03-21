@@ -7,16 +7,9 @@ from server import models
 
 load_dotenv()
 
-user = os.environ.get('POSTGRES_USER')
-pw = os.environ.get('POSTGRES_PASSWORD')
-hostname = os.environ.get('POSTGRES_HOSTNAME')
+aws_postgres_url = os.environ.get('AWS_POSTGRES_URL')
 
-port = os.environ.get('DATABASE_PORT')
-db_name = os.environ.get('POSTGRES_DB')
-
-SQLALCHEMY_DATABASE_URL = f"postgresql://{user}:{pw}@{hostname}:{port}/{db_name}"
-
-engine = create_engine(url=SQLALCHEMY_DATABASE_URL)
+engine = create_engine(url=aws_postgres_url)
 
 models.Base.metadata.create_all(bind=engine)
 

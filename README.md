@@ -15,6 +15,8 @@ Group ID: C1
 
 `docker-compose`: version 1.29.2
 
+`python`: version >= 3.8.10
+
 Install docker engine on https://docs.docker.com/engine/install/
 
 Install pnpm by
@@ -22,36 +24,55 @@ Install pnpm by
 npm install -g pnpm
 ```
 
+# Dependencies
+
+## API Server
+If you want to start the api server without using docker, install the python dependencies by the following command:
+```bash
+cd server
+python3 -m virtualenv venv
+source venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+## Frontend
+```bash
+pnpm install
+```
 
 # Usage
 
-## Server and Database
-The server and the database containers will work on http://localhost:8000 and http://localhost:5432 respectively.
+## API Server
+The server will work on http://localhost:8000.
 
 You may visit http://localhost:8000/docs to carry out api testing. 
+
+### Develop with Docker
 ```bash
-# Start the database server and the api server in detached mode
+# Start the api server in detached mode
 docker-compose up -d
 
-# Start the database server and the api server (suggessted)
+# Start the api server (suggessted)
 docker-compose up 
 
 # check how many containers are running
 docker ps
 
-# Stop the database server and the api server
+# Stop the api server
 docker-compose down
+```
 
-# Stop the servers and clean up the database
-docker-compose down -v
+### Develop with python virtual environment
+Make sure that you have activate the virtual environment before running the following command.
+```bash
+cd server
+uvicorn server.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 
 ## Frontend
 ```bash
-# Install dependencies to node_module
-pnpm install 
-
 # Start the frontend serivce in development mode
 pnpm dev
 ```
