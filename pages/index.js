@@ -1,12 +1,15 @@
-import { Inter } from 'next/font/google'
-import { Text } from '@chakra-ui/react'
-
-const inter = Inter({ subsets: ['latin'] })
+import { Flex, Spacer, Button, useColorMode } from '@chakra-ui/react'
+import { SideBar } from '@/components/sidebar'
 
 export default function Home() {
+  const { colorMode, toggleColorMode } = useColorMode();
   return (
-    <>
-      <Text>CSCI3100 project HOME</Text>
-    </>
+    <Flex>
+      <SideBar colorMode={colorMode}/>
+      <Spacer/>
+      <Button onClick={toggleColorMode}>
+          Toggle {colorMode === 'light' ? 'Dark' : 'Light'}
+      </Button>
+    </Flex>
   )
 }
