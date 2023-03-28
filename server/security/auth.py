@@ -1,14 +1,10 @@
 import os
 
 import bcrypt
-# from dotenv import load_dotenv
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer
 
 from server.models import UserModel
-
-# load_dotenv()
-# salt = bytes(os.environ.get('SALT'), "utf-8")
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 

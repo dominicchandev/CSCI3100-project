@@ -9,12 +9,9 @@ from server.schema.user import UserCreate
 from server.schema.token import TokenData
 from server.security.auth import salt_and_hash
 
-from dotenv import load_dotenv
+from server.utils.setting import Setting
 
-load_dotenv()
-
-SECRET_KEY = os.environ.get('SECRET_KEY')
-ALGORITHM = os.environ.get('ALGORITHM')
+setting = Setting()
 
 def create_user(db: Session, user: UserCreate):
     db_user = UserModel(
@@ -48,7 +45,7 @@ def get_current_user(db: Session, token: str):
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, setting.SECRET_KEY, algorithms=[setting.HASH_ALGORITHM])
         email: str = payload.get("sub")
         if email is None:
             raise credentials_exception
