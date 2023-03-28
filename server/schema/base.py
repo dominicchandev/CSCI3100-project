@@ -15,7 +15,5 @@ class CourseBase(BaseModel):
     outline: str
 
 class UserBase(BaseModel):
-    id: int
     name: str
-    role: Literal["student", "admin"]
     email: str
