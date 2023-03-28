@@ -22,7 +22,7 @@ def create_user(db: Session, user: UserCreate):
         name = user.name,
         role = user.role,
         email = user.email,
-        salted_hashed_password = salt_and_hash(user.password)
+        hash = salt_and_hash(user.password)
     )
     db.add(db_user)
     db.commit()
