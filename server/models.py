@@ -1,6 +1,6 @@
 from typing import Set
 
-from sqlalchemy import Table, Column, ForeignKey, DateTime, String, Integer
+from sqlalchemy import Table, Column, ForeignKey, DateTime, String, Integer, LargeBinary
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, Mapped, mapped_column, DeclarativeBase
 
@@ -20,7 +20,7 @@ class UserModel(Base):
     name = Column(String)
     role = Column(String)
     email = Column(String, unique=True)
-    salted_hashed_password = Column(String)
+    hash = Column(LargeBinary)
 
     courses: Mapped[Set["CourseModel"]] = relationship(secondary=user_course_association_table, back_populates="users")
 

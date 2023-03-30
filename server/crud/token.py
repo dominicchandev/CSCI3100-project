@@ -4,17 +4,13 @@ from datetime import datetime, timedelta
 
 from jose import jwt
 
-from dotenv import load_dotenv
+from server.utils.setting import Setting
 
-load_dotenv()
+setting = Setting()
 
-SECRET_KEY = os.environ.get('SECRET_KEY')
-ALGORITHM = os.environ.get('ALGORITHM')
-ACCESS_TOKEN_EXPIRE_MINUTES = int(os.environ.get('ACCESS_TOKEN_EXPIRE_MINUTES'))
-
-def create_access_token(data: dict, expires_delta: timedelta = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)):
+def create_access_token(data: dict, expires_delta: timedelta = timedelta(minutes=setting.ACCESS_TOKEN_EXPIRE_MINUTES)):
     to_encode = data.copy()
     expire = datetime.utcnow() + expires_delta
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    encoded_jwt = jwt.encode(to_encode, setting.SECRET_KEY, algorithm=setting.HASH_ALGORITHM)
     return encoded_jwt

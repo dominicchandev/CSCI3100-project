@@ -1,20 +1,24 @@
-class CRUDBase:
-    def __init__(self, schema):
-        self.schema = schema
+from abc import ABC, abstractmethod
+from sqlalchemy.orm import Session
 
-    def create():
+class CRUDBase(ABC):
+    def __init__(self, model):
+        self.model = model
+
+    @abstractmethod
+    def create(self):
         pass
 
-    def read():
+    def read(self, db: Session, id: int):
+        data_item = db.query(self.model).get(id)
+        if not data_item:
+            return None
+        return data_item
+
+    @abstractmethod
+    def update(self):
         pass
 
-    def update():
-        pass
-
-    def delete():
-        pass
-
-class UserCRUD(CRUDBase):
-    def __init__():
-        super.__init__()
+    def delete(self, db: Session, id: int):
+        return db.query(self.model).get(id).delete()
     
