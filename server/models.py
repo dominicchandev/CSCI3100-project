@@ -1,8 +1,8 @@
 from typing import Set
 
-from sqlalchemy import Table, Column, ForeignKey, DateTime, String, Integer, LargeBinary
+from sqlalchemy import Table, Column, ForeignKey, Date, String, Integer, LargeBinary
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, Mapped, mapped_column, DeclarativeBase
+from sqlalchemy.orm import relationship, Mapped, mapped_column
 
 Base = declarative_base()
 
@@ -29,8 +29,8 @@ class CourseModel(Base):
     __tablename__ = 'course'
     id: Mapped[str] = mapped_column(primary_key=True, index=True)
     name = Column(String)
-    start_time = Column(DateTime)
-    end_time = Column(DateTime)
+    start_time = Column(Date)
+    end_time = Column(Date)
     place = Column(String)
     department = Column(String)
     instructor = Column(String)
