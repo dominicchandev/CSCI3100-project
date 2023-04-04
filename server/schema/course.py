@@ -1,16 +1,24 @@
-from typing import List
-from datetime import datetime
+from datetime import date
 
 from pydantic import BaseModel
 
-from server.schema.base import UserBase, CourseBase
+class CourseCreate(BaseModel):
+    id: str
+    name: str
+    start_time: date
+    end_time: date
+    place: str
+    department: str
+    instructor: str
+    capacity: int
 
-class CourseCreate(CourseBase):
-    pass
+class CourseOutlineUpload(BaseModel):
+    id: str
+    outline: str
 
-
-class CourseSchema(CourseBase):
-    users: List[UserBase] = []
+class CourseSchema(CourseCreate):
+    users: list
+    outline: str
 
     class Config:
         orm_mode = True

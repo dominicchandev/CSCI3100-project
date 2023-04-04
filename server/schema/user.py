@@ -1,6 +1,10 @@
-from typing import Literal, List
+from typing import Literal
 
-from server.schema.base import CourseBase, UserBase
+from pydantic import BaseModel
+
+class UserBase(BaseModel):
+    name: str
+    email: str
 
 class UserUpdate(UserBase):
     id: int
@@ -15,8 +19,8 @@ class UserCreate(UserBase):
 
 class UserSchema(UserBase):
     id: int
+    courses: list
     
-    courses: List[CourseBase] = []
     class Config:
         orm_mode = True
 

@@ -46,7 +46,7 @@ export default function LoginPage() {
             formData.append('username', email);
             formData.append('password', password);
             fetch(
-                process.env.NEXT_PUBLIC_SERVER + '/login',
+                process.env.NEXT_PUBLIC_SERVER + 'login',
                 {
                     body: formData,
                     method: 'POST',
