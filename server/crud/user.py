@@ -1,5 +1,3 @@
-import os
-
 from sqlalchemy.orm import Session
 
 from fastapi import HTTPException, status
@@ -24,22 +22,22 @@ class UserCRUD(CRUDBase):
             name = user.name,
             role = user.role,
             email = user.email,
-            hash = salt_and_hash(user.password)
+            hash = salt_and_hash(user.password),
         )
-        self.db.add(db_user)
-        self.db.commit()
-        self.db.refresh(db_user)
+        db.add(db_user)
+        db.commit()
+        db.refresh(db_user)
         return db_user
     
     def update(self, db: Session, user: UserUpdate):
-        db_user = self.db.query(self.model).get(user.id)
+        db_user = db.query(self.model).filter(self.model.id == user.id).first()
         db_user.name = user.name
-        self.db.commit()
-        self.db.refresh(db_user)
+        db.commit()
+        db.refresh(db_user)
         return db_user
 
     def read_by_email(self, db: Session, email: str):
-        user = self.db.query(self.model).filter(self.model.email == email).first()
+        user = db.query(self.model).filter(self.model.email == email).first()
         if not user:
             return None
         return user
@@ -58,7 +56,7 @@ class UserCRUD(CRUDBase):
             token_data = TokenData(email=email)
         except JWTError:
             raise credentials_exception
-        user = self.read_by_email(email=token_data.email)
+        user = self.read_by_email(db=db, email=token_data.email)
         if user is None:
             raise credentials_exception
         return user
