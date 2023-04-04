@@ -1,3 +1,4 @@
+from typing import Literal
 from pydantic import BaseModel
 
 class Token(BaseModel):
@@ -5,4 +6,7 @@ class Token(BaseModel):
     token_type: str
 
 class TokenData(BaseModel):
+    id: int
+    name: str
     email: str
+    role: Literal["student", "admin"]

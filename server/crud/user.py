@@ -1,14 +1,12 @@
 from sqlalchemy.orm import Session
 
-from fastapi import HTTPException, status
-from jose import jwt, JWTError
+from fastapi import Depends
 
 from server.models import UserModel
-from server.schema.user import UserCreate, UserUpdate
-from server.schema.token import TokenData
-from server.security.auth import salt_and_hash
-from server.utils.setting import Setting
 from server.crud.base import CRUDBase
+from server.utils.setting import Setting
+from server.schema.user import UserCreate, UserUpdate
+from server.security.auth import salt_and_hash, get_token_data, oauth2_scheme
 
 setting = Setting()
 
@@ -29,7 +27,7 @@ class UserCRUD(CRUDBase):
         db.refresh(db_user)
         return db_user
     
-    def update(self, db: Session, user: UserUpdate):
+    def update_username(self, db: Session, user: UserUpdate):
         db_user = db.query(self.model).filter(self.model.id == user.id).first()
         db_user.name = user.name
         db.commit()
@@ -42,22 +40,7 @@ class UserCRUD(CRUDBase):
             return None
         return user
     
-    def read_myself(self, db: Session, token: str):
-        credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-        )
-        try:
-            payload = jwt.decode(token, setting.SECRET_KEY, algorithms=[setting.HASH_ALGORITHM])
-            email: str = payload.get("sub")
-            if email is None:
-                raise credentials_exception
-            token_data = TokenData(email=email)
-        except JWTError:
-            raise credentials_exception
-        user = self.read_by_email(db=db, email=token_data.email)
-        if user is None:
-            raise credentials_exception
-        return user
+    def read_current_user(self, token: str = Depends(oauth2_scheme)):
+        token_data = get_token_data(token)
+        return token_data
     

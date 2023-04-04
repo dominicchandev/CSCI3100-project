@@ -18,7 +18,12 @@ async def login_for_access_token(db: Session = Depends(get_db), form_data: OAuth
     if not user:
         raise HTTPException(status_code=401, detail="Incorrect email or password")
     
-    access_token = create_access_token(data={"sub": user.email})
+    access_token = create_access_token(data={
+        "id": user.id,
+        "email": user.email,
+        "role": user.role,
+        "name": user.name,
+    })
     return {
         "access_token": access_token,
         "token_type": "bearer"
