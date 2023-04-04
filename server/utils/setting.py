@@ -11,3 +11,4 @@ class Setting:
         self.ACCESS_TOKEN_EXPIRE_MINUTES: float = float(os.environ.get('ACCESS_TOKEN_EXPIRE_MINUTES'))
         self.GMAIL_ADDRESS: str = os.environ.get('GMAIL_ADDRESS')
         self.GMAIL_APP_PASSWORD: str = os.environ.get('GMAIL_APP_PASSWORD')
+        self.DRIVE_FOLDER_ID: str = os.environ.get('DRIVE_FOLDER_ID')
