@@ -1,7 +1,9 @@
 import os
+import smtplib, ssl
 
 from sqlalchemy.orm import Session
-
+from email.message import EmailMessage
+from hashlib import sha256
 from fastapi import HTTPException, status
 from jose import jwt, JWTError
 
@@ -63,3 +65,27 @@ class UserCRUD(CRUDBase):
             raise credentials_exception
         return user
     
+    def genVerificationCode(self, email: str):
+        code = sha256(email.encode('utf-8')).hexdigest()
+        return code
+
+    def verifyCode(self, email: str, code: str):
+        return code == self.genVerificationCode(email)
+
+    def sendVerificationEmail(self, email: str):
+        port = 465  # For SSL
+        smtp_server = "smtp.gmail.com"
+        sender_email = setting.GMAIL_ADDRESS
+        password = setting.GMAIL_APP_PASSWORD
+        msg = EmailMessage()
+        code = self.genVerificationCode(email)
+        msg.set_content("Your verification code is {}".format(code))
+        msg['Subject'] = "[CourseMan] Password Reset Verification Code"
+        msg['From'] = sender_email
+        msg['To'] = email
+
+        context = ssl.create_default_context()
+        with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+            server.login(sender_email, password)
+            server.send_message(msg, from_addr=sender_email, to_addrs=email)
+
