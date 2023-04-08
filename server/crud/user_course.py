@@ -22,7 +22,6 @@ class UserCourseCRUD:
         return user_ids
     
     def register_one(self, db: Session, user_id: int, course_id: str):
-        # db_course = db.query(CoursesModel).get(course_id)
         basic_check = check_basic_availability(db=db, course_id=course_id)
         if next(iter(basic_check)) != "passed":
             return basic_check
@@ -40,10 +39,6 @@ class UserCourseCRUD:
         db.commit()
         db.refresh(user_course)
 
-        # db_course = db.query(CoursesModel).filter(CoursesModel.id == course_id).first()
-        # db_course.available_seats -= 1
-        # db.commit()
-        # db.refresh(db_course)
         self.update_available_seats(db=db, course_id=course_id)
         return {"successful": {course_id}}
     
