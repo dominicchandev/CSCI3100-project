@@ -13,12 +13,11 @@ class UserChangePassword(UserBase):
     password: str
 
 class UserCreate(UserBase):
-    id: int
-    role: Literal["student", "admin"]
     password: str
 
 class UserSchema(UserBase):
     id: int
+    role: Literal["student", "admin"]
     courses: list
     
     class Config:

@@ -1,7 +1,7 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, noload
 
-from server.models import CourseModel
-from server.schema.course import CourseCreate, CourseOutlineUpload
+from server.models import CoursesModel
+from server.schema.course import CourseCreate
 from server.utils.setting import Setting
 from server.crud.base import CRUDBase
 
@@ -9,19 +9,27 @@ setting = Setting()
 
 class CourseCRUD(CRUDBase):
     def __init__(self):
-        super().__init__(model=CourseModel)
+        super().__init__(model=CoursesModel)
+    
+    def read(self, db: Session, course_id: str):
+        db_course = db.query(CoursesModel).options(noload(CoursesModel.users)).get(course_id)
+        if not db_course:
+            return None
+        return db_course
 
     def create(self, db: Session, course: CourseCreate):
         db_course = self.model(
             id = course.id,
             name = course.name,
-            start_time = course.start_time,
-            end_time = course.end_time,
+            start_date = course.start_date,
+            end_date = course.end_date,
+            schedule = course.schedule,
             place = course.place,
             department = course.department,
             instructor = course.instructor,
             capacity = course.capacity,
-            outline = "No valid pdf"
+            available_seats = course.available_seats,
+            outline = "Not available yet"
         )
         db.add(db_course)
         db.commit()

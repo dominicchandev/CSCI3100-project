@@ -5,23 +5,22 @@ from email.message import EmailMessage
 from hashlib import sha256
 from fastapi import Depends
 
-from server.models import UserModel
+from server.models import UsersModel
 from server.crud.base import CRUDBase
 from server.utils.setting import Setting
 from server.schema.user import UserCreate, UserUpdate
-from server.security.auth import salt_and_hash, get_token_data, oauth2_scheme
+from server.security.auth import salt_and_hash, get_token_data
 
 setting = Setting()
 
 class UserCRUD(CRUDBase):
     def __init__(self):
-        super().__init__(model=UserModel)
+        super().__init__(model=UsersModel)
 
     def create(self, db: Session, user: UserCreate):
         db_user = self.model(
-            id = user.id,
             name = user.name,
-            role = user.role,
+            role = "student",
             email = user.email,
             hash = salt_and_hash(user.password),
         )
@@ -43,9 +42,9 @@ class UserCRUD(CRUDBase):
             return None
         return user
     
-    def read_current_user(self, token: str = Depends(oauth2_scheme)):
-        token_data = get_token_data(token)
-        return token_data
+    def read_current_user(self, db: Session, token_data = Depends(get_token_data)):
+        current_user = self.read(db=db, id=token_data.id)
+        return current_user        
 
     def genVerificationCode(self, email: str):
         code = sha256(email.encode('utf-8')).hexdigest()
@@ -70,3 +69,4 @@ class UserCRUD(CRUDBase):
         with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
             server.login(sender_email, password)
             server.send_message(msg, from_addr=sender_email, to_addrs=email)
+
