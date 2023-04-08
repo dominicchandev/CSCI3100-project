@@ -1,15 +1,12 @@
-import os
-from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from server import models
+from server.utils.setting import Setting
 
-load_dotenv()
+setting = Setting()
 
-aws_postgres_url = os.environ.get('AWS_POSTGRES_URL')
-
-engine = create_engine(url=aws_postgres_url)
+engine = create_engine(url=setting.AWS_POSTGRES_URL)
 
 models.Base.metadata.create_all(bind=engine)
 

@@ -1,40 +1,38 @@
-from typing import Set
-
-from sqlalchemy import Table, Column, ForeignKey, DateTime, String, Integer
+from sqlalchemy import Column, ForeignKey, Date, String, Integer, LargeBinary, JSON
+from sqlalchemy.schema import Sequence
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, Mapped, mapped_column, DeclarativeBase
+from sqlalchemy.orm import relationship,deferred
 
 Base = declarative_base()
 
 # establishing many-to-many relationship between user and course
-user_course_association_table = Table(
-    "user_course_association_table",
-    Base.metadata,
-    Column("user_id", ForeignKey("system_user.id"), primary_key=True),
-    Column("course_id", ForeignKey("course.id"), primary_key=True),
-)
+class UsersCourses(Base):
+    __tablename__ = 'users_courses'
+    user_id = Column(ForeignKey('system_users.id'), primary_key=True)
+    course_id = Column(ForeignKey('courses.id'), primary_key=True)
 
-class UserModel(Base):
-    __tablename__ = 'system_user'
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+class UsersModel(Base):
+    __tablename__ = 'system_users'
+    id = Column(Integer, Sequence('user_id_seq', start=1155000000, increment=1), primary_key=True)
     name = Column(String)
-    role = Column(String)
+    role = deferred(Column(String))
     email = Column(String, unique=True)
-    salted_hashed_password = Column(String)
+    hash = deferred(Column(LargeBinary))
 
-    courses: Mapped[Set["CourseModel"]] = relationship(secondary=user_course_association_table, back_populates="users")
+    courses = relationship("CoursesModel", secondary="users_courses", back_populates="users")
 
-
-class CourseModel(Base):
-    __tablename__ = 'course'
-    id: Mapped[str] = mapped_column(primary_key=True, index=True)
+class CoursesModel(Base):
+    __tablename__ = 'courses'
+    id = Column(String, primary_key=True)
     name = Column(String)
-    start_time = Column(DateTime)
-    end_time = Column(DateTime)
+    start_date = Column(Date)
+    end_date = Column(Date)
+    schedule = Column(JSON)
     place = Column(String)
     department = Column(String)
     instructor = Column(String)
     capacity = Column(Integer)
+    available_seats = Column(Integer)
     outline = Column(String)
 
-    users: Mapped[Set["UserModel"]] = relationship(secondary=user_course_association_table, back_populates="courses")
+    users = relationship("UsersModel", secondary="users_courses", back_populates="courses")

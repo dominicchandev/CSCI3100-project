@@ -1,13 +1,25 @@
-from typing import Literal, List
+from typing import Literal
 
-from server.schema.base import CourseBase, UserBase
+from pydantic import BaseModel
 
+class UserBase(BaseModel):
+    name: str
+    email: str
+
+class UserUpdate(UserBase):
+    id: int
+
+class UserChangePassword(UserBase):
+    password: str
 
 class UserCreate(UserBase):
     password: str
 
 class UserSchema(UserBase):
-    courses: List[CourseBase] = []
+    id: int
+    role: Literal["student", "admin"]
+    courses: list
+    
     class Config:
         orm_mode = True
 

@@ -1,29 +1,42 @@
-import os
-
 import bcrypt
-from dotenv import load_dotenv
+from jose import jwt
+
 from sqlalchemy.orm import Session
+from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 
-from server.models import UserModel
+from server.models import UsersModel
+from server.schema.token import TokenData
+from server.utils.setting import Setting
 
-load_dotenv()
-salt = bytes(os.environ.get('SALT'), "utf-8")
+setting = Setting()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
-def authenticate_user(db: Session, email: str, password: str) -> bool:
-    user: UserModel = db.query(UserModel).filter(UserModel.email == email).first()
+def authenticate_user(db: Session, email: str, password: str) -> UsersModel:
+    user: UsersModel = db.query(UsersModel).filter(UsersModel.email == email).first()
     if not user:
-        return False
-    if not verify_password(password, user.salted_hashed_password):
-        return False
+        return None
+    if not verify_password(password, user.hash):
+        return None
     return user
 
-def verify_password(plain_password:str, salted_hashed_password:str) -> bool:
-    if salt_and_hash(plain_password) == salted_hashed_password:
-        return True
-    return False
+def verify_password(plain_password: str, hashpw: bytes) -> bool:
+    return bcrypt.checkpw(plain_password.encode('utf-8'), hashpw)
 
-def salt_and_hash(plain_password: str) -> str:
-    return bcrypt.hashpw(bytes(plain_password, "utf-8"), salt).decode("utf-8")
+def salt_and_hash(plain_password: str) -> bytes:
+    salt: bytes = bcrypt.gensalt()
+    hashpw: bytes = bcrypt.hashpw(bytes(plain_password, "utf-8"), salt)
+    return hashpw
+
+def get_token_data(token: str = Depends(oauth2_scheme)) -> TokenData:
+    payload = jwt.decode(token, setting.SECRET_KEY, algorithms=[setting.HASH_ALGORITHM])
+    token_data = TokenData(
+        id = payload.get("id"),
+        name = payload.get("name"),
+        email = payload.get("email"),
+        role = payload.get("role"),
+    )
+    return token_data
+
+
