@@ -34,9 +34,9 @@ import { CourseTable } from "@/components/profile/CourseTable";
 export default function Home() {
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { token, authStatus, courses, email } = useAuth();
+  const { token, authStatus, courses, email, name } = useAuth();
   const cancelRef = React.useRef();
-
+  
   console.log(`token: ${token}`);
   console.log(`authStatus: ${authStatus}`);
 
@@ -62,7 +62,7 @@ export default function Home() {
                 <Breadcrumb>
                   <BreadcrumbItem color="White">
                     <BreadcrumbLink href="" color="White">
-                      Testing
+                      {name}
                     </BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbItem color="White">
@@ -157,7 +157,9 @@ export default function Home() {
                   color="Gray.Gray-700"
                   width="143.5px"
                   height="25px"
-                ></Text>
+                >
+                  {name}
+                </Text>
                 <Text
                   fontFamily="Helvetica"
                   lineHeight="1.4"

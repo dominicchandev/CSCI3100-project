@@ -9,6 +9,7 @@ export function useAuth() {
   const [token, setToken] = useState("");
   const [courses, setCourses] = useState([]);
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
 
   console.log(`token: ${token}`);
   console.log(`authStatus: ${authStatus}`);
@@ -36,8 +37,9 @@ export function useAuth() {
       setAuthStatus("auth");
       setCourses(resultJson.courses);
       setEmail(resultJson.email);
+      setName(resultJson.name);
     })();
   }, []);
 
-  return { authStatus, accessToken: token, email, courses };
+  return { authStatus, accessToken: token, email, courses, name };
 }
