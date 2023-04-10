@@ -34,7 +34,13 @@ export default function LoginPage() {
         e.preventDefault();
         if (password1 === password2) {
             //update the password for the user
-            //success message
+            toast({
+                title: "Success",
+                description: "Your password is changed.",
+                status: "success",
+                duration: 9000,
+                isClosable: true,
+            });
             router.push("/login")
         } else {
             toast({
