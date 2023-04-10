@@ -54,7 +54,7 @@ export default function Home() {
         <Spacer/>
         <VStack>
           <Box
-            position="absolute"
+            position="fixed"
             ml = "10px"
             borderRadius="15px"
             height="300px"
@@ -210,7 +210,7 @@ export default function Home() {
               <Tbody>
                 <Tr>
                   <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748">CSCI3100</Td>
-                  <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748">Software Engineering</Td>
+                  <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748" whiteSpace="normal" wordBreak="break-word">Software Engineering</Td>
                   <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748" whiteSpace="normal" wordBreak="break-word">Professor LYU Rung Tsong Michael</Td>
                   <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748" whiteSpace="normal" wordBreak="break-word">Dept of Computer Sci & Engg</Td>
                   <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748" whiteSpace="normal" wordBreak="break-word">Mo 11:30AM - 12:15PM</Td>
