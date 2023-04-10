@@ -20,6 +20,12 @@ async def create_course(course: CourseCreate, db: Session = Depends(get_db), tok
     db_course = courseCRUD.create(db=db, course=course)
     return db_course
 
+@router.get("/")
+async def get_all_courses(db: Session = Depends(get_db), token_data: TokenData = Depends(get_token_data)):
+    if token_data.role != "admin":
+        raise HTTPException(status_code=401, detail="Unauthorized user")
+    return courseCRUD.read_all(db=db)
+
 @router.post("/outline", response_model=CourseSchema)
 async def upload_course_outline(course_outline: UploadFile, db: Session = Depends(get_db), token_data: TokenData = Depends(get_token_data)):
     if token_data.role != "admin":
@@ -51,5 +57,6 @@ async def read_course(course_id: str, db: Session = Depends(get_db), token_data:
 @router.delete("/{course_id}", response_model=CourseSchema)
 async def delete_course(course_id: str, db: Session = Depends(get_db), token_data: TokenData = Depends(get_token_data)):
     if token_data.role != "admin":
-            raise HTTPException(status_code=401, detail="Unauthorized user")
+        raise HTTPException(status_code=401, detail="Unauthorized user")
     return courseCRUD.delete(db=db, id=course_id)
+

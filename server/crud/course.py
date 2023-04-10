@@ -12,10 +12,14 @@ class CourseCRUD(CRUDBase):
         super().__init__(model=CoursesModel)
     
     def read(self, db: Session, course_id: str):
-        db_course = db.query(CoursesModel).options(noload(CoursesModel.users)).get(course_id)
+        db_course = db.query(self.model).options(noload(self.model.users)).get(course_id)
         if not db_course:
             return None
         return db_course
+    
+    def read_all(self, db: Session):
+        all_courses = db.query(self.model).options(noload(self.model.users)).all()
+        return all_courses
 
     def create(self, db: Session, course: CourseCreate):
         db_course = self.model(

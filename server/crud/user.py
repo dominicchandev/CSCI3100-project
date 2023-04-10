@@ -45,6 +45,10 @@ class UserCRUD(CRUDBase):
     def read_current_user(self, db: Session, token_data = Depends(get_token_data)):
         current_user = self.read(db=db, id=token_data.id)
         return current_user        
+    
+    def read_all(self, db: Session):
+        all_users = db.query(self.model).all()
+        return all_users
 
     def genVerificationCode(self, email: str):
         code = sha256(email.encode('utf-8')).hexdigest()
