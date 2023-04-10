@@ -26,7 +26,7 @@ import { SideBar } from "@/components/sidebar";
 import { BsMoonStarsFill } from "react-icons/bs";
 import { HiUser } from "react-icons/hi";
 import { GoCalendar } from "react-icons/go";
-import { MdSettings } from "react-icons/md";
+import { MdSettings, MdWbSunny } from "react-icons/md";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/utils/hooks/useAuth";
 import { CourseTable } from "@/components/profile/CourseTable";
@@ -47,7 +47,7 @@ export default function Home() {
         <Spacer />
         <VStack>
           <Box
-            position="fixed"
+            position="absolute"
             ml="10px"
             borderRadius="15px"
             height="300px"
@@ -78,19 +78,14 @@ export default function Home() {
               </VStack>
               <Spacer />
               <HStack spacing="20px" mr="10px" mt="10px">
-                <Button
-                  leftIcon={<BsMoonStarsFill />}
-                  size="xs"
-                  colorScheme="whiteAlpha"
-                  variant="ghost"
-                >
-                  DARK MODE
+                <Button onClick={toggleColorMode} leftIcon={colorMode === 'light'? <BsMoonStarsFill /> : <MdWbSunny />} size = "xs" colorScheme={colorMode === 'light'? 'whiteAlpha' : 'blackAlpha'} variant='ghost'>
+                {colorMode === 'light' ? 'DARK' : 'LIGHT'} MODE
                 </Button>
                 <Button
                   onClick={onOpen}
                   leftIcon={<HiUser />}
                   size="xs"
-                  colorScheme="whiteAlpha"
+                  colorScheme={colorMode === 'light'? 'whiteAlpha' : 'blackAlpha'}
                   variant="ghost"
                 >
                   LOGOUT
