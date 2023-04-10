@@ -28,7 +28,6 @@ class CoursesModel(Base):
     start_date = Column(Date)
     end_date = Column(Date)
     schedule = Column(JSON)
-    place = Column(String)
     department = Column(String)
     instructor = Column(String)
     capacity = Column(Integer)

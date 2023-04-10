@@ -8,8 +8,7 @@ class CourseCreate(BaseModel):
     name: str
     start_date: date
     end_date: date
-    schedule: Dict[str, List[List[str]]]
-    place: str
+    schedule: Dict[str, Dict[str, List[str]]]
     department: str
     instructor: str
     capacity: int
@@ -18,15 +17,15 @@ class CourseCreate(BaseModel):
     @validator('schedule')
     def valid_schedule_format(cls, v):
         weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-        for key, value_list in v.items():
+        for key, class_time_dict in v.items():
             if key not in weekdays:
                 raise ValueError(f"{key} is not a valid weekday name. Valid weekday names are {weekdays}")
-            for interval in value_list:
-                if len(interval) != 2:
+            for class_time in class_time_dict.values():
+                if len(class_time) != 2:
                     raise ValueError("Duration of courses should contain a start and end time only")
                 
-                start_time = datetime.strptime(interval[0], "%H:%M")
-                end_time = datetime.strptime(interval[1], "%H:%M")
+                start_time = datetime.strptime(class_time[0], "%H:%M")
+                end_time = datetime.strptime(class_time[1], "%H:%M")
                 if start_time >= end_time:
                     raise ValueError("End time must be later than the start time")
         return v

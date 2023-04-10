@@ -24,7 +24,6 @@ class CourseCRUD(CRUDBase):
             start_date = course.start_date,
             end_date = course.end_date,
             schedule = course.schedule,
-            place = course.place,
             department = course.department,
             instructor = course.instructor,
             capacity = course.capacity,
