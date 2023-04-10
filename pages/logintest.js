@@ -18,7 +18,7 @@ import { useRouter } from "next/router";
 import { useState, useRef, useEffect } from "react";
 import { CompanyIntro } from "@/components/companyintro";
 import { NavigationBar } from "@/components/navigationbar";
-import { useAuth } from "@/utils/hooks/useAuth";
+//import { useAuth } from "@/utils/hooks/useAuth";
 
 export default function LoginPage() {
   const { colorMode } = useColorMode();
@@ -52,7 +52,7 @@ export default function LoginPage() {
       let formData = new FormData();
       formData.append("username", email);
       formData.append("password", password);
-      fetch(process.env.NEXT_PUBLIC_SERVER + "/login", {
+      fetch(process.env.NEXT_PUBLIC_SERVER + "login", {
         body: formData,
         method: "POST",
       })

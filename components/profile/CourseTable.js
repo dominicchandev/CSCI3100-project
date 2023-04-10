@@ -109,7 +109,8 @@ export function CourseTableRow(props) {
           fontWeight="bold"
           fontSize="12px"
           color="#2D3748"
-          whiteSpace="nowrap"
+          whiteSpace="normal"
+          wordBreak="break-word"
         >
           {content}
         </Td>
@@ -122,7 +123,8 @@ export function CourseTableRow(props) {
         fontWeight="bold"
         fontSize="12px"
         color="#2D3748"
-        whiteSpace="nowrap"
+        whiteSpace="normal"
+        wordBreak="break-word"
       >
         <VStack align="flex-start">
           {content.map((text) => (
