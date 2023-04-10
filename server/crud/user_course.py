@@ -110,15 +110,15 @@ def check_time_clash(db: Session, course_ids: set):
         for other_course_id, other_schedule in other_courses_schedule.items():
             skip_to_other_course = False
             for weekday in schedule:
-                intervals = schedule[weekday]
+                class_time_dict = schedule[weekday]
                 if weekday in other_schedule:
-                    other_intervals = other_schedule[weekday]
-                    for interval in intervals:
-                        start_time = datetime.strptime(interval[0], "%H:%M")
-                        end_time = datetime.strptime(interval[1], "%H:%M")
-                        for other_inerval in other_intervals:
-                            other_start_time = datetime.strptime(other_inerval[0], "%H:%M")
-                            other_end_time = datetime.strptime(other_inerval[1], "%H:%M")
+                    other_class_time_dict = other_schedule[weekday]
+                    for class_time in class_time_dict.values():
+                        start_time = datetime.strptime(class_time[0], "%H:%M")
+                        end_time = datetime.strptime(class_time[1], "%H:%M")
+                        for other_class_time in other_class_time_dict.values():
+                            other_start_time = datetime.strptime(other_class_time[0], "%H:%M")
+                            other_end_time = datetime.strptime(other_class_time[1], "%H:%M")
                             if not(end_time <= other_start_time or other_end_time <= start_time):
                                 clash_course_ids.add(course_id)
                                 clash_course_ids.add(other_course_id)

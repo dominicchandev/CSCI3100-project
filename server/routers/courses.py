@@ -26,7 +26,7 @@ async def upload_course_outline(course_outline: UploadFile, db: Session = Depend
         raise HTTPException(status_code=401, detail="Unauthorized user")
     
     course_id = course_outline.filename.split(".")[0]
-    db_course = courseCRUD.read(db=db, id=course_id)
+    db_course = courseCRUD.read(db=db, course_id=course_id)
     if not db_course:
         raise HTTPException(status_code=404, detail=f"Course {course_id} not found")
     
