@@ -25,6 +25,14 @@ import {
   TableCaption,
   TableContainer,
   Checkbox,
+  useDisclosure,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogCloseButton,
+  AlertDialogOverlay
   } from '@chakra-ui/react'
 import { SideBar } from '@/components/sidebar'
 import { BsMoonStarsFill } from "react-icons/bs";
@@ -36,6 +44,8 @@ import React, { useEffect, useState } from "react";
 
 export default function Home() {
   const { colorMode, toggleColorMode } = useColorMode();
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const cancelRef = React.useRef()
   
   return (
     <Box>
@@ -74,11 +84,35 @@ export default function Home() {
               <Button leftIcon={<BsMoonStarsFill />} size = "xs" colorScheme='whiteAlpha' variant='ghost'>
               DARK MODE
               </Button>
-              <Link href="/testing">
-              <Button leftIcon={<HiUser />} size = "xs" colorScheme='whiteAlpha' variant='ghost'>
+              <Button onClick={onOpen} leftIcon={<HiUser />} size = "xs" colorScheme='whiteAlpha' variant='ghost'>
               LOGOUT
               </Button>
-              </Link>
+              <AlertDialog
+              motionPreset='slideInBottom'
+              leastDestructiveRef={cancelRef}
+              onClose={onClose}
+              isOpen={isOpen}
+              isCentered
+              >
+              <AlertDialogOverlay />
+              <AlertDialogContent>
+                <AlertDialogHeader>Logout</AlertDialogHeader>
+                <AlertDialogCloseButton />
+                <AlertDialogBody>
+                Are you sure to logout?
+                </AlertDialogBody>
+                <AlertDialogFooter>
+                  <Button ref={cancelRef} onClick={onClose}>
+                    Cancel
+                  </Button>
+                  <Link href="/login">
+                  <Button bg="cyanAlpha" color = "white" ml={3}>
+                    Logout
+                  </Button>
+                  </Link>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+              </AlertDialog>
             </HStack>
             </HStack>
           </Box>
