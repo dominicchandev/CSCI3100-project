@@ -37,6 +37,7 @@ import {
   import { SideBar } from '@/components/adminsidebar'
   import { BsMoonStarsFill } from "react-icons/bs";
   import { HiUser, HiUserAdd, HiUserRemove } from "react-icons/hi"
+  import { MdWbSunny } from 'react-icons/md'
   import React from "react";
 
   
@@ -79,10 +80,10 @@ import {
               </VStack>
               <Spacer/>
               <HStack spacing = "20px" mr="10px" mt="10px">
-                <Button leftIcon={<BsMoonStarsFill />} size = "xs" colorScheme='whiteAlpha' variant='ghost'>
-                DARK MODE
+                <Button onClick={toggleColorMode} leftIcon={colorMode === 'light'? <BsMoonStarsFill /> : <MdWbSunny />} size = "xs" colorScheme={colorMode === 'light'? 'whiteAlpha' : 'blackAlpha'} variant='ghost'>
+                {colorMode === 'light' ? 'DARK' : 'LIGHT'} MODE
                 </Button>
-                <Button onClick={onOpen} leftIcon={<HiUser />} size = "xs" colorScheme='whiteAlpha' variant='ghost'>
+                <Button onClick={onOpen} leftIcon={<HiUser />} size = "xs" colorScheme={colorMode === 'light'? 'whiteAlpha' : 'blackAlpha'} variant='ghost'>
                 LOGOUT
                 </Button>
                 <AlertDialog
