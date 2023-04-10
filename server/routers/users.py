@@ -20,7 +20,7 @@ async def user_create(user: UserCreate, db: Session = Depends(get_db)):
     create_user = userCRUD.create(db=db, user=user)
     return create_user
 
-@router.get("/")
+@router.get("/all")
 def get_all_users(db: Session = Depends(get_db), token_data: TokenData = Depends(get_token_data)):
     if token_data.role != "admin":
         raise HTTPException(status_code=401, detail="Unauthorized user")
