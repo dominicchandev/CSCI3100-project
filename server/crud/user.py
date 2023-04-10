@@ -37,6 +37,12 @@ class UserCRUD(CRUDBase):
         db.refresh(db_user)
         return db_user
 
+    def update_password(self, db: Session, email: str, password: str):
+        db_user = db.query(self.model).filter(self.model.email == email).first()
+        db_user.hash = salt_and_hash(password)
+        db.commit()
+        db.refresh(db_user)
+
     def read_by_email(self, db: Session, email: str):
         user = db.query(self.model).filter(self.model.email == email).first()
         if not user:
@@ -54,7 +60,9 @@ class UserCRUD(CRUDBase):
     def verifyCode(self, email: str, code: str):
         return code == self.genVerificationCode(email)
 
-    def sendVerificationEmail(self, email: str):
+    def sendVerificationEmail(self, db: Session, email: str):
+        if self.read_by_email(db, email) == None:
+            return False
         port = 465  # For SSL
         smtp_server = "smtp.gmail.com"
         sender_email = setting.GMAIL_ADDRESS
@@ -70,3 +78,4 @@ class UserCRUD(CRUDBase):
         with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
             server.login(sender_email, password)
             server.send_message(msg, from_addr=sender_email, to_addrs=email)
+        return True
