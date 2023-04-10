@@ -228,16 +228,6 @@ export default function Home() {
               </Box>
               <Spacer />
             </VStack>
-            <Flex justify="flex-end">
-              <Button
-                type="submit"
-                bg="cyanAlpha"
-                color="white"
-                variant="solid"
-              >
-                Confirm Drop Course
-              </Button>
-            </Flex>
           </Box>
         </VStack>
       </HStack>
