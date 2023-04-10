@@ -60,7 +60,7 @@ import {
                 <BreadcrumbLink href='' color="White" >Testing</BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbItem color="White">
-                <BreadcrumbLink href='' color="White" >profile</BreadcrumbLink>
+                <BreadcrumbLink href='' color="White" >Profile</BreadcrumbLink>
                 </BreadcrumbItem>
                 </Breadcrumb>
                 <Text
@@ -153,7 +153,7 @@ import {
                 </Box>
                 <Spacer/>
                 <Box pr="40px">
-                  <Link href="/logintest">
+                  <Link href="/changepw">
                   <Button leftIcon={<MdSettings />} size = "xs" colorScheme='teal' variant='ghost'>
                   RESET PASSWORD
                   </Button>

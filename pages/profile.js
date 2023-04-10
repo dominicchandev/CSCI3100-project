@@ -164,7 +164,7 @@ export default function Home() {
               </Box>
               <Spacer/>
               <Box pr="40px">
-                <Link href="/logintest">
+                <Link href="/changepw">
                 <Button leftIcon={<MdSettings />} size = "xs" colorScheme='teal' variant='ghost'>
                 RESET PASSWORD
                 </Button>
@@ -188,7 +188,7 @@ export default function Home() {
           background="#FFFFFF"
           mr = "10px"
           overflowWrap="anywhere"
-         >
+          >
           <VStack>
           <Box
           overflowWrap="break-word"
@@ -247,7 +247,7 @@ export default function Home() {
           <Flex justify="flex-end">
           <Button type="submit" bg='cyanAlpha' color = "white" variant = "solid">
               Confirm Drop Course
-          </Button> 
+          </Button>
           </Flex>
           
           </Box>
