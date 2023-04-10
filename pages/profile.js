@@ -177,9 +177,9 @@ export default function Home() {
                 <Tr>
                   <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748">CSCI3100</Td>
                   <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748">Software Engineering</Td>
-                  <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748" >Professor LYU Rung Tsong Michael</Td>
-                  <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748" >Dept of Computer Sci & Engg</Td>
-                  <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748">Mo 11:30AM - 12:15PM</Td>
+                  <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748" whiteSpace="normal" wordBreak="break-word">Professor LYU Rung Tsong Michael</Td>
+                  <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748" whiteSpace="normal" wordBreak="break-word">Dept of Computer Sci & Engg</Td>
+                  <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748" whiteSpace="normal" wordBreak="break-word">Mo 11:30AM - 12:15PM</Td>
                   <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748">SWC_LT</Td>
                   <Td textAlign ="center"><Checkbox value='drop'></Checkbox></Td>
 
@@ -187,9 +187,9 @@ export default function Home() {
                 <Tr>
                   <Td fontFamily="Helvetica" fontWeight="bold" fontSize="12px" color="#2D3748">CSCI3100</Td>
                   <Td fontFamily="Helvetica" fontWeight="bold" fontSize="12px" color="#2D3748">Software Engineering</Td>
-                  <Td fontFamily="Helvetica" fontWeight="bold" fontSize="12px" color="#2D3748">Professor LYU Rung Tsong Michael</Td>
-                  <Td fontFamily="Helvetica" fontWeight="bold" fontSize="12px" color="#2D3748">Dept of Computer Sci & Engg</Td>
-                  <Td fontFamily="Helvetica" fontWeight="bold" fontSize="12px" color="#2D3748">Mo 11:30AM - 12:15PM</Td>
+                  <Td fontFamily="Helvetica" fontWeight="bold" fontSize="12px" color="#2D3748" whiteSpace="normal" wordBreak="break-word">Professor LYU Rung Tsong Michael</Td>
+                  <Td fontFamily="Helvetica" fontWeight="bold" fontSize="12px" color="#2D3748" whiteSpace="normal" wordBreak="break-word">Dept of Computer Sci & Engg</Td>
+                  <Td fontFamily="Helvetica" fontWeight="bold" fontSize="12px" color="#2D3748" whiteSpace="normal" wordBreak="break-word">Mo 11:30AM - 12:15PM</Td>
                   <Td fontFamily="Helvetica" fontWeight="bold" fontSize="12px" color="#2D3748">SWC_LT</Td>
                   <Td textAlign ="center"><Checkbox value='drop'></Checkbox></Td>
                 </Tr>
@@ -198,9 +198,9 @@ export default function Home() {
                 <Tr>
                   <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748">CSCI3100</Td>
                   <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748">Software Engineering</Td>
-                  <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748">Professor LYU Rung Tsong Michael</Td>
-                  <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748">Dept of Computer Sci & Engg</Td>
-                  <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748">Mo 11:30AM - 12:15PM</Td>
+                  <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748" whiteSpace="normal" wordBreak="break-word">Professor LYU Rung Tsong Michael</Td>
+                  <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748" whiteSpace="normal" wordBreak="break-word">Dept of Computer Sci & Engg</Td>
+                  <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748" whiteSpace="normal" wordBreak="break-word">Mo 11:30AM - 12:15PM</Td>
                   <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748">SWC_LT</Td>
                   <Td textAlign ="center" ><Checkbox value='drop'></Checkbox></Td>
                 </Tr>
@@ -208,18 +208,16 @@ export default function Home() {
             </Table>
           </TableContainer>
           </Box>
-          <Spacer/>
-          <Box
-          position = "absolute"
-          bottom = "20px"
-          right = "10px"
-          >
-            <Button type="submit" bg='cyanAlpha' color = "white" variant = "solid">
+          <Spacer/>      
+          </VStack>
+          <Flex justify="flex-end">
+          <Button type="submit" bg='cyanAlpha' color = "white" variant = "solid">
               Confirm Drop Course
-            </Button>
+          </Button> 
+          </Flex>
+          
           </Box>
-            </VStack>
-          </Box>
+          
 
           
           
