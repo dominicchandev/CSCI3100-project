@@ -20,7 +20,7 @@ async def create_course(course: CourseCreate, db: Session = Depends(get_db), tok
     db_course = courseCRUD.create(db=db, course=course)
     return db_course
 
-@router.get("/")
+@router.get("/all")
 async def get_all_courses(db: Session = Depends(get_db), token_data: TokenData = Depends(get_token_data)):
     if token_data.role != "admin":
         raise HTTPException(status_code=401, detail="Unauthorized user")
