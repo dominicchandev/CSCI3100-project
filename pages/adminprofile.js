@@ -29,12 +29,15 @@ import {
   import { HiUser } from "react-icons/hi"
   import { MdSettings, MdWbSunny } from 'react-icons/md'
   import React from "react";
+  import { useAuth } from "@/utils/hooks/useAuth";
+
   
   
   export default function Home() {
     const { colorMode, toggleColorMode } = useColorMode();
-    const { isOpen, onOpen, onClose } = useDisclosure()
-    const cancelRef = React.useRef()
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const { token, authStatus, courses, email, name } = useAuth();
+    const cancelRef = React.useRef();
     
     return (
       <Box>
@@ -57,7 +60,7 @@ import {
               <VStack align = "left" mt="10px" ml = "10px" pt= "10px">
                 <Breadcrumb >
                 <BreadcrumbItem color="White">
-                <BreadcrumbLink href='' color="White" >Testing</BreadcrumbLink>
+                <BreadcrumbLink href='' color="White" >{name}</BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbItem color="White">
                 <BreadcrumbLink href='' color="White" >Profile</BreadcrumbLink>
@@ -137,7 +140,7 @@ import {
                 width="143.5px"
                 height="25px"
                 >
-                
+                {name}
                 </Text>
                 <Text
                   fontFamily="Helvetica"
@@ -148,7 +151,7 @@ import {
                   width="178px"
                   height="17px"
                 >
-                  testing@csci3100.edu.hk
+                  {email}
                 </Text>
                 </Box>
                 <Spacer/>
