@@ -37,8 +37,14 @@ export default function Home() {
   const { token, authStatus, courses, email, name } = useAuth();
   const cancelRef = React.useRef();
   
-  console.log(`token: ${token}`);
-  console.log(`authStatus: ${authStatus}`);
+  // console.log(`profile token: ${token}`);
+  // console.log(`authStatus: ${authStatus}`);
+
+  useEffect(() => {
+    if (authStatus === "auth") {
+      console.log(`profile token: ${token}`)
+    }
+  }, [authStatus])
 
   return (
     <Box>

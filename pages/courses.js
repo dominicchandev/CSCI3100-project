@@ -23,18 +23,7 @@ import {
   Divider,
   Text,
   Link,
-  Avatar,
-  AvatarBadge,
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  TableCaption,
-  TableContainer,
-  Checkbox,
+  useToast
  } from '@chakra-ui/react'
 import { ReactIcon } from '@chakra-ui/icons'
 import { GoBook, GoThreeBars } from 'react-icons/go'
@@ -44,9 +33,98 @@ import { HiUser } from "react-icons/hi"
 import { GoCalendar } from 'react-icons/go'
 import { MdSettings } from 'react-icons/md'
 import React, { useEffect, useState } from "react";
+import { useAuth } from "@/utils/hooks/useAuth";
+import { ResultTable } from "@/components/ResultTable";
+
 
 export default function Courses() {
   const { colorMode, toggleColorMode } = useColorMode();
+  const { token, authStatus, name } = useAuth();
+  const [status, setStatus] = useState(false);
+  const [courseid, setCourseID] = useState("");
+  const [coursename, setCourseName] = useState("");
+  const [dept, setDept] = useState("");
+  const [date, setDate] = useState("");
+  const [starttime, setStartTime] = useState("");
+  const [endtime, setEndTime] = useState("");
+  const [courses, setCourses] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
+  const toast = useToast();
+  const searchParams = new URLSearchParams();
+
+  useEffect(() => {
+    if (authStatus === "auth" && status==true) {
+      // run api
+      console.log(`access token: ${token}`)
+      const formData = new FormData();
+      formData.append("course_id", courseid);
+      formData.append("name", coursename);
+      formData.append("department", dept);
+      formData.append("day", date);
+      formData.append("start_time", starttime);
+      formData.append("end_time", endtime);
+      const searchParams = new URLSearchParams();
+      for (const [key, value] of formData.entries()) {
+        if (value !== '') {
+          searchParams.append(key, value);
+        }
+      }
+      const queryString = searchParams.toString();
+      console.log(queryString);
+
+      fetch(process.env.NEXT_PUBLIC_SERVER + "api/courses/search?" + queryString, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          if (res.status === 200) {
+            console.log("Searched");
+            res.json().then((result) => {
+            //  console.log(result);
+              // TODO: change to session logic, localStorage is bad practice!
+              setCourses(JSON.stringify(result));
+            //  console.log(courses)
+            });
+            // router.push("/");
+          } else if (res.status === 422) {
+            setErrMsg("Invalid search");
+            console.log("Invalid search");
+            toast({
+              title: "Error",
+              description: {errMsg},
+              status: "error",
+              duration: 9000,
+              isClosable: true,
+            });
+          } else {
+            console.log(res.json());
+          }
+        })
+        .catch((err) => console.log("Error: ", err));
+    }
+    setIsLoading(false); 
+  }, [authStatus, status])
+
+  const handleSubmit = (e) => {
+    setIsLoading(true);
+    setErrMsg("");
+    e.preventDefault();
+    if (courseid === "" && coursename === "" && dept ==="" &&  date ==="" && starttime==="" && endtime==="") {
+      toast({
+        title: "Error",
+        description: "Please search by at least one criteria.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    } else {
+      setStatus(true);
+  };
+}
+
   return (
     <Grid
     templateAreas={`"nav breadcrumb"
@@ -65,16 +143,16 @@ export default function Courses() {
       <VStack align = "left" mt="10px" ml = "10px" pt= "10px">
         <Breadcrumb >
         <BreadcrumbItem color="White">
-        <BreadcrumbLink href='' color="White" >Testing</BreadcrumbLink>
+        <BreadcrumbLink href='' color="White" >{name}</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem color="White">
-        <BreadcrumbLink href='' color="White" >profile</BreadcrumbLink>
+        <BreadcrumbLink href='' color="White" >Course Browsing</BreadcrumbLink>
         </BreadcrumbItem>
         </Breadcrumb>
         <Text
         align="left"
         color="White"
-        fontWeight="bold"> Profile </Text>
+        fontWeight="bold"> Course Browsing </Text>
       </VStack>
       <Spacer/>
       <HStack spacing = "20px" mr="10px" mt="10px">
@@ -115,8 +193,8 @@ export default function Courses() {
                     fontSize="12px"
                     type="text"
                     id="courseid"
-                  //  value={courseid}
-                  //  onChange={(e) => setCourseID(e.target.value)}
+                    value={courseid}
+                    onChange={(e) => setCourseID(e.target.value)}
                 />
                 </HStack>
               </FormControl>
@@ -132,8 +210,8 @@ export default function Courses() {
                   fontSize="12px"
                   type="text"
                   id="dept"
-                //  value={dept}
-                // onChange={(e) => setPassword(e.target.value)}
+                  value={dept}
+                  onChange={(e) => setDept(e.target.value)}
               />
               </HStack>
               </FormControl>
@@ -141,33 +219,31 @@ export default function Courses() {
               <WrapItem>
               <FormControl>
               <HStack>
-              <FormLabel htmlFor="Coursename" fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="14px" color="Gray.Gray-700" width="95px" height="20px"  >Course Name</FormLabel>
+              <FormLabel htmlFor="coursename" fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="14px" color="Gray.Gray-700" width="95px" height="20px"  >Course Name</FormLabel>
               <Input
                   w = "300px"
                   placeholder='Text here'
                   fontSize="12px"
                   type="text"
                   id="coursename"
-                //  value={coursename}
-                // onChange={(e) => setPassword(e.target.value)}
+                  value={coursename}
+                  onChange={(e) => setCourseName(e.target.value)}
               />
               </HStack>
               </FormControl>
               </WrapItem>
-
-
               <WrapItem>
               <FormControl>
               <HStack>
-              <FormLabel htmlFor="Date" fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="14px" color="Gray.Gray-700" width="95px" height="20px"  >Time</FormLabel>
-              <Select placeholder = "Select option" id="date" fontSize="12px" color="#808EA0">
+              <FormLabel htmlFor="Date" fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="14px" color="Gray.Gray-700" width="95px" height="20px">Time</FormLabel>
+              <Select placeholder = "Select option" id="date" fontSize="12px" color="#808EA0" value={date} onChange={(e) => setDate(e.target.value)}>
                 <option value = 'Mon'> Monday </option>
                 <option value = 'Tue'> Tuesday </option>
                 <option value = 'Wed'> Wednesday </option>
                 <option value = 'Thur'> Thursday </option>
                 <option value = 'Fri'> Friday </option>
               </Select>
-              <Select placeholder = "Select Start Time" fontSize="12px" color="#808EA0" >
+              <Select placeholder = "Select Start Time" id ="starttime" fontSize="12px" color="#808EA0" value={starttime} onChange={(e) => setStartTime(e.target.value)}>
                 <option value = '0800'> 08:00am </option>
                 <option value = '0830'> 08:30am </option>
                 <option value = '0900'> 09:00am </option>
@@ -190,7 +266,7 @@ export default function Courses() {
                 <option value = '1730'> 05:30pm </option>
                 <option value = '1800'> 06:00pm </option>
               </Select>
-              <Select placeholder = "Select End Time" fontSize="12px" color="#808EA0">
+              <Select placeholder = "Select End Time" id ="endtime" fontSize="12px" color="#808EA0" value={endtime} onChange={(e) => setEndTime(e.target.value)}>
                 <option value = '0815'> 08:15am </option>
                 <option value = '0845'> 08:45am </option>
                 <option value = '0915'> 09:15am </option>
@@ -221,14 +297,24 @@ export default function Courses() {
           <Button type="submit" colorScheme="teal" variant = "outline" >
               Reset
           </Button>
-          <Button type="submit" bg='cyanAlpha' color = "white" variant = "solid" >
+          <Button type="submit" bg='cyanAlpha' color = "white" variant = "solid" onClick={handleSubmit} isLoading={isLoading}>
               Search Course
           </Button>
         </HStack>
       </VStack>
   </GridItem>
-  <GridItem pl='2' area={'result'}>
-    <Box></Box>
+  <GridItem pl='2' area={'result'} borderRadius="15px" background="#FFFFFF" mr="10px" ml="10px" overflowWrap="anywhere">
+      <VStack>
+        <Box overflowWrap="break-word" flexWrap="wrap">
+          <VStack>
+            <Box overflowWrap="break-word" flexWrap="wrap">
+              <ResultTable courses={courses} />
+            </Box>
+            <Spacer />
+          </VStack>
+        </Box>
+        <Spacer />
+      </VStack>
   </GridItem>
 </Grid>
   )

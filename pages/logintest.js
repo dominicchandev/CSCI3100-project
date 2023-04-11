@@ -31,9 +31,9 @@ export default function LoginPage() {
 
   const { authStatus } = useAuth();
 
-  useEffect(() => {
-    if (authStatus === "auth") router.push("/");
-  }, [authStatus, router]);
+  // useEffect(() => {
+  //   if (authStatus === "auth") router.push("/");
+  // }, [authStatus, router]);
 
   const handleSubmit = (e) => {
     setIsLoading(true);
