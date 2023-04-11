@@ -112,7 +112,7 @@ export default function SignUpPage() {
                     Register with
                     </Text>
                     <Spacer/>
-                     <FormControl>
+                     <FormControl isRequired>
                         <FormLabel htmlFor="name"fontFamily="Helvetica" lineHeight="1.4" fontSize="14px" color="Gray.Gray-700" mt = "30px">Name</FormLabel>
                               <Input
                                   placeholder='Your full name'
@@ -126,7 +126,7 @@ export default function SignUpPage() {
                               />
                           </FormControl>
 
-                          <FormControl>
+                          <FormControl isRequired>
                             <FormLabel htmlFor="email" fontFamily="Helvetica" lineHeight="1.4" fontSize="14px" color="Gray.Gray-700" >Email</FormLabel>
                                 <Input
                                     placeholder='Your email address'
@@ -142,7 +142,7 @@ export default function SignUpPage() {
                         <Text color="red" fontSize="sm">
                             {errMsg}
                         </Text>
-                      <FormControl>
+                      <FormControl isRequired>
                       <FormLabel htmlFor="password" fontFamily="Helvetica" lineHeight="1.4" fontSize="14px" color="Gray.Gray-700" >Password</FormLabel>
                       <Input
                           placeholder='Your password'
