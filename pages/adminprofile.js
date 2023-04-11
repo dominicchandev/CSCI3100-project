@@ -2,7 +2,7 @@ import {
     Flex, 
     Spacer, 
     Button, 
-    useColorMode, 
+    useColorMode,
     Box, 
     Breadcrumb, 
     BreadcrumbItem, 
@@ -24,11 +24,12 @@ import {
     AlertDialogCloseButton,
     AlertDialogOverlay
     } from '@chakra-ui/react'
-  import { SideBar } from '@/components/adminsidebar'
+  import { SideBar } from '@/components/adminsidebar';
+  import { useRouter } from "next/router";
   import { BsMoonStarsFill } from "react-icons/bs";
   import { HiUser } from "react-icons/hi"
   import { MdSettings, MdWbSunny } from 'react-icons/md'
-  import React from "react";
+  import { useRef, useState } from "react";
   import { useAuth } from "@/utils/hooks/useAuth";
 
   
@@ -37,7 +38,13 @@ import {
     const { colorMode, toggleColorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { token, authStatus, courses, email, name } = useAuth();
-    const cancelRef = React.useRef();
+    const router = useRouter();
+    const cancelRef = useRef();
+    const handleLogout = (e) => { 
+      e.preventDefault();
+      localStorage.removeItem("accessToken");
+      router.push("/login");
+    };
     
     return (
       <Box>
@@ -97,11 +104,9 @@ import {
                     <Button ref={cancelRef} onClick={onClose}>
                       Cancel
                     </Button>
-                    <Link href="/login">
-                    <Button bg="cyanAlpha" color = "white" ml={3}>
+                    <Button onClick={handleLogout} bg="cyanAlpha" color = "white" ml={3}>
                       Logout
                     </Button>
-                    </Link>
                   </AlertDialogFooter>
                 </AlertDialogContent>
                 </AlertDialog>
