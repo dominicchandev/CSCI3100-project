@@ -11,9 +11,6 @@ export function useAuth() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
 
-  console.log(`token: ${token}`);
-  console.log(`authStatus: ${authStatus}`);
-
   useEffect(() => {
     // try {
     (async () => {
@@ -30,16 +27,24 @@ export function useAuth() {
           Authorization: `Bearer ${token}`,
         },
       });
+
       const resultJson = await result.json();
       console.log(`Read me result:`);
       console.log(resultJson);
       setToken(token);
-      setAuthStatus("auth");
+      // setAuthStatus("auth");
       setCourses(resultJson.courses);
       setEmail(resultJson.email);
       setName(resultJson.name);
     })();
   }, []);
 
-  return { authStatus, accessToken: token, email, courses, name };
+  useEffect(() => {
+    if (token != "") {
+      setAuthStatus("auth")
+    }
+  }, [token])
+  // return { authStatus, accessToken: token, email, courses, name };
+  return { authStatus, token, email, courses, name };
+
 }
