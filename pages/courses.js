@@ -48,7 +48,7 @@ export default function Courses() {
   const [date, setDate] = useState("");
   const [starttime, setStartTime] = useState("");
   const [endtime, setEndTime] = useState("");
-  const [courses, setCourses] = useState("");
+  const [courses, setCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
   const toast = useToast();
@@ -93,8 +93,9 @@ export default function Courses() {
             res.json().then((result) => {
             console.log(result);
             setCourses(result);
-            console.log(courses);
+            console.log(`1: ${courses}`);
             });
+            console.log(`2: ${courses}`);
             // router.push("/");
           } else if (res.status === 422) {
             setErrMsg("Invalid search");
@@ -112,6 +113,7 @@ export default function Courses() {
         })
         .catch((err) => console.log("Error: ", err));
     }
+    setStatus(false);
     setIsLoading(false); 
   }, [authStatus, status])
 
@@ -130,6 +132,7 @@ export default function Courses() {
     } else {
       setStatus(true);
   };
+    setIsLoading(false);
   }
 
   return (
@@ -315,7 +318,7 @@ export default function Courses() {
         <Box overflowWrap="break-word" flexWrap="wrap">
           <VStack>
             <Box overflowWrap="break-word" flexWrap="wrap">
-              {/* <ResultTable courses={courses} /> */}
+              <ResultTable courses={courses} />
             </Box>
             <Spacer />
           </VStack>

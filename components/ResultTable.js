@@ -28,15 +28,18 @@ const TH_STYLE = {
  * @param {*} props
  * @returns
  */
+
 export function ResultTable(props) {
   const { courses } = props;
+  console.log("JELL");
+  console.log(courses);
 
   return (
     <TableContainer>
       <Table variant="simple" layout="fixed" overflowWrap="anywhere">
         <ResultTableHeadRow />
         <Tbody>
-          {courses.map((course) => (
+        {courses.map((course) => (
             <ResultTableRow
               key={`course-table-row-${course.id}`}
               course={course}
@@ -99,8 +102,8 @@ export function ResultTableRow(props) {
       <ColumnElem content={department} />
       <ColumnElem content={times} />
       <ColumnElem content={locations} />
-      <ColumnElem content={available_seats} />
-      <ColumnElem content={capacity} />
+      <ColumnElem content={name} />
+      <ColumnElem content={name} />
       <Td textAlign="center">
         <Button value={`outline-${id}`} variant="outline">VIEW</Button>
       </Td>
@@ -112,6 +115,8 @@ export function ResultTableRow(props) {
 
   function ColumnElem(props) {
     const { content } = props;
+    console.log("ERRR");
+    console.log(content);
     if (typeof content === "string")
       return (
         <Td

@@ -74,7 +74,7 @@ async def search_courses(
         courses.update(courseCRUD.read_by_class_time(db=db, day=day, start_time=start_time, end_time=end_time))
     if None in courses:
         courses.remove(None)
-    return {"courses": courses}
+    return courses
 
 @router.get("/{course_id}", response_model=CourseSchema)
 async def read_course(course_id: str, db: Session = Depends(get_db), token_data: TokenData = Depends(get_token_data)):
