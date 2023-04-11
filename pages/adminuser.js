@@ -64,6 +64,9 @@ import {
         console.log(`profile token: ${token}`);
         fetchData();
       }
+      else {
+        router.push("/login");
+      }
     }, [authStatus])
 
     async function fetchData() {
@@ -102,7 +105,7 @@ import {
               <VStack align = "left" mt="10px" ml = "10px" pt= "10px">
                 <Breadcrumb >
                 <BreadcrumbItem color="White">
-                <BreadcrumbLink href='' color="White" >Testing</BreadcrumbLink>
+                <BreadcrumbLink href='' color="White" >{name}</BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbItem color="White">
                 <BreadcrumbLink href='' color="White" >Users</BreadcrumbLink>

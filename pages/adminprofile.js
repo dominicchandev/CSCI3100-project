@@ -29,10 +29,9 @@ import {
   import { BsMoonStarsFill } from "react-icons/bs";
   import { HiUser } from "react-icons/hi"
   import { MdSettings, MdWbSunny } from 'react-icons/md'
-  import { useRef, useState } from "react";
+  import { useRef, useState, useEffect } from "react";
   import { useAuth } from "@/utils/hooks/useAuth";
 
-  
   
   export default function Home() {
     const { colorMode, toggleColorMode } = useColorMode();
@@ -45,6 +44,15 @@ import {
       localStorage.removeItem("accessToken");
       router.push("/login");
     };
+
+    useEffect(() => {
+      if (authStatus === "auth") {
+        console.log(`profile token: ${token}`)
+      }
+      else {
+        router.push("/login");
+      }
+    }, [authStatus])
     
     return (
       <Box>
