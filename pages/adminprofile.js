@@ -49,9 +49,6 @@ import {
       if (authStatus === "auth") {
         console.log(`profile token: ${token}`)
       }
-      else {
-        router.push("/login");
-      }
     }, [authStatus])
     
     return (
