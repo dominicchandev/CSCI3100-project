@@ -8,11 +8,13 @@ from server.schema.course import CourseCreate, CourseSchema
 from server.schema.token import TokenData
 from server.security.auth import get_token_data
 from server.crud.course import CourseCRUD
+from server.crud.user_course import UserCourseCRUD
 # from server.utils.drive import upload_pdf_and_get_link
 from server.utils.dropbox import DropBoxHandler
 
 router = APIRouter()
 courseCRUD = CourseCRUD()
+usercourseCRUD = UserCourseCRUD()
 dropbox_handler = DropBoxHandler()
 
 @router.post("/", response_model=CourseSchema)
@@ -87,4 +89,10 @@ async def read_course(course_id: str, db: Session = Depends(get_db), token_data:
 async def delete_course(course_id: str, db: Session = Depends(get_db), token_data: TokenData = Depends(get_token_data)):
     if token_data.role != "admin":
         raise HTTPException(status_code=401, detail="Unauthorized user")
+    course = courseCRUD.read(db=db, id=course_id)
+    if not course:
+        raise HTTPException(status_code=404, detail=f"Course {course_id} not found")
+    registered_user_ids = usercourseCRUD.read_registered_users(db=db, course_id=course_id)
+    for user_id in registered_user_ids:
+        usercourseCRUD.drop_course(db=db, user_id=user_id, course_id=course_id)
     return courseCRUD.delete(db=db, id=course_id)
