@@ -39,12 +39,16 @@ import {
   import { HiUser, HiUserAdd, HiUserRemove } from "react-icons/hi";
   import { MdWbSunny } from 'react-icons/md';
   import { useRouter } from "next/router";
+  import { useAuth } from "@/utils/hooks/useAuth";
+  import { useRef, useState, useEffect } from "react";
   import React from "react";
+  import { UserTable } from "@/components/profile/UserTable";
 
   
   export default function Home() {
     const { colorMode, toggleColorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const { token, authStatus, email, name } = useAuth();
     const cancelRef = React.useRef();
     const router = useRouter();
     const handleLogout = (e) => { 
@@ -52,7 +56,31 @@ import {
       localStorage.removeItem("accessToken");
       router.push("/login");
     };
+
+    const [data, setData] = useState(null);
+
+    useEffect(() => {
+      if (authStatus === "auth") {
+        console.log(`profile token: ${token}`);
+        fetchData();
+      }
+    }, [authStatus])
+
+    async function fetchData() {
+      const response = await fetch(process.env.NEXT_PUBLIC_SERVER + "api/users/all", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
+      const data = await response.json();
+      setData(data);
+    }
     
+    if (!data) {
+      return <Text>Loading...</Text>;
+    }
+
     return (
       <Box>
         <HStack mt="10px" pt= "10px">
@@ -83,7 +111,7 @@ import {
                 <Text
                 align="left"
                 color="White"
-                fontWeight="bold"> Users </Text>
+                fontWeight="bold">Users</Text>
               </VStack>
               <Spacer/>
               <HStack spacing = "20px" mr="10px" mt="10px">
@@ -125,7 +153,6 @@ import {
             position="absolute"
             ml = "10px"
             borderRadius="15px"
-            height="300px"
             top = "120px"
             right = "10px"
             w="75%"
@@ -138,45 +165,15 @@ import {
             overflowWrap="break-word"
             flexWrap="wrap"
             >
-            <TableContainer>
-                <Table variant='simple' layout="fixed" overflowWrap="anywhere" >
-                <TableCaption placement="top" textAlign="left" fontWeight="bold" fontSize="xl">Users</TableCaption>
-                <Thead>
-                    <Tr>
-                    <Th fontFamily="Helvetica" lineHeight="1.5" fontWeight="bold" fontSize="10px" color="#A0AEC0">NAME</Th>
-                    <Th fontFamily="Helvetica" lineHeight="1.5" fontWeight="bold" fontSize="10px" color="#A0AEC0">EMAIL</Th>
-                    <Th fontFamily="Helvetica" lineHeight="1.5" fontWeight="bold" fontSize="10px" color="#A0AEC0" textAlign ="center">DELETE USER</Th>
-                    </Tr>
-                </Thead>
-                <Tbody>
-                    <Tr>
-                    <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748">Admin</Td>
-                    <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748">Admin@gmail.com</Td>
-                    <Td textAlign ="center"><Checkbox value='drop'></Checkbox></Td>
-                    </Tr>
-                    <Tr>
-                    <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748">Admin</Td>
-                    <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748">Admin@gmail.com</Td>
-                    <Td textAlign ="center"><Checkbox value='drop'></Checkbox></Td>
-                    </Tr>
-                </Tbody>
-                <Tfoot>
-                    <Tr>
-                    <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748">Admin</Td>
-                    <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748">Admin@gmail.com</Td>
-                    <Td textAlign ="center"><Checkbox value='drop'></Checkbox></Td>
-                    </Tr>
-                </Tfoot>
-                </Table>
-            </TableContainer>
+            <UserTable users={data} />
             </Box>
             <Spacer/>      
             </VStack>
             <Flex marginTop="10" justify="flex-end">
-            <Button mr={4} type="submit" leftIcon={<HiUserAdd />} color= "cyanAlpha" borderColor="cyanAlpha" variant = "outline">
+            <Button mr={4} mb={4} type="submit" leftIcon={<HiUserAdd />} color= "cyanAlpha" borderColor="cyanAlpha" variant = "outline">
                 Create User
             </Button>
-            <Button leftIcon={<HiUserRemove />} type="submit" bg='cyanAlpha' color = "white" variant = "solid">
+            <Button mr={2} leftIcon={<HiUserRemove />} type="submit" bg='cyanAlpha' color = "white" variant = "solid">
                 Delete User
             </Button>
             </Flex>
