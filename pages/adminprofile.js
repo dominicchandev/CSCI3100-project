@@ -37,7 +37,7 @@ import {
   export default function Home() {
     const { colorMode, toggleColorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const { token, authStatus, courses, email, name } = useAuth();
+    const { token, authStatus, email, name } = useAuth();
     const router = useRouter();
     const cancelRef = useRef();
     const handleLogout = (e) => { 
