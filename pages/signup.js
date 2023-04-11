@@ -28,48 +28,50 @@ export default function SignUpPage() {
   const toast = useToast();
 
   const handleSubmit = (e) => {
-      setIsLoading(true)
-      setErrMsg("")
-      e.preventDefault();
-      if (email === "" || password === "" || name ==="") {
-          toast({
-              title: "Error",
-              description: "Name, email and password are required.",
-              status: "error",
-              duration: 9000,
-              isClosable: true,
-          });
-      } else {
-          // handle login
-          let formData = new FormData();
-          formData.append('name', name);
-          formData.append('username', email);
-          formData.append('password', password);
-          fetch(
-              process.env.NEXT_PUBLIC_SERVER + '/register',
-              {
-                  body: formData,
-                  method: 'POST',
-              }
-          )
-              .then((res) => {
-                  if (res.status === 200) {
-                      console.log("New user");
-                      router.push("/")
-                  }
-                  else if (res.status === 401) {
-                      setErrMsg("Invalid registration")
-                      console.log("Invalid registration");
-                  }
-                  else {
-                      console.log(res.json())
-                  }
-              }
-              )
-              .catch((err) => console.log("Error: ", err))
-      }
-      setIsLoading(false)
-  };
+    e.preventDefault();
+    setIsLoading(true);
+    setErrMsg("");
+    if (email === "" || password === "" || name === "") {
+        toast({
+            title: "Error",
+            description: "Name, email and password are required.",
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+        });
+        setIsLoading(false);
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("password", password);
+
+    const plainFormData = Object.fromEntries(formData.entries());
+    const formDataJsonString = JSON.stringify(plainFormData);
+
+    fetch(process.env.NEXT_PUBLIC_SERVER + 'api/users', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: formDataJsonString
+    })
+    .then((res) => {
+        if (res.status === 200) {
+            console.log("New user");
+            router.push("/")
+        } else if (res.status === 400) {
+            setErrMsg("Email already registered")
+            console.log("Email already registered");
+        } else {
+            console.log(res.json())
+        }
+    })
+    .catch((err) => console.log("Error: ", err))
+    .finally(() => setIsLoading(false));
+    };
 
   return (
       <Box>
@@ -125,7 +127,7 @@ export default function SignUpPage() {
                           </FormControl>
 
                           <FormControl>
-                            <FormLabel htmlFor="username"fontFamily="Helvetica" lineHeight="1.4" fontSize="14px" color="Gray.Gray-700" >Email</FormLabel>
+                            <FormLabel htmlFor="email" fontFamily="Helvetica" lineHeight="1.4" fontSize="14px" color="Gray.Gray-700" >Email</FormLabel>
                                 <Input
                                     placeholder='Your email address'
                                     fontSize="12px"
@@ -137,6 +139,9 @@ export default function SignUpPage() {
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
                           </FormControl>
+                        <Text color="red" fontSize="sm">
+                            {errMsg}
+                        </Text>
                       <FormControl>
                       <FormLabel htmlFor="password" fontFamily="Helvetica" lineHeight="1.4" fontSize="14px" color="Gray.Gray-700" >Password</FormLabel>
                       <Input
