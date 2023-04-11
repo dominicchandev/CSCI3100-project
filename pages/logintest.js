@@ -18,7 +18,7 @@ import { useRouter } from "next/router";
 import { useState, useRef, useEffect } from "react";
 import { CompanyIntro } from "@/components/companyintro";
 import { NavigationBar } from "@/components/navigationbar";
-//import { useAuth } from "@/utils/hooks/useAuth";
+import { useAuth } from "@/utils/hooks/useAuth";
 
 export default function LoginPage() {
   const { colorMode } = useColorMode();
@@ -42,7 +42,7 @@ export default function LoginPage() {
     if (email === "" || password === "") {
       toast({
         title: "Error",
-        description: "email and password are required.",
+        description: "Email and password are required.",
         status: "error",
         duration: 9000,
         isClosable: true,

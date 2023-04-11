@@ -71,7 +71,7 @@ export default function SignUpPage() {
     })
     .catch((err) => console.log("Error: ", err))
     .finally(() => setIsLoading(false));
-};
+    };
 
   return (
       <Box>
