@@ -53,6 +53,13 @@ export default function Courses() {
   const [errMsg, setErrMsg] = useState("");
   const toast = useToast();
   const searchParams = new URLSearchParams();
+  const router = useRouter();
+
+  const handleLogout = (e) => { 
+      e.preventDefault();
+      localStorage.removeItem("accessToken");
+      router.push("/login");
+  };
 
   useEffect(() => {
     if (authStatus === "auth" && status==true) {
@@ -84,10 +91,9 @@ export default function Courses() {
           if (res.status === 200) {
             console.log("Searched");
             res.json().then((result) => {
-            //  console.log(result);
-              // TODO: change to session logic, localStorage is bad practice!
-              setCourses(JSON.stringify(result));
-            //  console.log(courses)
+            console.log(result);
+            setCourses(result);
+            console.log(courses);
             });
             // router.push("/");
           } else if (res.status === 422) {
@@ -125,18 +131,7 @@ export default function Courses() {
       setStatus(true);
   };
   }
-}
 
-
-export default function Courses() {
-  const { colorMode, toggleColorMode } = useColorMode();
-  const router = useRouter();
-  const handleLogout = (e) => { 
-      e.preventDefault();
-      localStorage.removeItem("accessToken");
-      router.push("/login");
-  };
-  
   return (
     <Grid
     templateAreas={`"nav breadcrumb"
@@ -320,7 +315,7 @@ export default function Courses() {
         <Box overflowWrap="break-word" flexWrap="wrap">
           <VStack>
             <Box overflowWrap="break-word" flexWrap="wrap">
-              <ResultTable courses={courses} />
+              {/* <ResultTable courses={courses} /> */}
             </Box>
             <Spacer />
           </VStack>
