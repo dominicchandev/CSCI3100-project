@@ -21,6 +21,7 @@ import {
   AlertDialogContent,
   AlertDialogCloseButton,
   AlertDialogOverlay,
+  useToast
 } from "@chakra-ui/react";
 import { SideBar } from "@/components/sidebar";
 import { BsMoonStarsFill } from "react-icons/bs";
@@ -38,6 +39,17 @@ export default function Home() {
   const { token, authStatus, courses, email, name } = useAuth();
   const cancelRef = React.useRef();
   const router = useRouter();
+  const handleDrop = (e) => {
+    e.preventDefault();
+    toast({
+      title: 'Course dropped.',
+      description: "The courses are dropped",
+      status: 'success',
+      duration: 9000,
+      isClosable: true,
+    })
+  };
+
   const handleLogout = (e) => { 
       e.preventDefault();
       localStorage.removeItem("accessToken");
@@ -229,6 +241,7 @@ export default function Home() {
                 </VStack>
                 <Flex justify="flex-end">
                   <Button
+                    onClick={handleDrop}
                     type="submit"
                     bg="cyanAlpha"
                     color="white"
