@@ -50,6 +50,7 @@ export default function Home() {
   useEffect(() => {
     if (authStatus === "auth") {
       console.log(`profile token: ${token}`)
+      console.log({courses});
     }
   }, [authStatus])
 
