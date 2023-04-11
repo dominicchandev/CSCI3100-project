@@ -30,12 +30,19 @@ import { MdSettings, MdWbSunny } from "react-icons/md";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/utils/hooks/useAuth";
 import { CourseTable } from "@/components/profile/CourseTable";
+import { useRouter } from "next/router";
 
 export default function Home() {
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { token, authStatus, courses, email, name } = useAuth();
   const cancelRef = React.useRef();
+  const router = useRouter();
+  const handleLogout = (e) => { 
+      e.preventDefault();
+      localStorage.removeItem("accessToken");
+      router.push("/login");
+  };
   
   // console.log(`profile token: ${token}`);
   // console.log(`authStatus: ${authStatus}`);
@@ -112,11 +119,9 @@ export default function Home() {
                       <Button ref={cancelRef} onClick={onClose}>
                         Cancel
                       </Button>
-                      <Link href="/login">
-                        <Button bg="cyanAlpha" color="white" ml={3}>
+                        <Button onClick={handleLogout} bg="cyanAlpha" color="white" ml={3}>
                           Logout
                         </Button>
-                      </Link>
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>

@@ -36,15 +36,22 @@ import {
     } from '@chakra-ui/react'
   import { SideBar } from '@/components/adminsidebar'
   import { BsMoonStarsFill } from "react-icons/bs";
-  import { HiUser, HiUserAdd, HiUserRemove } from "react-icons/hi"
-  import { MdWbSunny } from 'react-icons/md'
+  import { HiUser, HiUserAdd, HiUserRemove } from "react-icons/hi";
+  import { MdWbSunny } from 'react-icons/md';
+  import { useRouter } from "next/router";
   import React from "react";
 
   
   export default function Home() {
     const { colorMode, toggleColorMode } = useColorMode();
-    const { isOpen, onOpen, onClose } = useDisclosure()
-    const cancelRef = React.useRef()
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const cancelRef = React.useRef();
+    const router = useRouter();
+    const handleLogout = (e) => { 
+      e.preventDefault();
+      localStorage.removeItem("accessToken");
+      router.push("/login");
+    };
     
     return (
       <Box>
@@ -104,11 +111,9 @@ import {
                     <Button ref={cancelRef} onClick={onClose}>
                       Cancel
                     </Button>
-                    <Link href="/login">
-                    <Button bg="cyanAlpha" color = "white" ml={3}>
+                    <Button onClick={handleLogout} bg="cyanAlpha" color = "white" ml={3}>
                       Logout
                     </Button>
-                    </Link>
                   </AlertDialogFooter>
                 </AlertDialogContent>
                 </AlertDialog>

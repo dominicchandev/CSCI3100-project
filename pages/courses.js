@@ -35,6 +35,7 @@ import { MdSettings } from 'react-icons/md'
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/utils/hooks/useAuth";
 import { ResultTable } from "@/components/ResultTable";
+import { useRouter } from "next/router";
 
 
 export default function Courses() {
@@ -123,8 +124,19 @@ export default function Courses() {
     } else {
       setStatus(true);
   };
+  }
 }
 
+
+export default function Courses() {
+  const { colorMode, toggleColorMode } = useColorMode();
+  const router = useRouter();
+  const handleLogout = (e) => { 
+      e.preventDefault();
+      localStorage.removeItem("accessToken");
+      router.push("/login");
+  };
+  
   return (
     <Grid
     templateAreas={`"nav breadcrumb"
