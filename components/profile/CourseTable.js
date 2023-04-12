@@ -94,7 +94,7 @@ export function CourseTableRow(props) {
       <ColumnElem content={times} />
       <ColumnElem content={locations} />
       <Td textAlign="center">
-        <Checkbox value={`drop-course-${id}`}></Checkbox>
+        <Checkbox value={`${id}`}></Checkbox>
       </Td>
     </Tr>
   );

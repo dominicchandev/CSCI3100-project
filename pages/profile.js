@@ -39,14 +39,28 @@ export default function Home() {
   const { token, authStatus, courses, email, name } = useAuth();
   const cancelRef = React.useRef();
   const router = useRouter();
+  const toast = useToast();
   const handleDrop = (e) => {
+    const data = ["CSCI3100", "STAT1001", "CSCI3320"]
     e.preventDefault();
-    toast({
-      title: 'Course dropped.',
-      description: "The courses are dropped",
-      status: 'success',
-      duration: 9000,
-      isClosable: true,
+    fetch(process.env.NEXT_PUBLIC_SERVER + "api/users/dropCourse", {
+      method: "PUT",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }).then((res) => {
+      if (res.status === 200) {
+        toast({
+          title: 'Courses dropped.',
+          description: "The courses are dropped",
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+        })
+        location.reload();
+      }
     })
   };
 
