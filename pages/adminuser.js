@@ -2,7 +2,10 @@ import {
     Flex, 
     Spacer, 
     Button, 
-    useColorMode, 
+    useColorMode,
+    FormControl,
+    FormLabel,
+    Input,
     Box, 
     Breadcrumb, 
     BreadcrumbItem, 
@@ -39,20 +42,59 @@ import {
   import { HiUser, HiUserAdd, HiUserRemove } from "react-icons/hi";
   import { MdWbSunny } from 'react-icons/md';
   import { useRouter } from "next/router";
+  import { useAuth } from "@/utils/hooks/useAuth";
+  import { useRef, useState, useEffect } from "react";
   import React from "react";
+  import { UserTable } from "@/components/profile/UserTable";
 
   
   export default function Home() {
     const { colorMode, toggleColorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const { isOpen: isOpen2, onOpen: onOpen2, onClose: onClose2 } = useDisclosure();
+    const { token, authStatus, email, name } = useAuth();
     const cancelRef = React.useRef();
     const router = useRouter();
+    
+    const handleCreate = (e) => { 
+      e.preventDefault();
+    };
+
+    const handleDelete = (e) => { 
+      e.preventDefault();
+    };
+
     const handleLogout = (e) => { 
       e.preventDefault();
       localStorage.removeItem("accessToken");
       router.push("/login");
     };
+
+    const [data, setData] = useState(null);
+
+    useEffect(() => {
+      if (authStatus === "auth") {
+        console.log(`profile token: ${token}`);
+        fetchData();
+      }
+    }, [authStatus])
+
+    async function fetchData() {
+      const response = await fetch(process.env.NEXT_PUBLIC_SERVER + "api/users/all", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
+      const data = await response.json();
+      setData(data);
+    }
     
+    if (!data) {
+      return <Text>Loading...</Text>;
+    }
+
+    // the 3 boxes in create users do not align, as well as the labels
     return (
       <Box>
         <HStack mt="10px" pt= "10px">
@@ -74,7 +116,7 @@ import {
               <VStack align = "left" mt="10px" ml = "10px" pt= "10px">
                 <Breadcrumb >
                 <BreadcrumbItem color="White">
-                <BreadcrumbLink href='' color="White" >Testing</BreadcrumbLink>
+                <BreadcrumbLink href='' color="White" >{name}</BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbItem color="White">
                 <BreadcrumbLink href='' color="White" >Users</BreadcrumbLink>
@@ -83,7 +125,7 @@ import {
                 <Text
                 align="left"
                 color="White"
-                fontWeight="bold"> Users </Text>
+                fontWeight="bold">Users</Text>
               </VStack>
               <Spacer/>
               <HStack spacing = "20px" mr="10px" mt="10px">
@@ -125,7 +167,6 @@ import {
             position="absolute"
             ml = "10px"
             borderRadius="15px"
-            height="300px"
             top = "120px"
             right = "10px"
             w="75%"
@@ -138,45 +179,74 @@ import {
             overflowWrap="break-word"
             flexWrap="wrap"
             >
-            <TableContainer>
-                <Table variant='simple' layout="fixed" overflowWrap="anywhere" >
-                <TableCaption placement="top" textAlign="left" fontWeight="bold" fontSize="xl">Users</TableCaption>
-                <Thead>
-                    <Tr>
-                    <Th fontFamily="Helvetica" lineHeight="1.5" fontWeight="bold" fontSize="10px" color="#A0AEC0">NAME</Th>
-                    <Th fontFamily="Helvetica" lineHeight="1.5" fontWeight="bold" fontSize="10px" color="#A0AEC0">EMAIL</Th>
-                    <Th fontFamily="Helvetica" lineHeight="1.5" fontWeight="bold" fontSize="10px" color="#A0AEC0" textAlign ="center">DELETE USER</Th>
-                    </Tr>
-                </Thead>
-                <Tbody>
-                    <Tr>
-                    <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748">Admin</Td>
-                    <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748">Admin@gmail.com</Td>
-                    <Td textAlign ="center"><Checkbox value='drop'></Checkbox></Td>
-                    </Tr>
-                    <Tr>
-                    <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748">Admin</Td>
-                    <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748">Admin@gmail.com</Td>
-                    <Td textAlign ="center"><Checkbox value='drop'></Checkbox></Td>
-                    </Tr>
-                </Tbody>
-                <Tfoot>
-                    <Tr>
-                    <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748">Admin</Td>
-                    <Td fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="12px" color="#2D3748">Admin@gmail.com</Td>
-                    <Td textAlign ="center"><Checkbox value='drop'></Checkbox></Td>
-                    </Tr>
-                </Tfoot>
-                </Table>
-            </TableContainer>
+            <UserTable users={data} />
             </Box>
             <Spacer/>      
             </VStack>
             <Flex marginTop="10" justify="flex-end">
-            <Button mr={4} type="submit" leftIcon={<HiUserAdd />} color= "cyanAlpha" borderColor="cyanAlpha" variant = "outline">
+            <Button mr={4} mb={4} onClick={onOpen2} type="submit" leftIcon={<HiUserAdd />} color= "cyanAlpha" borderColor="cyanAlpha" variant = "outline">
                 Create User
             </Button>
-            <Button leftIcon={<HiUserRemove />} type="submit" bg='cyanAlpha' color = "white" variant = "solid">
+            <AlertDialog
+            motionPreset='slideInBottom'
+            leastDestructiveRef={cancelRef}
+            onClose={onClose2}
+            isOpen={isOpen2}
+            isCentered
+            >
+            <AlertDialogOverlay />
+            <AlertDialogContent>
+              <AlertDialogHeader>Create User</AlertDialogHeader>
+              <AlertDialogCloseButton />
+              <AlertDialogBody>
+              <Text>Fill in the name, email, and password to create a new user.</Text>
+              <form onSubmit={handleCreate}>
+                <FormControl>
+                  <Flex alignItems="center" mt="30px">
+                  <FormLabel htmlFor="name" fontFamily="Helvetica" lineHeight="1.4" fontSize="14px" color="Gray.Gray-700">Name</FormLabel>
+                  <Input
+                      placeholder="New user's name"
+                      fontSize="12px"
+                      type="text"
+                      id="name"
+                  />
+                  </Flex>
+                </FormControl>
+                <FormControl>
+                  <Flex alignItems="center" mt="20px">
+                  <FormLabel htmlFor="email" fontFamily="Helvetica" lineHeight="1.4" fontSize="14px" color="Gray.Gray-700">Email</FormLabel>
+                  <Input
+                      placeholder="New user's email"
+                      fontSize="12px"
+                      type="text"
+                      id="email"
+                  />
+                  </Flex>
+                </FormControl>
+                <FormControl>
+                  <Flex alignItems="center" mt="20px">
+                  <FormLabel htmlFor="password" fontFamily="Helvetica" lineHeight="1.4" fontSize="14px" color="Gray.Gray-700">Password</FormLabel>
+                  <Input
+                      placeholder="New user's password"
+                      fontSize="12px"
+                      type="text"
+                      id="password"
+                  />
+                  </Flex>
+                </FormControl>
+              </form>
+              </AlertDialogBody>
+              <AlertDialogFooter>
+                <Button ref={cancelRef} onClick={onClose2}>
+                  Cancel
+                </Button>
+                <Button onClick={handleCreate} bg="cyanAlpha" color = "white" ml={3}>
+                  Create
+                </Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+            </AlertDialog>
+            <Button mr={2} leftIcon={<HiUserRemove />} type="submit" bg='cyanAlpha' color = "white" variant = "solid">
                 Delete User
             </Button>
             </Flex>
