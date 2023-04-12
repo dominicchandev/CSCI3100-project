@@ -102,10 +102,10 @@ export function ResultTableRow(props) {
       <ColumnElem content={department} />
       <ColumnElem content={times} />
       <ColumnElem content={locations} />
-      <ColumnElem content={name} />
-      <ColumnElem content={name} />
+      <ColumnElem content={String(available_seats)} />
+      <ColumnElem content={String(capacity)} />
       <Td textAlign="center">
-        <Button value={`outline-${id}`} variant="outline">VIEW</Button>
+        <Button value={`outline-${id}`} variant="outline" fontSize="10px" color="#40DDCF">VIEW</Button>
       </Td>
       <Td textAlign="center">
         <Checkbox value={`register-course-${id}`} ></Checkbox>
@@ -117,7 +117,7 @@ export function ResultTableRow(props) {
     const { content } = props;
     console.log("ERRR");
     console.log(content);
-    if (typeof content === "string")
+    if (typeof content === "string" || typeof content === "int" )
       return (
         <Td
           fontFamily="Helvetica"
@@ -131,6 +131,7 @@ export function ResultTableRow(props) {
           {content}
         </Td>
       );
+    
     // Assume content is of type array of string:
     return (
       <Td

@@ -303,7 +303,8 @@ export default function Courses() {
               </FormControl>
           </WrapItem>
         </Wrap>
-        <HStack position="absolute" right = "10px" bottom = "20px">
+        <Flex justify="flex-end" pb="10px">
+        <HStack right = "10px" bottom = "20px">
           <Button type="submit" colorScheme="teal" variant = "outline" >
               Reset
           </Button>
@@ -311,6 +312,7 @@ export default function Courses() {
               Search Course
           </Button>
         </HStack>
+        </Flex>
       </VStack>
   </GridItem>
   <GridItem pl='2' area={'result'} borderRadius="15px" background="#FFFFFF" mr="10px" ml="10px" overflowWrap="anywhere">

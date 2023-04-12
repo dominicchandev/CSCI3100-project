@@ -1,4 +1,3 @@
-import { useAuth } from "@/utils/hooks/useAuth";
 import {
   Box,
   Button,
@@ -10,29 +9,31 @@ import {
   Link,
   Spacer,
   useToast,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
+  HStack,
+  Flex,
+  useColorMode,
+  VStack,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useState, useRef, useEffect } from "react";
+import { CompanyIntro } from "@/components/companyintro";
+import { NavigationBar } from "@/components/navigationbar";
+import { useAuth } from "@/utils/hooks/useAuth";
 
 export default function LoginPage() {
+  const { colorMode } = useColorMode();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
   const toast = useToast();
+
   const { authStatus } = useAuth();
 
-  useEffect(() => {
-    if (authStatus === "auth") router.push("/");
-  }, [authStatus, router]);
+  // useEffect(() => {
+  //   if (authStatus === "auth") router.push("/");
+  // }, [authStatus, router]);
 
   const handleSubmit = (e) => {
     setIsLoading(true);
@@ -41,7 +42,7 @@ export default function LoginPage() {
     if (email === "" || password === "") {
       toast({
         title: "Error",
-        description: "email and password are required.",
+        description: "Email and password are required.",
         status: "error",
         duration: 9000,
         isClosable: true,
@@ -57,17 +58,13 @@ export default function LoginPage() {
       })
         .then((res) => {
           if (res.status === 200) {
-            console.log("Valid user");
-
             res.json().then((result) => {
               console.log(result);
               const token = result.access_token;
               // TODO: change to session logic, localStorage is bad practice!
               localStorage.setItem("accessToken", token);
-              router.push("/");
+              router.push("/profile");
             });
-
-            // router.push("/");
           } else if (res.status === 401) {
             setErrMsg("Invalid email or password");
             console.log("Invalid email or password");
@@ -81,66 +78,131 @@ export default function LoginPage() {
   };
 
   return (
-    <Box>
-      <Modal
-        size="lg"
-        isOpen={true}
-        closeOnOverlayClick={false}
-        scrollBehavior="inside"
-        onClose={() => {
-          return;
-        }}
-        isCentered
-        isClosable={false}
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Login</ModalHeader>
-          <ModalBody>
+    <Flex>
+      <Box w="50%" h="100%" bg="white">
+        <VStack>
+          <NavigationBar colorMode={colorMode} />
+
+          <VStack
+            pt="100px"
+            spacing="10px"
+            alignItems="left"
+            alignContent="left"
+            textAlign="left"
+          >
+            <Text
+              lineHeight="1.3"
+              fontWeight="bold"
+              fontSize="32px"
+              color="#40DDCF"
+            >
+              Welcome Back
+            </Text>
+            <Text
+              lineHeight="1.4"
+              fontWeight="bold"
+              fontSize="14px"
+              color="#A0AEC0"
+              maxWidth="100%"
+              textAlign="left"
+            >
+              Enter your email and password to sign in
+            </Text>
             <form onSubmit={handleSubmit}>
-              <Stack spacing={4}>
-                <FormControl>
-                  <FormLabel htmlFor="username">Email</FormLabel>
-                  <Input
-                    type="text"
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </FormControl>
-                <FormControl>
-                  <FormLabel htmlFor="password">Password</FormLabel>
-                  <Input
-                    type="password"
-                    id="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </FormControl>
-              </Stack>
+              <FormControl>
+                <FormLabel
+                  htmlFor="username"
+                  fontFamily="Helvetica"
+                  lineHeight="1.4"
+                  fontSize="14px"
+                  color="Gray.Gray-700"
+                  width="35.5px"
+                  height="19.5px"
+                >
+                  Email
+                </FormLabel>
+                <Input
+                  w="300px"
+                  placeholder="Your email address"
+                  fontSize="12px"
+                  type="text"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel
+                  htmlFor="password"
+                  fontFamily="Helvetica"
+                  lineHeight="1.4"
+                  fontSize="14px"
+                  color="Gray.Gray-700"
+                >
+                  Password
+                </FormLabel>
+                <Input
+                  w="300px"
+                  placeholder="Your password"
+                  fontSize="12px"
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </FormControl>
             </form>
             <Text color="red" fontSize="sm">
               {errMsg}
             </Text>
-          </ModalBody>
-
-          <ModalFooter>
-            <Link fontSize="sm" href="/register">
-              Register here
-            </Link>
+            <Text
+              fontFamily="Helvetica"
+              lineHeight="1.4"
+              fontWeight="regular"
+              fontSize="14px"
+              color="Gray.Gray-400"
+              width="237px"
+              height="20px"
+            >
+              <span>Forgot password? </span>
+              <Box as="span" fontWeight="bold" color="#40DDCF">
+                <Link fontSize="sm" href="/resetpw">
+                  Reset Password
+                </Link>
+              </Box>
+            </Text>
             <Spacer />
             <Button
               type="submit"
-              variantColor="teal"
+              bg="cyanAlpha"
+              color="white"
+              variant="solid"
               onClick={handleSubmit}
               isLoading={isLoading}
-              disabled={isLoading}
             >
-              Login
+              Sign in
             </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </Box>
+            <Text
+              fontFamily="Helvetica"
+              lineHeight="1.4"
+              fontWeight="regular"
+              fontSize="14px"
+              color="Gray.Gray-400"
+              width="202.5px"
+              height="19.5px"
+            >
+              <span>{"Don't have an account?"} </span>
+              <Box as="span" fontWeight="bold" color="#40DDCF">
+                <Link fontSize="sm" href="/register">
+                  Sign up
+                </Link>
+              </Box>
+            </Text>
+          </VStack>
+        </VStack>
+      </Box>
+      <Spacer />
+      <CompanyIntro colorMode={colorMode} />
+    </Flex>
   );
 }

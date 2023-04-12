@@ -239,7 +239,7 @@ export default function Home() {
                   </Box>
                   <Spacer />
                 </VStack>
-                <Flex justify="flex-end">
+                <Flex justify="flex-end" pb="10px">
                   <Button
                     onClick={handleDrop}
                     type="submit"
