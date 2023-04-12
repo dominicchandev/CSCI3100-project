@@ -38,11 +38,9 @@ export function SideBar(props) {
 
     return (
         <Box 
-            position="fixed" 
-            left="0" 
-            top="0" 
-            pl="20px" 
-            pt="10px"
+            pl="20px"
+            mt={props.mt ?? undefined}
+            height="100vh"
         >
             <HStack>
                     <Center height="80px">

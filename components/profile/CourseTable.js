@@ -28,22 +28,26 @@ const TH_STYLE = {
  * @returns
  */
 export function CourseTable(props) {
-  const { courses } = props;
+  const courses = props.courses;
+  const onChange = props.onChange;
 
   return (
-    <TableContainer>
-      <Table variant="simple" layout="fixed" overflowWrap="anywhere">
-        <CourseTableHeadRow />
-        <Tbody>
-          {courses.map((course) => (
-            <CourseTableRow
-              key={`course-table-row-${course.id}`}
-              course={course}
-            />
-          ))}
-        </Tbody>
-      </Table>
-    </TableContainer>
+    <>    
+      <TableContainer>
+        <Table variant="simple" layout="fixed" overflowWrap="anywhere">
+          <CourseTableHeadRow />
+          <Tbody>
+            {courses.map((course) => (
+              <CourseTableRow
+                key={`course-table-row-${course.id}`}
+                course={course}
+                onChange={onChange}
+              />
+            ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
+    </>
   );
 }
 
@@ -76,7 +80,8 @@ function CourseTableHeadRow() {
  * @returns
  */
 export function CourseTableRow(props) {
-  const { course } = props;
+  const course = props.course;
+  const onChange = props.onChange;
   const { id, name, instructor, department, schedule } = course;
   const formattedSchedule = convertSchedule(schedule);
   const times = formattedSchedule.map((schedule) => {
@@ -94,7 +99,10 @@ export function CourseTableRow(props) {
       <ColumnElem content={times} />
       <ColumnElem content={locations} />
       <Td textAlign="center">
-        <Checkbox value={`drop-course-${id}`}></Checkbox>
+        <Checkbox 
+          value={id}
+          onChange={onChange}
+        />
       </Td>
     </Tr>
   );
