@@ -170,7 +170,7 @@ import {
                 </Box>
                 <Spacer/>
                 <Box pr="40px">
-                  <Link href="/changepw">
+                  <Link href="/login/changepw">
                   <Button leftIcon={<MdSettings />} size = "xs" colorScheme='teal' variant='ghost'>
                   RESET PASSWORD
                   </Button>

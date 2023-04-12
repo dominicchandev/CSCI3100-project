@@ -63,7 +63,6 @@ export function ResultTable(props) {
         color="Gray.Gray-700"
         width="181px"
         height="25px"
-           
       >{title}</Text>
       <Spacer/>
       <Table variant="simple" layout="fixed" overflowWrap="anywhere">

@@ -34,7 +34,6 @@ import {
     const email = props.email;
     const name = props.name;
     const schedule = props.schedule;
-    // const schedule = true;
 
     const { colorMode, toggleColorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -60,18 +59,18 @@ import {
                     <VStack align="left" mt="10px" ml="10px" pt="10px">
                     <Breadcrumb>
                         <BreadcrumbItem color="White">
-                        <BreadcrumbLink href="" color="White">
+                        <BreadcrumbLink href="/profile" color="White">
                             {name}
                         </BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbItem color="White">
-                        <BreadcrumbLink href="" color="White">
+                        <BreadcrumbLink href="/profile" color="White">
                             profile
                         </BreadcrumbLink>
                         </BreadcrumbItem>
                         {schedule ? 
                             <BreadcrumbItem color="White">
-                                <BreadcrumbLink href="" color="White">schedule</BreadcrumbLink>
+                                <BreadcrumbLink href="/profile/schedule" color="White">schedule</BreadcrumbLink>
                             </BreadcrumbItem>
                             : <></>
                         }
@@ -168,17 +167,18 @@ import {
                             </Box>
                             <Spacer />
                             <Box pr="40px">
-                            <Link href="/changepw">
+                            <Link href="/login/resetpw">
                                 <Button
                                 leftIcon={<MdSettings />}
                                 size="xs"
                                 colorScheme="teal"
                                 variant="ghost"
+                                onClick={() => localStorage.removeItem("accessToken")}
                                 >
                                 RESET PASSWORD
                                 </Button>
                             </Link>
-                            <Link href="/logintest">
+                            <Link href="/profile/schedule">
                                 <Button
                                 leftIcon={<GoCalendar />}
                                 ml="10px"

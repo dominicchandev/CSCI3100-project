@@ -25,7 +25,7 @@ import {
     AlertDialogOverlay,
     useToast
     } from '@chakra-ui/react'
-  import { SideBar } from '@/components/adminsidebar'
+  import { SideBar } from '@/components/sidebar'
   import { BsMoonStarsFill } from "react-icons/bs";
   import { HiUser, HiUserAdd, HiUserRemove } from "react-icons/hi";
   import { MdWbSunny } from 'react-icons/md';
@@ -140,7 +140,7 @@ import {
     return (
       <Box>
         <HStack mt="10px" pt= "10px">
-          <SideBar colorMode={colorMode}/>
+          <SideBar colorMode={colorMode} isAdmin={role === "admin"}/>
           <Spacer/>
           <VStack>
             <Box

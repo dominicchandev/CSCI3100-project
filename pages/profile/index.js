@@ -18,7 +18,7 @@ import { ProfileBox } from "@/components/profile/profileBox";
 
 export default function Home() {
   const { colorMode, toggleColorMode } = useColorMode();
-  const { token, authStatus, courses, email, name } = useAuth();
+  const { token, authStatus, courses, email, name, role } = useAuth();
   const [selectedCourses, setSelectedCourses] = useState(new Set())
   const [isDropping, setIsDroping] = useState(false)
   const toast = useToast();
@@ -46,12 +46,6 @@ export default function Home() {
       setSelectedCourses(prev => new Set([...prev].filter(x => x !== e.target.value)))
     }
   }
-
-  const handleLogout = (e) => { 
-      e.preventDefault();
-      localStorage.removeItem("accessToken");
-      router.push("/login");
-  };
   
   useEffect(() => {
     if (authStatus === "auth" && isDropping === true) {
@@ -80,7 +74,7 @@ export default function Home() {
 
   return (
       <HStack spacing={10} alignItems="flex-start">
-        <SideBar colorMode={colorMode} mt="20px"/>
+        <SideBar colorMode={colorMode} mt="20px" isAdmin={role === "admin"}/>
         <VStack width="100%" pr="20px" pt="25px" spacing={20}>
               <ProfileBox
                 email={email}

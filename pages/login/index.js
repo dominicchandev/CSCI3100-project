@@ -169,7 +169,7 @@ export default function LoginPage() {
             >
               <span>Forgot password? </span>
               <Box as="span" fontWeight="bold" color="#40DDCF">
-                <Link fontSize="sm" href="/resetpw">
+                <Link fontSize="sm" href="/login/resetpw">
                   Reset Password
                 </Link>
               </Box>
@@ -196,7 +196,7 @@ export default function LoginPage() {
             >
               <span>{"Don't have an account?"} </span>
               <Box as="span" fontWeight="bold" color="#40DDCF">
-                <Link fontSize="sm" href="/register">
+                <Link fontSize="sm" href="/login/signup">
                   Sign up
                 </Link>
               </Box>

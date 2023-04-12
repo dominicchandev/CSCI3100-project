@@ -171,7 +171,7 @@ export default function SignUpPage() {
                       >
                       <span>Already have an account? </span>
                       <Box as="span" fontWeight="bold" color="#40DDCF">
-                      <Link fontSize="sm" href="/logintest">Sign In</Link>
+                      <Link fontSize="sm" href="/login">Sign In</Link>
                       </Box>
                       </Text>
                       </VStack>
