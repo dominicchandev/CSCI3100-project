@@ -62,6 +62,9 @@ export default function Courses() {
   };
 
   useEffect(() => {
+    if (authStatus === "unauth") {
+      router.push("/login")
+    }
     if (authStatus === "auth" && status==true) {
       // run api
       console.log(`access token: ${token}`)
