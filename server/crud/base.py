@@ -15,10 +15,6 @@ class CRUDBase(ABC):
             return None
         return data_item
 
-    @abstractmethod
-    def update(self):
-        pass
-
     def delete(self, db: Session, id: int):
         data_item = self.read(db=db, id=id)
         db.delete(data_item)
