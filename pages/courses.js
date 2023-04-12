@@ -42,6 +42,7 @@ export default function Courses() {
   const { colorMode, toggleColorMode } = useColorMode();
   const { token, authStatus, name } = useAuth();
   const [status, setStatus] = useState(false);
+  const [title, setTitle] = useState("");
   const [courseid, setCourseID] = useState("");
   const [coursename, setCourseName] = useState("");
   const [dept, setDept] = useState("");
@@ -104,10 +105,18 @@ export default function Courses() {
             console.log("Searched");
             res.json().then((result) => {
             console.log(result);
+            console.log(result.length);
+            if (result.length===0){
+              toast({
+                title: "Error",
+                description: "Invalid Search. No corresponding search result",
+                status: "error",
+                duration: 9000,
+                isClosable: true,
+              });
+            }
             setCourses(result);
-            console.log(`1: ${courses}`);
             });
-            console.log(`2: ${courses}`);
             // router.push("/");
           } else if (res.status === 422) {
             setErrMsg("Invalid search");
@@ -152,6 +161,7 @@ export default function Courses() {
         duration: 9000,
         isClosable: true,
       });
+      setIsLoading(false);
     } else if((date!="" && (starttime=="" || endtime=="")) || (starttime!="" && (date=="" || endtime=="")) || (endtime!="" && (date=="" || starttime==""))) {
       toast({
         title: "Error",
@@ -160,10 +170,13 @@ export default function Courses() {
         duration: 9000,
         isClosable: true,
       });
+      setIsLoading(false);
     }
     else {
+      setTitle("Search Result");
       setStatus(true);
   };
+  
   }
 
   if (authStatus =="unauth"){
@@ -181,15 +194,15 @@ export default function Courses() {
     templateAreas={`"nav breadcrumb"
                   "nav search"
                   "nav result"`}
-    gridTemplateRows={'130px 1fr 1fr'}
+    gridTemplateRows={'130px full 1fr'}
     gridTemplateColumns={'250px 1fr'}
     h='fill'
     gap='1'
   >
   <GridItem pl='2' area={'nav'}>
-    <SideBar colorMode={colorMode} onPage={lastPartOfRoute}/>
+  <SideBar colorMode={colorMode} onPage={lastPartOfRoute}/>
   </GridItem>
-  <GridItem area={'breadcrumb'} pl='5px' mt = "10px" pr ="20px" background="#40DDCF" borderWidth='1px' borderRadius="15px" >
+  <GridItem area={'breadcrumb'} height="130px" pl='5px' mt = "10px" pr ="20px" background="#40DDCF" borderWidth='1px' borderRadius="15px" >
       <HStack>
       <VStack align = "left" mt="10px" ml = "10px" pt= "10px">
         <Breadcrumb >
@@ -233,7 +246,7 @@ export default function Courses() {
           Search Courses
         </Text>
         <Divider/>
-        <Wrap align='center' justify='full'>
+        <Wrap align='center'>
             <WrapItem>
             <FormControl> 
               <HStack>
@@ -345,7 +358,7 @@ export default function Courses() {
           </WrapItem>
         </Wrap>
         <Flex justify="flex-end" pb="10px">
-        <HStack right = "10px" bottom = "20px">
+        <HStack right = "10px">
           <Button type="reset" onClick={handleReset} colorScheme="teal" variant = "outline" >
               Reset
           </Button>
@@ -361,7 +374,7 @@ export default function Courses() {
         <Box overflowWrap="break-word" flexWrap="wrap">
           <VStack>
             <Box overflowWrap="break-word" flexWrap="wrap">
-              <ResultTable courses={courses} status={status} isLoading={isLoading} title={title} submitted/>
+              <ResultTable courses={courses} title={title} isLoading={isLoading} status={status}/>
             </Box>
             <Spacer />
           </VStack>

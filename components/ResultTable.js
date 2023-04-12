@@ -11,7 +11,8 @@ import {
   VStack,
   Button,
   useToast,
-  Link
+  Link,
+  Spacer
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 
@@ -36,34 +37,35 @@ const TH_STYLE = {
 
 export function ResultTable(props) {
   const { courses } = props;
-  const { status } = props;
-  const { isLoading } = props;
   const { title } = props;
+  const { isLoading } = props;
+  const { status } = props;
   const toast = useToast();
-  let control = true;
+  let showed = false;
+  console.log("HI");
   console.log(status);
+  console.log(isLoading);
   console.log(courses);
   console.log(courses.length===0);
-  console.log(isLoading);
 
-  if(courses.length===0&&isLoading==false&&control==true){
-    toast({
-      title: "Error",
-      description: "Invalid Search. No corresponding search result",
-      status: "error",
-      duration: 9000,
-      isClosable: true,
-    });
-    control=false;
-  }
-  else if (courses.length!==0 && isLoading==false)
-  {
+  if (courses.length===0){
+    return(
+      <></>
+    );
+  } else{
   return (
-    <TableContainer background="#FFFFFF" borderRadius="15px">
-      <Text>
-        {title}
-      </Text>
-      <Divider/>
+    <TableContainer background="#FFFFFF" borderRadius="15px" pt = "15px" pl = "15px">
+      <Text
+        fontFamily="Helvetica"
+        lineHeight="1.4"
+        fontWeight="bold"
+        fontSize="18px"
+        color="Gray.Gray-700"
+        width="181px"
+        height="25px"
+           
+      >{title}</Text>
+      <Spacer/>
       <Table variant="simple" layout="fixed" overflowWrap="anywhere">
         <ResultTableHeadRow />
         <Tbody>
@@ -77,11 +79,6 @@ export function ResultTable(props) {
       </Table>
     </TableContainer>
   );
-}
-else {
-  return(
-    <></>
-  )
 }
 }
 
