@@ -47,6 +47,7 @@ import {
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [errMsg, setErrMsg] = useState("");
+    const [data, setData] = useState(null);
     const cancelRef = React.useRef();
     const router = useRouter();
     const toast = useToast();
@@ -109,8 +110,6 @@ import {
       router.push("/login");
     };
 
-    const [data, setData] = useState(null);
-
     useEffect(() => {
       if (authStatus === "auth") {
         console.log(`profile token: ${token}`);
@@ -129,7 +128,7 @@ import {
       setData(data);
     }
     
-    if (!data) {
+    if (!data || authStatus === "loading") {
       return <Text>Loading...</Text>;
     }
 

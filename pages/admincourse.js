@@ -104,6 +104,17 @@ import {
         setIsLoading(false);
     };
 
+    async function handleShow(){
+        const response = await fetch(process.env.NEXT_PUBLIC_SERVER + "api/courses/all", {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        const data = await response.json();
+        setCourses(data);
+    };
+
     useEffect(() => {
         if (authStatus === "auth" && status==true) {
           // run api
@@ -160,6 +171,10 @@ import {
         setIsLoading(false); 
     }, [authStatus, status])
 
+    if (authStatus === "loading") {
+        return <Text>Loading...</Text>;
+      }
+
     if (role!="admin"){
       return(
         <Unauthorized/>
@@ -178,7 +193,7 @@ import {
               height="100px"
               top = "20px"
               right = "0px"
-              w="75%"
+              w="80%"
               background="#40DDCF"
               mr = "10px"
             >
@@ -239,7 +254,7 @@ import {
             borderRadius="15px"
             top = "120px"
             right = "10px"
-            w="75%"
+            w="80%"
             background="#FFFFFF"
             mr = "10px"
             overflowWrap="anywhere"
@@ -379,10 +394,10 @@ import {
                     <Button fontSize="14px" type="reset" onClick={handleReset} color= "black" borderColor="cyanAlpha" variant = "outline" >
                         Reset
                     </Button>
-                    <Button leftIcon={<HiOutlinePlusCircle />} iconSize="xl" fontSize="14px" type="submit" onClick={handleReset} color= "black" borderColor="cyanAlpha" variant = "outline" >
+                    <Button leftIcon={<HiOutlinePlusCircle />} iconSize="xl" fontSize="14px" type="submit" color= "black" borderColor="cyanAlpha" variant = "outline" >
                         Add Course
                     </Button>
-                    <Button fontSize="14px" type="submit" onClick={handleShow} color= "black" borderColor="cyanAlpha" variant = "outline" >
+                    <Button fontSize="14px" type="submit" onClick={handleShow} color= "black" borderColor="cyanAlpha" variant = "outline" isLoading={isLoading}>
                         Show All Courses
                     </Button>
                     <Button fontSize="14px" type="submit" bg='cyanAlpha' color = "white" variant = "solid" onClick={handleSubmit} isLoading={isLoading}>
@@ -397,12 +412,12 @@ import {
             </Box>
             <Box
             position="absolute"
-            ml = "10px"
             borderRadius="15px"
-            top = "400px"
+            top = "350px"
             right = "10px"
-            w="75%"
+            w="80%"
             background="#FFFFFF"
+            ml = "10px"
             mr = "10px"
             overflowWrap="anywhere"
             >
@@ -416,6 +431,17 @@ import {
             </VStack>
             </Box>
             <Spacer />
+            <Flex justify="flex-end" pb="10px">
+                  <Button
+                    fontSize="14px"
+                    type="submit"
+                    bg="cyanAlpha"
+                    color="white"
+                    variant="solid"
+                  >
+                    Confirm Delete Course(s)
+                  </Button>
+            </Flex>
             </VStack>
             </Box>
         </VStack>

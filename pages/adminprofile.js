@@ -50,12 +50,14 @@ import {
         console.log(`profile token: ${token}`)
       }
     }, [authStatus])
-    
-    if (role!="admin"){
+
+    if (authStatus === "loading") {
+      return <Text>Loading...</Text>;
+    } else if (role!="admin"){
       return(
         <Unauthorized/>
       )
-    }else {
+    } else {
     return (
       <Box>
         <HStack mt="10px" pt= "10px">
