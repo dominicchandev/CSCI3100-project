@@ -107,7 +107,7 @@ export default function Home() {
                   </BreadcrumbItem>
                   <BreadcrumbItem color="White">
                     <BreadcrumbLink href="" color="White">
-                      profile
+                      Profile
                     </BreadcrumbLink>
                   </BreadcrumbItem>
                 </Breadcrumb>

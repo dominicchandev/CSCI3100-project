@@ -40,6 +40,7 @@ import {
     const { colorMode, toggleColorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isOpen: isOpen2, onOpen: onOpen2, onClose: onClose2 } = useDisclosure();
+    const { isOpen: isOpen3, onOpen: onOpen3, onClose: onClose3 } = useDisclosure();
     const { token, authStatus, email, name, role } = useAuth();
     const [newname, setNewName] = useState("");
     const [newemail, setNewEmail] = useState("");
@@ -99,6 +100,7 @@ import {
 
     const handleDelete = (e) => { 
       e.preventDefault();
+      setIsLoading(false);
     };
 
     const handleLogout = (e) => { 
@@ -114,7 +116,7 @@ import {
         console.log(`profile token: ${token}`);
         fetchData();
       }
-    }, [authStatus])
+    }, [isLoading, authStatus])
 
     async function fetchData() {
       const response = await fetch(process.env.NEXT_PUBLIC_SERVER + "api/users/all", {
@@ -297,9 +299,33 @@ import {
               </AlertDialogFooter>
             </AlertDialogContent>
             </AlertDialog>
-            <Button mr={2} leftIcon={<HiUserRemove />} type="submit" bg='cyanAlpha' color = "white" variant = "solid">
+            <Button onClick={onOpen3} mr={2} leftIcon={<HiUserRemove />} type="submit" bg='cyanAlpha' color = "white" variant = "solid">
                 Delete User
             </Button>
+            <AlertDialog
+              motionPreset='slideInBottom'
+              leastDestructiveRef={cancelRef}
+              onClose={onClose3}
+              isOpen={isOpen3}
+              isCentered
+              >
+              <AlertDialogOverlay />
+              <AlertDialogContent>
+                <AlertDialogHeader>Delete User</AlertDialogHeader>
+                <AlertDialogCloseButton />
+                <AlertDialogBody>
+                Are you sure to delete the selected users?
+                </AlertDialogBody>
+                <AlertDialogFooter>
+                  <Button ref={cancelRef} onClick={onClose3}>
+                    Cancel
+                  </Button>
+                  <Button onClick={handleDelete} isLoading={isLoading} bg="cyanAlpha" color = "white" ml={3}>
+                    Delete
+                  </Button>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
             </Flex>
             </Box>
           </VStack>

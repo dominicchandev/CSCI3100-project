@@ -50,6 +50,7 @@ import {
         console.log(`profile token: ${token}`)
       }
     }, [authStatus])
+    
     if (role!="admin"){
       return(
         <Unauthorized/>
