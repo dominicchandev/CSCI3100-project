@@ -15,6 +15,7 @@ import { CourseTable } from "@/components/profile/CourseTable";
 import { useRouter } from "next/router";
 import { ProfileBox } from "@/components/profile/profileBox";
 
+
 export default function Home() {
   const { colorMode, toggleColorMode } = useColorMode();
   const { token, authStatus, courses, email, name } = useAuth();
@@ -22,6 +23,19 @@ export default function Home() {
   const [isDropping, setIsDroping] = useState(false)
   const toast = useToast();
   const router = useRouter();
+  const [getRoute, setGetRoute] = useState(true)
+  const [lastPartOfRoute, setLastPartOfRoute] = useState("");
+
+
+  useEffect(() => {
+    if (getRoute==true){
+    const currentUrl = document.URL;
+    setLastPartOfRoute(document.URL.substring(currentUrl.lastIndexOf("/") + 1));
+    console.log(lastPartOfRoute);
+     console.log(getRoute);
+    setGetRoute(false);
+    }
+  }, [getRoute]);
 
   const handleCheckboxChange = (e) => {
     e.preventDefault();

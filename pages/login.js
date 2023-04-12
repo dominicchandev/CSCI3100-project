@@ -63,7 +63,7 @@ export default function LoginPage() {
               const token = result.access_token;
               // TODO: change to session logic, localStorage is bad practice!
               localStorage.setItem("accessToken", token);
-              router.push("/");
+              router.push("/profile");
             });
           } else if (res.status === 401) {
             setErrMsg("Invalid email or password");
@@ -76,9 +76,12 @@ export default function LoginPage() {
     }
     setIsLoading(false);
   };
-
+  if (authStatus=="auth"){
+    router.push("/profile");
+  } else{
+    
   return (
-    <Flex>
+    <Flex bg = "white" height ="100vh">
       <Box w="50%" h="100%" bg="white">
         <VStack>
           <NavigationBar colorMode={colorMode} />
@@ -205,4 +208,5 @@ export default function LoginPage() {
       <CompanyIntro colorMode={colorMode} />
     </Flex>
   );
+}
 }

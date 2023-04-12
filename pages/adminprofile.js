@@ -29,15 +29,14 @@ import {
   import { BsMoonStarsFill } from "react-icons/bs";
   import { HiUser } from "react-icons/hi"
   import { MdSettings, MdWbSunny } from 'react-icons/md'
-  import { useRef, useState } from "react";
+  import { useRef, useState, useEffect } from "react";
   import { useAuth } from "@/utils/hooks/useAuth";
+  import { Unauthorized } from "@/components/unauthorized";
 
-  
-  
   export default function Home() {
     const { colorMode, toggleColorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const { token, authStatus, courses, email, name } = useAuth();
+    const { token, authStatus, email, name, role } = useAuth();
     const router = useRouter();
     const cancelRef = useRef();
     const handleLogout = (e) => { 
@@ -45,7 +44,17 @@ import {
       localStorage.removeItem("accessToken");
       router.push("/login");
     };
-    
+
+    useEffect(() => {
+      if (authStatus === "auth") {
+        console.log(`profile token: ${token}`)
+      }
+    }, [authStatus])
+    if (role!="admin"){
+      return(
+        <Unauthorized/>
+      )
+    }else {
     return (
       <Box>
         <HStack mt="10px" pt= "10px">
@@ -174,3 +183,4 @@ import {
       </Box>
     )
   }
+}

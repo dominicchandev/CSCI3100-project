@@ -9,8 +9,11 @@ import {
   Thead,
   Tr,
   VStack,
-  Button
+  Button,
+  useToast,
+  Link
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 
 // CONSTS (don't repeat yourself!)
 const TH_STYLE = {
@@ -19,6 +22,8 @@ const TH_STYLE = {
   fontWeight: "bold",
   fontSize: "10px",
   color: "#A0AEC0",
+  whiteSpace:"normal",
+  wordBreak:"break-word"
 };
 
 /**
@@ -31,11 +36,34 @@ const TH_STYLE = {
 
 export function ResultTable(props) {
   const { courses } = props;
-  console.log("JELL");
+  const { status } = props;
+  const { isLoading } = props;
+  const { title } = props;
+  const toast = useToast();
+  let control = true;
+  console.log(status);
   console.log(courses);
+  console.log(courses.length===0);
+  console.log(isLoading);
 
+  if(courses.length===0&&isLoading==false&&control==true){
+    toast({
+      title: "Error",
+      description: "Invalid Search. No corresponding search result",
+      status: "error",
+      duration: 9000,
+      isClosable: true,
+    });
+    control=false;
+  }
+  else if (courses.length!==0 && isLoading==false)
+  {
   return (
-    <TableContainer>
+    <TableContainer background="#FFFFFF" borderRadius="15px">
+      <Text>
+        {title}
+      </Text>
+      <Divider/>
       <Table variant="simple" layout="fixed" overflowWrap="anywhere">
         <ResultTableHeadRow />
         <Tbody>
@@ -49,6 +77,12 @@ export function ResultTable(props) {
       </Table>
     </TableContainer>
   );
+}
+else {
+  return(
+    <></>
+  )
+}
 }
 
 
@@ -94,6 +128,23 @@ export function ResultTableRow(props) {
   const locations = formattedSchedule.map((schedule) => {
     return schedule.location;
   });
+  const toast = useToast();
+
+  const handleOnClick = (e) => {
+    console.log(outline)
+    if (outline == "Not available yet") {
+      toast({
+        title: "Error",
+        description: `Course outline of ${id} is not available yet`,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    } else {
+      window.open({outline}, "_blank")
+  };
+  }
+
   return (
     <Tr w="full">
       <ColumnElem content={id} />
@@ -102,10 +153,10 @@ export function ResultTableRow(props) {
       <ColumnElem content={department} />
       <ColumnElem content={times} />
       <ColumnElem content={locations} />
-      <ColumnElem content={name} />
-      <ColumnElem content={name} />
+      <ColumnElem content={String(available_seats)} />
+      <ColumnElem content={String(capacity)} />
       <Td textAlign="center">
-        <Button value={`outline-${id}`} variant="outline">VIEW</Button>
+        <Button value={`outline-${id}`} onClick={handleOnClick} variant="outline" fontSize="10px" color="#40DDCF">VIEW</Button>
       </Td>
       <Td textAlign="center">
         <Checkbox value={`register-course-${id}`} ></Checkbox>
@@ -117,7 +168,7 @@ export function ResultTableRow(props) {
     const { content } = props;
     console.log("ERRR");
     console.log(content);
-    if (typeof content === "string")
+    if (typeof content === "string" || typeof content === "int" )
       return (
         <Td
           fontFamily="Helvetica"
@@ -131,6 +182,7 @@ export function ResultTableRow(props) {
           {content}
         </Td>
       );
+    
     // Assume content is of type array of string:
     return (
       <Td

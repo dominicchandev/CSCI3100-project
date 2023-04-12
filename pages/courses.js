@@ -54,6 +54,18 @@ export default function Courses() {
   const toast = useToast();
   const searchParams = new URLSearchParams();
   const router = useRouter();
+  const [getRoute, setGetRoute] = useState(true)
+  const [lastPartOfRoute, setLastPartOfRoute] = useState("");
+
+  useEffect(() => {
+    if (getRoute==true){
+    const currentUrl = document.URL;
+    setLastPartOfRoute(document.URL.substring(currentUrl.lastIndexOf("/") + 1));
+    console.log(lastPartOfRoute);
+     console.log(getRoute);
+    setGetRoute(false);
+    }
+  }, [getRoute]);
 
   const handleLogout = (e) => { 
       e.preventDefault();
@@ -120,6 +132,17 @@ export default function Courses() {
     setIsLoading(false); 
   }, [authStatus, status])
 
+  function handleReset(){
+    setCourseID("");
+    setCourseName("");
+    setDept("");
+    setDate("");
+    setStartTime("");
+    setEndTime("");
+    setCourses([]);
+    setStatus(false);
+  }
+
   const handleSubmit = (e) => {
     setIsLoading(true);
     setErrMsg("");
@@ -132,13 +155,31 @@ export default function Courses() {
         duration: 9000,
         isClosable: true,
       });
-    } else {
+    } else if((date!="" && (starttime=="" || endtime=="")) || (starttime!="" && (date=="" || endtime=="")) || (endtime!="" && (date=="" || starttime==""))) {
+      toast({
+        title: "Error",
+        description: "To search by time, please input all three day, start time and end time.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+    else {
       setStatus(true);
   };
-    setIsLoading(false);
   }
 
-  return (
+  if (authStatus =="unauth"){
+    router.push("/login");
+  }
+  else if (authStatus=="loading")
+    {
+      return(
+        <Text>loading...</Text>
+      )
+    }
+    else {
+    return (
     <Grid
     templateAreas={`"nav breadcrumb"
                   "nav search"
@@ -149,9 +190,9 @@ export default function Courses() {
     gap='1'
   >
   <GridItem pl='2' area={'nav'}>
-    <SideBar colorMode={colorMode}/>
+    <SideBar colorMode={colorMode} onPage={lastPartOfRoute}/>
   </GridItem>
-  <GridItem pl='5px' mt = "10px" pr ="20px" background="#40DDCF" borderWidth='1px' borderRadius="15px" area={'breadcrumb'}>
+  <GridItem area={'breadcrumb'} pl='5px' mt = "10px" pr ="20px" background="#40DDCF" borderWidth='1px' borderRadius="15px" >
       <HStack>
       <VStack align = "left" mt="10px" ml = "10px" pt= "10px">
         <Breadcrumb >
@@ -180,7 +221,7 @@ export default function Courses() {
       </HStack>
       </HStack>
   </GridItem>
-  <GridItem pl='15px' pt = "10px" mt = '10px'  pr ="20px" background="#FFFFFF" borderRadius="15px" area={'search'}>
+  <GridItem area={'search'} pl='15px' pt = "10px" mt = '10px'  pr ="20px" background="#FFFFFF" borderRadius="15px" >
     <VStack alignItems="left">
       <Text
         textAlign={["left"]}
@@ -201,7 +242,7 @@ export default function Courses() {
               <HStack>
               <FormLabel htmlFor="courseid"fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="14px" color="Gray.Gray-700" width="95px" height="20px" >Course ID</FormLabel>
                 <Input
-                    mid
+                    w = "300px"
                     placeholder='Text here'
                     fontSize="12px"
                     type="text"
@@ -250,78 +291,80 @@ export default function Courses() {
               <HStack>
               <FormLabel htmlFor="Date" fontFamily="Helvetica" lineHeight="1.4" fontWeight="bold" fontSize="14px" color="Gray.Gray-700" width="95px" height="20px">Time</FormLabel>
               <Select placeholder = "Select option" id="date" fontSize="12px" color="#808EA0" value={date} onChange={(e) => setDate(e.target.value)}>
-                <option value = 'Mon'> Monday </option>
-                <option value = 'Tue'> Tuesday </option>
-                <option value = 'Wed'> Wednesday </option>
-                <option value = 'Thur'> Thursday </option>
-                <option value = 'Fri'> Friday </option>
+                <option value = 'Monday'> Monday </option>
+                <option value = 'Tuesday'> Tuesday </option>
+                <option value = 'Wednesday'> Wednesday </option>
+                <option value = 'Thursday'> Thursday </option>
+                <option value = 'Friday'> Friday </option>
               </Select>
               <Select placeholder = "Select Start Time" id ="starttime" fontSize="12px" color="#808EA0" value={starttime} onChange={(e) => setStartTime(e.target.value)}>
-                <option value = '0800'> 08:00am </option>
-                <option value = '0830'> 08:30am </option>
-                <option value = '0900'> 09:00am </option>
-                <option value = '0930'> 09:30am </option>
-                <option value = '1000'> 10:00am </option>
-                <option value = '1030'> 10:30am </option>
-                <option value = '1100'> 11:00am </option>
-                <option value = '1130'> 11:30am </option>
-                <option value = '1200'> 12:00nn </option>
-                <option value = '1230'> 12:30pm </option>
-                <option value = '1300'> 01:00pm </option>
-                <option value = '1330'> 01:30pm </option>
-                <option value = '1400'> 02:00pm </option>
-                <option value = '1430'> 02:30pm </option>
-                <option value = '1500'> 03:00pm </option>
-                <option value = '1530'> 03:30pm </option>
-                <option value = '1600'> 04:00pm </option>
-                <option value = '1630'> 04:30pm </option>
-                <option value = '1700'> 05:00pm </option>
-                <option value = '1730'> 05:30pm </option>
-                <option value = '1800'> 06:00pm </option>
+                <option value = '08:00'> 08:00am </option>
+                <option value = '08:30'> 08:30am </option>
+                <option value = '09:00'> 09:00am </option>
+                <option value = '09:30'> 09:30am </option>
+                <option value = '10:00'> 10:00am </option>
+                <option value = '10:30'> 10:30am </option>
+                <option value = '11:00'> 11:00am </option>
+                <option value = '11:30'> 11:30am </option>
+                <option value = '12:00'> 12:00nn </option>
+                <option value = '12:30'> 12:30pm </option>
+                <option value = '13:00'> 01:00pm </option>
+                <option value = '13:30'> 01:30pm </option>
+                <option value = '14:00'> 02:00pm </option>
+                <option value = '14:30'> 02:30pm </option>
+                <option value = '15:00'> 03:00pm </option>
+                <option value = '15:30'> 03:30pm </option>
+                <option value = '16:00'> 04:00pm </option>
+                <option value = '16:30'> 04:30pm </option>
+                <option value = '17:00'> 05:00pm </option>
+                <option value = '17:30'> 05:30pm </option>
+                <option value = '18:00'> 06:00pm </option>
               </Select>
               <Select placeholder = "Select End Time" id ="endtime" fontSize="12px" color="#808EA0" value={endtime} onChange={(e) => setEndTime(e.target.value)}>
-                <option value = '0815'> 08:15am </option>
-                <option value = '0845'> 08:45am </option>
-                <option value = '0915'> 09:15am </option>
-                <option value = '0945'> 09:45am </option>
-                <option value = '1015'> 10:15am </option>
-                <option value = '1045'> 10:45am </option>
-                <option value = '1115'> 11:15am </option>
-                <option value = '1145'> 11:45am </option>
-                <option value = '1215'> 12:15pm </option>
-                <option value = '1245'> 12:45pm </option>
-                <option value = '1315'> 01:15pm </option>
-                <option value = '1345'> 01:45pm </option>
-                <option value = '1415'> 02:15pm </option>
-                <option value = '1445'> 02:45pm </option>
-                <option value = '1515'> 03:15pm </option>
-                <option value = '1545'> 03:45pm </option>
-                <option value = '1615'> 04:15pm </option>
-                <option value = '1645'> 04:45pm </option>
-                <option value = '1715'> 05:15pm </option>
-                <option value = '1745'> 05:45pm </option>
-                <option value = '1815'> 06:15pm </option>
+                <option value = '08:15'> 08:15am </option>
+                <option value = '08:45'> 08:45am </option>
+                <option value = '09:15'> 09:15am </option>
+                <option value = '09:45'> 09:45am </option>
+                <option value = '10:15'> 10:15am </option>
+                <option value = '10:45'> 10:45am </option>
+                <option value = '11:15'> 11:15am </option>
+                <option value = '11:45'> 11:45am </option>
+                <option value = '12:15'> 12:15pm </option>
+                <option value = '12:45'> 12:45pm </option>
+                <option value = '13:15'> 01:15pm </option>
+                <option value = '13:45'> 01:45pm </option>
+                <option value = '14:15'> 02:15pm </option>
+                <option value = '14:45'> 02:45pm </option>
+                <option value = '15:15'> 03:15pm </option>
+                <option value = '15:45'> 03:45pm </option>
+                <option value = '16:15'> 04:15pm </option>
+                <option value = '16:45'> 04:45pm </option>
+                <option value = '17:15'> 05:15pm </option>
+                <option value = '17:45'> 05:45pm </option>
+                <option value = '18:15'> 06:15pm </option>
               </Select>
               </HStack>
               </FormControl>
           </WrapItem>
         </Wrap>
-        <HStack position="absolute" right = "10px" bottom = "20px">
-          <Button type="submit" colorScheme="teal" variant = "outline" >
+        <Flex justify="flex-end" pb="10px">
+        <HStack right = "10px" bottom = "20px">
+          <Button type="reset" onClick={handleReset} colorScheme="teal" variant = "outline" >
               Reset
           </Button>
           <Button type="submit" bg='cyanAlpha' color = "white" variant = "solid" onClick={handleSubmit} isLoading={isLoading}>
               Search Course
           </Button>
         </HStack>
+        </Flex>
       </VStack>
   </GridItem>
-  <GridItem pl='2' area={'result'} borderRadius="15px" background="#FFFFFF" mr="10px" ml="10px" overflowWrap="anywhere">
+  <GridItem  area={'result'} pl='5px' pt = "10px" mt = '10px'  pr ="20px"  overflowWrap="anywhere">
       <VStack>
         <Box overflowWrap="break-word" flexWrap="wrap">
           <VStack>
             <Box overflowWrap="break-word" flexWrap="wrap">
-              <ResultTable courses={courses} />
+              <ResultTable courses={courses} status={status} isLoading={isLoading} title={title} submitted/>
             </Box>
             <Spacer />
           </VStack>
@@ -331,5 +374,6 @@ export default function Courses() {
   </GridItem>
 </Grid>
   )
+}
 }
 

@@ -29,7 +29,7 @@ export function CompanyIntro() {
             <VStack mt="130px" spacing="15px">
 
                 <Image 
-                    src='/images/logo_white.png'
+                    src='/images/white_logo.gif'
                     alt="CSCI3100 Logo"
                     width={300}
                     height={25}

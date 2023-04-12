@@ -10,16 +10,29 @@ import {
 import { HamburgerIcon } from '@chakra-ui/icons'
 import Image from "next/image";
 import { SidebarButton } from "./sidebarbutton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HiUser } from "react-icons/hi"
 import { GoBook } from "react-icons/go"
-
+import { useRouter } from "next/router";
 
 export function SideBar(props) {
     const [extend, setExtend] = useState(true)
     const [coursesHighlight, setCoursesHighlight] = useState(false)
     const [profileHighlight, setProfileHighlight] = useState(false)
-    const colorMode = props.colorMode
+    const colorMode = props.colorMode;
+    const onPage = props.onPage;
+    const router = useRouter();
+    
+
+    useEffect(() => {
+    if (onPage=="profile"){
+        setProfileHighlight(true)
+    }
+    else if (onPage=="courses"){
+        setCoursesHighlight(true)
+    } 
+
+    },[onPage])
 
 
     function menuOnClick() {
@@ -27,13 +40,11 @@ export function SideBar(props) {
     }
 
     function coursesOnClick() {
-        setCoursesHighlight(true)
-        setProfileHighlight(false)
+        router.push("/courses")
     }
 
     function profileOnClick() {
-        setCoursesHighlight(false)
-        setProfileHighlight(true)
+        router.push("/profile")
     }
 
     return (
