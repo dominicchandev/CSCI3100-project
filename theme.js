@@ -12,6 +12,7 @@ const styles = {
 
 const colors = {
     cyanAlpha: "#40DDCF",
+    buttoncolour: "#151928",
     text: {
         dark: "#000",
         light: "#fff"

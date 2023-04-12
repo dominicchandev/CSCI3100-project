@@ -9,16 +9,20 @@ class UserBase(BaseModel):
 class UserUpdate(UserBase):
     id: int
 
-class UserChangePassword(UserBase):
-    password: str
+class UserEmail(BaseModel):
+    email: str
+
+class UserVerifyEmail(UserEmail):
+    otp: str
+class UserChangePassword(UserVerifyEmail):
+    new_password: str
 
 class UserCreate(UserBase):
-    id: int
-    role: Literal["student", "admin"]
     password: str
 
 class UserSchema(UserBase):
     id: int
+    role: Literal["student", "admin"]
     courses: list
     
     class Config:

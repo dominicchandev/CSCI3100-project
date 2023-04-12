@@ -1,5 +1,3 @@
-import os
-from typing import Union
 from datetime import datetime, timedelta
 
 from jose import jwt
