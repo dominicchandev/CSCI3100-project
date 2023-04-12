@@ -12,7 +12,7 @@ class CourseCRUD(CRUDBase):
         super().__init__(model=CoursesModel)
     
     def read(self, db: Session, id: str):
-        db_course = db.query(self.model).options(noload(self.model.users)).get(id)
+        db_course = db.query(self.model).options(noload(self.model.users)).filter(self.model.id == id).first()
         if not db_course:
             return None
         return db_course
@@ -49,7 +49,6 @@ class CourseCRUD(CRUDBase):
         db_courses = []
         for course_id in course_ids:
             db_courses.append(self.read(db=db, id=course_id))
-        print(db_courses)
         return db_courses
     
     def read_all(self, db: Session):
