@@ -42,7 +42,7 @@ export default function LoginPage() {
         } else {
             // send a verification code in the backend
             // pass on the email to verify
-            router.push("/verify")
+            router.push("/login/verify")
         }
         setIsLoading(false)
     };

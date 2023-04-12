@@ -59,13 +59,13 @@ export function NavigationBar(props) {
                 <Button leftIcon={<BsMoonStarsFill />} size = "xs" colorScheme='#2D3748' variant='ghost'>
                 DARK MODE
                 </Button>
-                <Link href="/logintest">
+                <Link href="/login">
                 <Button leftIcon={<AiFillUnlock />} size = "xs" colorScheme='#2D3748' variant='ghost'>
                 SIGN IN
                 </Button>
                 </Link>
                 <Spacer/>
-                <Link href="/signup">
+                <Link href="/login/signup">
                 <Button leftIcon={<HiUserAdd />} size = "xs" bg='buttoncolour' color = "white" variant='solid' borderRadius='xl' px="20px" >
                 SIGN UP
                 </Button>

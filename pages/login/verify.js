@@ -42,7 +42,7 @@ export default function LoginPage() {
             });
         } else {
             // check if the code matches
-            router.push("/changepw")
+            router.push("/login/changepw")
         }
         setIsLoading(false)
     };

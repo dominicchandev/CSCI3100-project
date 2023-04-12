@@ -77,6 +77,14 @@ class UserCourseCRUD:
         db.refresh(db_course)
         return
 
+    def drop_many(self, db: Session, user_id: int, course_ids: List[str]):
+        if len(course_ids) == 1:
+            return self.drop_course(db=db, user_id=user_id, course_id=course_ids[0])
+        for course_id in course_ids:
+            self.drop_course(db=db, user_id=user_id, course_id=course_id)
+        response = {"user_id": user_id, "course_ids": course_ids}
+        return response
+    
     def drop_course(self, db: Session, user_id: int, course_id: str):
         db_user_course = db.query(self.model).filter(self.model.user_id == user_id, self.model.course_id == course_id).first()
         db.delete(db_user_course)

@@ -30,7 +30,7 @@ export function useAuth() {
       setAuthStatus("unauth");
     }
   
-    fetch(`http://localhost:8000/api/users/me`, {
+    fetch(process.env.NEXT_PUBLIC_SERVER + `api/users/me`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${local_token}`,

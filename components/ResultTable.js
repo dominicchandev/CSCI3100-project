@@ -9,8 +9,15 @@ import {
   Thead,
   Tr,
   VStack,
-  Button
+  Button,
+  useToast,
+  Link,
+  Spacer,
+  Flex,
 } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { useAuth } from "@/utils/hooks/useAuth";
+
 
 // CONSTS (don't repeat yourself!)
 const TH_STYLE = {
@@ -19,7 +26,10 @@ const TH_STYLE = {
   fontWeight: "bold",
   fontSize: "10px",
   color: "#A0AEC0",
+  whiteSpace:"normal",
+  wordBreak:"break-word"
 };
+
 
 /**
  *
@@ -31,11 +41,132 @@ const TH_STYLE = {
 
 export function ResultTable(props) {
   const { courses } = props;
-  console.log("JELL");
-  console.log(courses);
+  const { title } = props;
+  const { isLoading } = props;
+  const { status } = props;
+  const toast = useToast();
+  const { token, authStatus} = useAuth();
+  const [selectedCourses, setSelectedCourses] = useState(new Set())
+  const [isRegistering, setIsRegistering] = useState(false)
 
+  console.log("HI");
+  
+
+  const handleCheckboxChange = (e) => {
+  e.preventDefault();
+  if (e.target.checked) {
+    setSelectedCourses(prev => new Set(prev.add(e.target.value)))
+  }
+  else {
+    setSelectedCourses(prev => new Set([...prev].filter(x => x !== e.target.value)))
+  }
+  }
+
+  useEffect(() => {
+    if (authStatus === "auth" && isRegistering === true) {
+      var data = Array.from(selectedCourses);
+      fetch(process.env.NEXT_PUBLIC_SERVER + "api/users/registerCourse", {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((res) => {
+        if (res.status === 200) {
+          res.json().then((result) => {
+          console.log(result);
+          const { successful, failed } = result;
+          if (result.successful!=undefined && result.failed == undefined){
+            console.log(result.successful);
+            successful.map((courses) => (
+              toast({
+              title: "Success",
+              description: `Course ${courses} has been registered successfully.`,
+              status: "success",
+              duration: 9000,
+              isClosable: true,
+            })
+            ))
+          }
+          if (result.successful==undefined && result.failed != undefined){
+               console.log(result.failed);
+              // console.log(Object.keys(failed));
+              {Object.keys(failed).map((errorType) => {
+                const failedCourses = failed[errorType];
+                // console.log("HI");
+                // console.log(errorType);
+                // console.log(failedCourses);
+                if (failedCourses.length !== 0){
+                  {failedCourses.map((courseCode) => (
+                  toast({
+                    title: "Error",
+                    description: `Course ${courseCode} cannot be added. Reason: ${errorType}`,
+                    status: "error",
+                    duration: 9000,
+                    isClosable: true,
+                  })
+                  ))};
+                  }else{}
+                })
+                }
+              }
+          if (result.successful!=undefined && result.failed != undefined){
+            {Object.keys(failed).map((errorType) => {
+              const failedCourses = failed[errorType];
+              console.log("HI");
+              console.log(errorType);
+              console.log(failedCourses);
+              if (failedCourses.length === 0){
+                {failedCourses.map((courseCode) => (
+                toast({
+                  title: "Failed",
+                  description: `Course ${courseCode} cannot be added. Reason: ${errorType}`,
+                  status: "error",
+                  duration: 9000,
+                  isClosable: true,
+                })
+                ))};
+                };
+              })
+              }
+          successful.map((courses) => (
+            toast({
+            title: "Success",
+            description: `Course ${courses} has been registered successfully.`,
+            status: "success",
+            duration: 9000,
+            isClosable: true,
+          })
+          ))
+        }
+          }
+          )}
+        })
+          // router.push("/");
+      setIsRegistering(false);
+    }
+  }, [authStatus, isRegistering])
+
+  
+
+  if (courses.length===0){
+    return(
+      <></>
+    );
+  } else{
   return (
-    <TableContainer>
+    <TableContainer background="#FFFFFF" borderRadius="15px" pt = "15px" pl = "15px">
+      <Text
+        fontFamily="Helvetica"
+        lineHeight="1.4"
+        fontWeight="bold"
+        fontSize="18px"
+        color="Gray.Gray-700"
+        width="181px"
+        height="25px"
+      >{title}</Text>
+      <Spacer/>
       <Table variant="simple" layout="fixed" overflowWrap="anywhere">
         <ResultTableHeadRow />
         <Tbody>
@@ -43,12 +174,25 @@ export function ResultTable(props) {
             <ResultTableRow
               key={`course-table-row-${course.id}`}
               course={course}
+              onChange={handleCheckboxChange}
             />
           ))}
         </Tbody>
+        <Flex justify="flex-end" pb="10px">
+                  <Button
+                    onClick={() => setIsRegistering(true)}
+                    type="submit"
+                    bg="cyanAlpha"
+                    color="white"
+                    variant="solid"
+                  >
+                    Submit Registration
+                  </Button>
+                </Flex>
       </Table>
     </TableContainer>
   );
+}
 }
 
 
@@ -86,6 +230,7 @@ function ResultTableHeadRow() {
  */
 export function ResultTableRow(props) {
   const { course } = props;
+  const onChange = props.onChange;  
   const { id, name, instructor, department, schedule, available_seats, capacity, outline } = course;
   const formattedSchedule = convertSchedule(schedule);
   const times = formattedSchedule.map((schedule) => {
@@ -94,6 +239,23 @@ export function ResultTableRow(props) {
   const locations = formattedSchedule.map((schedule) => {
     return schedule.location;
   });
+  const toast = useToast();
+
+  const handleOnClick = (e) => {
+    console.log(outline)
+    if (outline == "Not available yet") {
+      toast({
+        title: "Error",
+        description: `Course outline of ${id} is not available yet`,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    } else {
+      window.open({outline}, "_blank")
+  };
+  }
+
   return (
     <Tr w="full">
       <ColumnElem content={id} />
@@ -102,13 +264,13 @@ export function ResultTableRow(props) {
       <ColumnElem content={department} />
       <ColumnElem content={times} />
       <ColumnElem content={locations} />
-      <ColumnElem content={name} />
-      <ColumnElem content={name} />
+      <ColumnElem content={String(available_seats)} />
+      <ColumnElem content={String(capacity)} />
       <Td textAlign="center">
-        <Button value={`outline-${id}`} variant="outline">VIEW</Button>
+        <Button value={`outline-${id}`} onClick={handleOnClick} variant="outline" fontSize="10px" color="#40DDCF">VIEW</Button>
       </Td>
       <Td textAlign="center">
-        <Checkbox value={`register-course-${id}`} ></Checkbox>
+        <Checkbox value={id} onChange={onChange}></Checkbox>
       </Td>
     </Tr>
   );
@@ -117,7 +279,7 @@ export function ResultTableRow(props) {
     const { content } = props;
     console.log("ERRR");
     console.log(content);
-    if (typeof content === "string")
+    if (typeof content === "string" || typeof content === "int" )
       return (
         <Td
           fontFamily="Helvetica"
@@ -131,6 +293,7 @@ export function ResultTableRow(props) {
           {content}
         </Td>
       );
+    
     // Assume content is of type array of string:
     return (
       <Td
