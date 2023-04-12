@@ -33,6 +33,7 @@ import { useAuth } from "@/utils/hooks/useAuth";
 import { CourseTable } from "@/components/profile/CourseTable";
 import { useRouter } from "next/router";
 
+
 export default function Home() {
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -40,6 +41,19 @@ export default function Home() {
   const cancelRef = React.useRef();
   const router = useRouter();
   const toast = useToast();
+  const [getRoute, setGetRoute] = useState(true)
+  const [lastPartOfRoute, setLastPartOfRoute] = useState("");
+
+  useEffect(() => {
+    if (getRoute==true){
+    const currentUrl = document.URL;
+    setLastPartOfRoute(document.URL.substring(currentUrl.lastIndexOf("/") + 1));
+    console.log(lastPartOfRoute);
+     console.log(getRoute);
+    setGetRoute(false);
+    }
+  }, [getRoute]);
+
   const handleDrop = (e) => {
     const data = ["CSCI3100", "STAT1001", "CSCI3320"]
     e.preventDefault();
@@ -80,10 +94,12 @@ export default function Home() {
     }
   }, [authStatus])
 
+console.log("JIJI");
+
   return (
     <Box>
       <HStack mt="10px" pt="10px">
-        <SideBar colorMode={colorMode} />
+        <SideBar colorMode={colorMode} onPage={lastPartOfRoute}/>
         <Spacer />
         <VStack>
           <Box

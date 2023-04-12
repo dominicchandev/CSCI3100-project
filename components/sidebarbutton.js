@@ -14,6 +14,7 @@ export function SidebarButton(props) {
             height="46px"
             borderRadius={12}
             backgroundColor={setBgColor(highlight, colorMode)}
+            // textColor={setTextColor(highlight)}
             onClick={onClick}
             justifyContent="flex-start"
         >
@@ -21,7 +22,7 @@ export function SidebarButton(props) {
                 <Center borderRadius="12" backgroundColor={setIconBg(highlight)} boxSize="30px">
                     {icon}
                 </Center>
-                {extend ? <Text ml="10px" variant="primary">{text}</Text> : <></>}
+                {extend ? <Text ml="10px" variant="primary" color={setTextColor(highlight)}>{text}</Text> : <></>}
             </HStack>
         </Button>
     )
@@ -42,4 +43,11 @@ function setIconBg(highlight) {
         return "#40DDCF"
     }
     return "white"
+}
+
+function setTextColor(highlight) {
+    if (highlight) {
+        return "#2D3748"
+    }
+    return "#A0AEC0"
 }

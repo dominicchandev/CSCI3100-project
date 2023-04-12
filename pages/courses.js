@@ -54,6 +54,18 @@ export default function Courses() {
   const toast = useToast();
   const searchParams = new URLSearchParams();
   const router = useRouter();
+  const [getRoute, setGetRoute] = useState(true)
+  const [lastPartOfRoute, setLastPartOfRoute] = useState("");
+
+  useEffect(() => {
+    if (getRoute==true){
+    const currentUrl = document.URL;
+    setLastPartOfRoute(document.URL.substring(currentUrl.lastIndexOf("/") + 1));
+    console.log(lastPartOfRoute);
+     console.log(getRoute);
+    setGetRoute(false);
+    }
+  }, [getRoute]);
 
   const handleLogout = (e) => { 
       e.preventDefault();
@@ -176,7 +188,7 @@ export default function Courses() {
     gap='1'
   >
   <GridItem pl='2' area={'nav'}>
-    <SideBar colorMode={colorMode}/>
+    <SideBar colorMode={colorMode} onPage={lastPartOfRoute}/>
   </GridItem>
   <GridItem area={'breadcrumb'} pl='5px' mt = "10px" pr ="20px" background="#40DDCF" borderWidth='1px' borderRadius="15px" >
       <HStack>
