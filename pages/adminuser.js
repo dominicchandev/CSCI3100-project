@@ -35,7 +35,8 @@ import {
     AlertDialogHeader,
     AlertDialogContent,
     AlertDialogCloseButton,
-    AlertDialogOverlay
+    AlertDialogOverlay,
+    useToast
     } from '@chakra-ui/react'
   import { SideBar } from '@/components/adminsidebar'
   import { BsMoonStarsFill } from "react-icons/bs";
@@ -53,11 +54,59 @@ import {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isOpen: isOpen2, onOpen: onOpen2, onClose: onClose2 } = useDisclosure();
     const { token, authStatus, email, name } = useAuth();
+    const [newname, setNewName] = useState("");
+    const [newemail, setNewEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const [errMsg, setErrMsg] = useState("");
     const cancelRef = React.useRef();
     const router = useRouter();
+    const toast = useToast();
     
     const handleCreate = (e) => { 
       e.preventDefault();
+      setIsLoading(true);
+      setErrMsg("");
+      if (newemail === "" || password === "" || newname === "") {
+        setErrMsg("Name, email and password are required.");
+        setIsLoading(false);
+        return;
+        };
+    const formData = new FormData();
+    formData.append("name", newname);
+    formData.append("email", newemail);
+    formData.append("password", password);
+
+    const plainFormData = Object.fromEntries(formData.entries());
+    const formDataJsonString = JSON.stringify(plainFormData);
+    console.log(newname);
+    fetch(process.env.NEXT_PUBLIC_SERVER + 'api/users', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: formDataJsonString
+    })
+    .then((res) => {
+        if (res.status === 200) {
+            console.log("New user");
+            onClose2();
+            toast({
+              title: "Success",
+              description: `New user ${newname} created`,
+              status: "success",
+              duration: 9000,
+              isClosable: true,
+          });
+        } else if (res.status === 400) {
+            setErrMsg("Email already registered")
+            console.log("Email already registered");
+        } else {
+            console.log(res.json())
+        }
+    })
+    .catch((err) => console.log("Error: ", err))
+    .finally(() => setIsLoading(false));
     };
 
     const handleDelete = (e) => { 
@@ -200,8 +249,8 @@ import {
               <AlertDialogCloseButton />
               <AlertDialogBody>
               <Text>Fill in the name, email, and password to create a new user.</Text>
-              <form onSubmit={handleCreate}>
-                <FormControl>
+              <form>
+                <FormControl isRequired>
                   <Flex alignItems="center" mt="30px">
                   <FormLabel htmlFor="name" fontFamily="Helvetica" lineHeight="1.4" fontSize="14px" color="Gray.Gray-700">Name</FormLabel>
                   <Input
@@ -209,10 +258,12 @@ import {
                       fontSize="12px"
                       type="text"
                       id="name"
+                      value={newname}
+                      onChange={(e) => setNewName(e.target.value)}
                   />
                   </Flex>
                 </FormControl>
-                <FormControl>
+                <FormControl isRequired>
                   <Flex alignItems="center" mt="20px">
                   <FormLabel htmlFor="email" fontFamily="Helvetica" lineHeight="1.4" fontSize="14px" color="Gray.Gray-700">Email</FormLabel>
                   <Input
@@ -220,10 +271,15 @@ import {
                       fontSize="12px"
                       type="text"
                       id="email"
+                      value={newemail}
+                      onChange={(e) => setNewEmail(e.target.value)}
                   />
                   </Flex>
                 </FormControl>
-                <FormControl>
+                <Text color="red" fontSize="sm">
+                            {errMsg}
+                        </Text>
+                <FormControl isRequired>
                   <Flex alignItems="center" mt="20px">
                   <FormLabel htmlFor="password" fontFamily="Helvetica" lineHeight="1.4" fontSize="14px" color="Gray.Gray-700">Password</FormLabel>
                   <Input
@@ -231,6 +287,8 @@ import {
                       fontSize="12px"
                       type="text"
                       id="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                   />
                   </Flex>
                 </FormControl>
@@ -240,7 +298,7 @@ import {
                 <Button ref={cancelRef} onClick={onClose2}>
                   Cancel
                 </Button>
-                <Button onClick={handleCreate} bg="cyanAlpha" color = "white" ml={3}>
+                <Button onClick={handleCreate} isLoading={isLoading} bg="cyanAlpha" color = "white" ml={3}>
                   Create
                 </Button>
               </AlertDialogFooter>
