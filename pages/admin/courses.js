@@ -31,7 +31,7 @@ import {
     AlertDialogOverlay,
     useToast
     } from '@chakra-ui/react'
-  import { SideBar } from '@/components/adminsidebar';
+  import { SideBar } from '@/components/sidebar';
   import { useRouter } from "next/router";
   import { BsMoonStarsFill } from "react-icons/bs";
   import { HiUser } from "react-icons/hi"
@@ -40,7 +40,6 @@ import {
   import { useRef, useState, useEffect } from "react";
   import { useAuth } from "@/utils/hooks/useAuth";
   import { ResultTable } from "@/components/ResultTable";
-  import { Unauthorized } from "@/components/unauthorized";
 
   export default function Home() {
     const { colorMode, toggleColorMode } = useColorMode();
@@ -116,6 +115,9 @@ import {
     };
 
     useEffect(() => {
+        if (authStatus === "auth" && role!="admin") {
+          router.push("/unauthorized")
+        }
         if (authStatus === "auth" && status==true) {
           // run api
           console.log(`access token: ${token}`)
@@ -171,19 +173,14 @@ import {
         setIsLoading(false); 
     }, [authStatus, status])
 
-    if (authStatus === "loading") {
-        return <Text>Loading...</Text>;
-      }
+    // if (authStatus === "loading") {
+    //     return <Text>Loading...</Text>;
+    // }
 
-    if (role!="admin"){
-      return(
-        <Unauthorized/>
-      )
-    }else {
     return (
         <Box>
         <HStack mt="10px" pt= "10px">
-          <SideBar colorMode={colorMode}/>
+          <SideBar colorMode={colorMode} isAdmin={role === "admin"}/>
           <Spacer/>
           <VStack>
             <Box
@@ -449,4 +446,3 @@ import {
       </Box>
     )
   }
-}

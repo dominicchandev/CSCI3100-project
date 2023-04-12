@@ -180,12 +180,12 @@ export default function Courses() {
   if (authStatus =="unauth"){
     router.push("/login");
   }
-  else if (authStatus=="loading")
-    {
-      return(
-        <Text>loading...</Text>
-      )
-    }
+  // else if (authStatus=="loading")
+  //   {
+  //     return(
+  //       <Text>loading...</Text>
+  //     )
+  //   }
     else {
     return (
   <>  

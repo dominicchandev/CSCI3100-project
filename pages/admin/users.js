@@ -34,7 +34,6 @@ import {
   import { useRef, useState, useEffect } from "react";
   import React from "react";
   import { UserTable } from "@/components/profile/UserTable";
-  import { Unauthorized } from "@/components/unauthorized";
   
   export default function Home() {
     const { colorMode, toggleColorMode } = useColorMode();
@@ -47,7 +46,7 @@ import {
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [errMsg, setErrMsg] = useState("");
-    const [data, setData] = useState(null);
+    const [data, setData] = useState([]);
     const cancelRef = React.useRef();
     const router = useRouter();
     const toast = useToast();
@@ -115,6 +114,9 @@ import {
         console.log(`profile token: ${token}`);
         fetchData();
       }
+      if (authStatus === "auth" && role!=="admin"){
+        router.push("/unauthorized")
+      }
     }, [isLoading, authStatus])
 
     async function fetchData() {
@@ -128,14 +130,11 @@ import {
       setData(data);
     }
     
-    if (!data || authStatus === "loading") {
-      return <Text>Loading...</Text>;
-    }
+    // if (!data || authStatus === "loading") {
+    //   return <Text>Loading...</Text>;
+    // }
 
     // the 3 boxes in create users do not align, as well as the labels
-    if (role!="admin"){
-      router.push("/unauthorized")
-    }else {
     return (
       <Box>
         <HStack mt="10px" pt= "10px">
@@ -330,4 +329,3 @@ import {
       </Box>
     )
   }
-}
