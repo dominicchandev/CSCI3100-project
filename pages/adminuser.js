@@ -15,19 +15,6 @@ import {
     Divider,
     Stack,
     Text,
-    Link,
-    Avatar,
-    AvatarBadge,
-    Table,
-    Thead,
-    Tbody,
-    Tfoot,
-    Tr,
-    Th,
-    Td,
-    TableCaption,
-    TableContainer,
-    Checkbox,
     useDisclosure,
     AlertDialog,
     AlertDialogBody,
@@ -47,13 +34,13 @@ import {
   import { useRef, useState, useEffect } from "react";
   import React from "react";
   import { UserTable } from "@/components/profile/UserTable";
-
+  import { Unauthorized } from "@/components/unauthorized";
   
   export default function Home() {
     const { colorMode, toggleColorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isOpen: isOpen2, onOpen: onOpen2, onClose: onClose2 } = useDisclosure();
-    const { token, authStatus, email, name } = useAuth();
+    const { token, authStatus, email, name, role } = useAuth();
     const [newname, setNewName] = useState("");
     const [newemail, setNewEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -62,6 +49,7 @@ import {
     const cancelRef = React.useRef();
     const router = useRouter();
     const toast = useToast();
+    console.log(role);
     
     const handleCreate = (e) => { 
       e.preventDefault();
@@ -144,6 +132,11 @@ import {
     }
 
     // the 3 boxes in create users do not align, as well as the labels
+    if (role!="admin"){
+      return(
+        <Unauthorized/>
+      )
+    }else {
     return (
       <Box>
         <HStack mt="10px" pt= "10px">
@@ -314,3 +307,4 @@ import {
       </Box>
     )
   }
+}

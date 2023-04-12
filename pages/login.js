@@ -76,9 +76,12 @@ export default function LoginPage() {
     }
     setIsLoading(false);
   };
-
+  if (authStatus=="auth"){
+    router.push("/profile");
+  } else{
+    
   return (
-    <Flex>
+    <Flex bg = "white" height ="100vh">
       <Box w="50%" h="100%" bg="white">
         <VStack>
           <NavigationBar colorMode={colorMode} />
@@ -205,4 +208,5 @@ export default function LoginPage() {
       <CompanyIntro colorMode={colorMode} />
     </Flex>
   );
+}
 }
