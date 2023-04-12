@@ -88,8 +88,8 @@ async def register_courses(course_ids: list, db: Session = Depends(get_db), toke
     return response
 
 @router.put("/dropCourse")
-async def drop_one_course(course_id: str, db: Session = Depends(get_db), token_data: TokenData = Depends(get_token_data)):
-    return usercourseCRUD.drop_course(db=db, user_id=token_data.id, course_id=course_id)
+async def drop_many(course_ids: list, db: Session = Depends(get_db), token_data: TokenData = Depends(get_token_data)):
+    return usercourseCRUD.drop_many(db=db, user_id=token_data.id, course_ids=course_ids)
 
 @router.get("/{user_id}/courses")
 async def read_registered_courses(user_id: int, db: Session = Depends(get_db), token_data: TokenData = Depends(get_token_data)):
