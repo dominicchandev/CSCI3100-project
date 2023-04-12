@@ -40,12 +40,14 @@ import {
     const { colorMode, toggleColorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isOpen: isOpen2, onOpen: onOpen2, onClose: onClose2 } = useDisclosure();
+    const { isOpen: isOpen3, onOpen: onOpen3, onClose: onClose3 } = useDisclosure();
     const { token, authStatus, email, name, role } = useAuth();
     const [newname, setNewName] = useState("");
     const [newemail, setNewEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [errMsg, setErrMsg] = useState("");
+    const [data, setData] = useState(null);
     const cancelRef = React.useRef();
     const router = useRouter();
     const toast = useToast();
@@ -99,6 +101,7 @@ import {
 
     const handleDelete = (e) => { 
       e.preventDefault();
+      setIsLoading(false);
     };
 
     const handleLogout = (e) => { 
@@ -107,14 +110,12 @@ import {
       router.push("/login");
     };
 
-    const [data, setData] = useState(null);
-
     useEffect(() => {
       if (authStatus === "auth") {
         console.log(`profile token: ${token}`);
         fetchData();
       }
-    }, [authStatus])
+    }, [isLoading, authStatus])
 
     async function fetchData() {
       const response = await fetch(process.env.NEXT_PUBLIC_SERVER + "api/users/all", {
@@ -127,7 +128,7 @@ import {
       setData(data);
     }
     
-    if (!data) {
+    if (!data || authStatus === "loading") {
       return <Text>Loading...</Text>;
     }
 
@@ -295,9 +296,33 @@ import {
               </AlertDialogFooter>
             </AlertDialogContent>
             </AlertDialog>
-            <Button mr={2} leftIcon={<HiUserRemove />} type="submit" bg='cyanAlpha' color = "white" variant = "solid">
+            <Button onClick={onOpen3} mr={2} leftIcon={<HiUserRemove />} type="submit" bg='cyanAlpha' color = "white" variant = "solid">
                 Delete User
             </Button>
+            <AlertDialog
+              motionPreset='slideInBottom'
+              leastDestructiveRef={cancelRef}
+              onClose={onClose3}
+              isOpen={isOpen3}
+              isCentered
+              >
+              <AlertDialogOverlay />
+              <AlertDialogContent>
+                <AlertDialogHeader>Delete User</AlertDialogHeader>
+                <AlertDialogCloseButton />
+                <AlertDialogBody>
+                Are you sure to delete the selected users?
+                </AlertDialogBody>
+                <AlertDialogFooter>
+                  <Button ref={cancelRef} onClick={onClose3}>
+                    Cancel
+                  </Button>
+                  <Button onClick={handleDelete} isLoading={isLoading} bg="cyanAlpha" color = "white" ml={3}>
+                    Delete
+                  </Button>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
             </Flex>
             </Box>
           </VStack>
