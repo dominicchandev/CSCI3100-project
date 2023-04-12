@@ -6,6 +6,7 @@ import {
   Box,
   HStack,
   VStack,
+  useToast
 } from "@chakra-ui/react";
 import { SideBar } from "@/components/sidebar";
 import React, { useEffect, useState } from "react";
@@ -19,6 +20,7 @@ export default function Home() {
   const { token, authStatus, courses, email, name } = useAuth();
   const [selectedCourses, setSelectedCourses] = useState(new Set())
   const [isDropping, setIsDroping] = useState(false)
+  const toast = useToast();
   const router = useRouter();
 
   const handleCheckboxChange = (e) => {
@@ -31,18 +33,6 @@ export default function Home() {
     }
   }
 
-  const handleDrop = (e) => {
-    e.preventDefault();
-    toast({
-      title: 'Course dropped.',
-      description: "The courses are dropped",
-      status: 'success',
-      duration: 9000,
-      isClosable: true,
-    })
-    // TODO: fetch the drop course api
-  };
-
   const handleLogout = (e) => { 
       e.preventDefault();
       localStorage.removeItem("accessToken");
@@ -51,21 +41,28 @@ export default function Home() {
   
   useEffect(() => {
     if (authStatus === "auth" && isDropping === true) {
-      //TODO: call handleDrop
-      // The selected courses are stored in the selectedCourses useState
-      // You may write sth like 
-      // fetch()
-      // .then((res) => res.json())
-      // ...
-      // .finally(setIsDropping(false))
-      setIsDroping(false)
+      var data = Array.from(selectedCourses);
+      fetch(process.env.NEXT_PUBLIC_SERVER + "api/users/dropCourse", {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((res) => {
+        if (res.status === 200) {
+          toast({
+            title: 'Course dropped.',
+            description: "The courses are dropped",
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+          });
+        }
+      })
+      setIsDroping(false);
     }
   }, [authStatus, isDropping])
-
-  // You may console log the courses by:
-  // useEffect(() => {
-  //   console.log(selectedCourses)
-  // }, [selectedCourses])
 
   return (
       <HStack spacing={10} alignItems="flex-start">
