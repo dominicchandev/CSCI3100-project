@@ -5,7 +5,7 @@ from server.database import get_db
 from server.crud.user import UserCRUD
 from server.schema.token import TokenData
 from server.crud.user_course import UserCourseCRUD
-from server.schema.user import UserSchema, UserCreate
+from server.schema.user import UserSchema, UserCreate, UserEmail, UserVerifyEmail, UserChangePassword
 from server.security.auth import get_token_data
 
 userCRUD = UserCRUD()
@@ -20,6 +20,29 @@ async def user_create(user: UserCreate, db: Session = Depends(get_db)):
     create_user = userCRUD.create(db=db, user=user)
     return create_user
 
+@router.post("/email")
+async def send_otp(user: UserEmail, db: Session = Depends(get_db)):
+    sent = userCRUD.sendVerificationEmail(db=db, email=user.email)
+    if not sent:
+        raise HTTPException(status_code=503, detail=f"Failed to send verification code to {user.email}")
+    return {"email sent" : sent}
+
+@router.post("/email/verification")
+def verify_otp(user: UserVerifyEmail):
+    verified = userCRUD.verifyCode(email=user.email, code=user.otp)
+    if not verified:
+        raise HTTPException(status_code=403, detail="Email verification failed")
+    return {"verified" : verified}
+
+@router.put("/password")
+async def reset_password(user: UserChangePassword, db: Session = Depends(get_db)):
+    verified = userCRUD.verifyCode(email=user.email, code=user.otp)
+    if not verified:
+        raise HTTPException(status_code=403, detail="Email verification failed")
+    
+    userCRUD.update_password(db=db, email=user.email, password=user.new_password)
+    return {"message" : "Successfully reset password"}
+        
 @router.get("/all")
 def get_all_users(db: Session = Depends(get_db), token_data: TokenData = Depends(get_token_data)):
     if token_data.role != "admin":

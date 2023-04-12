@@ -9,8 +9,11 @@ import {
   Thead,
   Tr,
   VStack,
-  Button
+  Button,
+  useToast,
+  Link
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 
 // CONSTS (don't repeat yourself!)
 const TH_STYLE = {
@@ -31,11 +34,30 @@ const TH_STYLE = {
 
 export function ResultTable(props) {
   const { courses } = props;
-  console.log("JELL");
+  const { status } = props;
+  const toast = useToast();
+  console.log(status);
   console.log(courses);
+  console.log(courses.length===0);
+  
 
+
+  if(courses.length===0&&status===true){
+    toast({
+      title: "Error",
+      description: "Invalid Search. No corresponding search result",
+      status: "error",
+      duration: 9000,
+      isClosable: true,
+    });
+  }
+  else if (courses.length===0){
+    return(
+      <></>
+    );
+  } else{
   return (
-    <TableContainer>
+    <TableContainer background="#FFFFFF" borderRadius="15px">
       <Table variant="simple" layout="fixed" overflowWrap="anywhere">
         <ResultTableHeadRow />
         <Tbody>
@@ -49,6 +71,7 @@ export function ResultTable(props) {
       </Table>
     </TableContainer>
   );
+}
 }
 
 
@@ -94,6 +117,23 @@ export function ResultTableRow(props) {
   const locations = formattedSchedule.map((schedule) => {
     return schedule.location;
   });
+  const toast = useToast();
+
+  const handleOnClick = (e) => {
+    console.log(outline)
+    if (outline == "Not available yet") {
+      toast({
+        title: "Error",
+        description: `Course outline of ${id} is not available yet`,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    } else {
+      window.open({outline}, "_blank")
+  };
+  }
+
   return (
     <Tr w="full">
       <ColumnElem content={id} />
@@ -105,7 +145,7 @@ export function ResultTableRow(props) {
       <ColumnElem content={String(available_seats)} />
       <ColumnElem content={String(capacity)} />
       <Td textAlign="center">
-        <Button value={`outline-${id}`} variant="outline" fontSize="10px" color="#40DDCF">VIEW</Button>
+        <Button value={`outline-${id}`} onClick={handleOnClick} variant="outline" fontSize="10px" color="#40DDCF">VIEW</Button>
       </Td>
       <Td textAlign="center">
         <Checkbox value={`register-course-${id}`} ></Checkbox>

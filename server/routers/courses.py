@@ -54,7 +54,7 @@ async def upload_course_outline(course_outline: UploadFile, db: Session = Depend
 
 @router.get("/search")
 async def search_courses(
-    course_id: str = "CSCI3100",
+    course_id: str = None,
     name: str = None,
     department: str = None,
     day: str = None,
@@ -64,6 +64,8 @@ async def search_courses(
     token_data: TokenData = Depends(get_token_data)
     ):
     courses = set()
+    if not (course_id or name or department or day or start_time or end_time):
+        return {"courses": set()}
     course_by_id = courseCRUD.read(db=db, id=course_id)
     courses.add(course_by_id)
     if name:
