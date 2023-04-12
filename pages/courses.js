@@ -164,7 +164,6 @@ export default function Courses() {
     else {
       setStatus(true);
   };
-    setIsLoading(false);
   }
 
   if (authStatus =="unauth"){
@@ -362,7 +361,7 @@ export default function Courses() {
         <Box overflowWrap="break-word" flexWrap="wrap">
           <VStack>
             <Box overflowWrap="break-word" flexWrap="wrap">
-              <ResultTable courses={courses} status={status}/>
+              <ResultTable courses={courses} status={status} isLoading={isLoading} title={title} submitted/>
             </Box>
             <Spacer />
           </VStack>

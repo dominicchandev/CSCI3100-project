@@ -22,6 +22,8 @@ const TH_STYLE = {
   fontWeight: "bold",
   fontSize: "10px",
   color: "#A0AEC0",
+  whiteSpace:"normal",
+  wordBreak:"break-word"
 };
 
 /**
@@ -35,14 +37,16 @@ const TH_STYLE = {
 export function ResultTable(props) {
   const { courses } = props;
   const { status } = props;
+  const { isLoading } = props;
+  const { title } = props;
   const toast = useToast();
+  let control = true;
   console.log(status);
   console.log(courses);
   console.log(courses.length===0);
-  
+  console.log(isLoading);
 
-
-  if(courses.length===0&&status===true){
+  if(courses.length===0&&isLoading==false&&control==true){
     toast({
       title: "Error",
       description: "Invalid Search. No corresponding search result",
@@ -50,14 +54,16 @@ export function ResultTable(props) {
       duration: 9000,
       isClosable: true,
     });
+    control=false;
   }
-  else if (courses.length===0){
-    return(
-      <></>
-    );
-  } else{
+  else if (courses.length!==0 && isLoading==false)
+  {
   return (
     <TableContainer background="#FFFFFF" borderRadius="15px">
+      <Text>
+        {title}
+      </Text>
+      <Divider/>
       <Table variant="simple" layout="fixed" overflowWrap="anywhere">
         <ResultTableHeadRow />
         <Tbody>
@@ -71,6 +77,11 @@ export function ResultTable(props) {
       </Table>
     </TableContainer>
   );
+}
+else {
+  return(
+    <></>
+  )
 }
 }
 
