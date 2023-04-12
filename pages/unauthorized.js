@@ -5,7 +5,7 @@ import {
 } from "@chakra-ui/react";
 import Image from "next/image";
 
-export function Unauthorized() {
+export default function Unauthorized() {
     return (
         <Box>
         <VStack mt="10px" ml = "10px" mr="10px" pt= "10px" spacing="15px" bg = "#40DDCF" w = "100%" h = "350px" borderRadius="15px">

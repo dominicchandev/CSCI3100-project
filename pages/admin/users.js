@@ -133,9 +133,7 @@ import {
 
     // the 3 boxes in create users do not align, as well as the labels
     if (role!="admin"){
-      return(
-        <Unauthorized/>
-      )
+      router.push("/unauthorized")
     }else {
     return (
       <Box>
