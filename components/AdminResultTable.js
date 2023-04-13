@@ -278,12 +278,13 @@ import {
                 isClosable: true,
             });
         }else{
+            let formData = new FormData();
+            formData.append("course_outline", pdfFile, pdfFile.name);
             fetch(process.env.NEXT_PUBLIC_SERVER + "api/courses/outline", {
                 method: "POST",
-                body: pdfFile,
+                body: formData,
                 headers: {
-                    "Content-Type": pdfFile.type,
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`
                 },
             }).then((res) => {
                 if (res.status === 200) {
