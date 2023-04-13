@@ -45,6 +45,8 @@ import {
     const [newemail, setNewEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [selectedUsers, setSelectedUsers] = useState(new Set())
+    const [isDeleting, setIsDeleting] = useState(false)
     const [errMsg, setErrMsg] = useState("");
     const [data, setData] = useState([]);
     const cancelRef = React.useRef();
@@ -98,16 +100,21 @@ import {
     .finally(() => setIsLoading(false));
     };
 
-    const handleDelete = (e) => { 
-      e.preventDefault();
-      setIsLoading(false);
-    };
-
     const handleLogout = (e) => { 
       e.preventDefault();
       localStorage.removeItem("accessToken");
       router.push("/login");
     };
+
+    const handleCheckboxChange = (e) => {
+      e.preventDefault();
+      if (e.target.checked) {
+        setSelectedUsers(prev => new Set(prev.add(e.target.value)))
+      }
+      else {
+        setSelectedUsers(prev => new Set([...prev].filter(x => x !== e.target.value)))
+      }
+    }
 
     useEffect(() => {
       if (authStatus === "auth") {
@@ -117,7 +124,31 @@ import {
       if (authStatus === "auth" && role!=="admin"){
         router.push("/unauthorized")
       }
-    }, [isLoading, authStatus])
+      if (authStatus === "auth" && isDeleting === true){
+        var dataArray = Array.from(selectedUsers);
+        dataArray.forEach(async (element) => {
+          setIsDeleting(true);
+          await fetch(process.env.NEXT_PUBLIC_SERVER + "api/users/" + element, {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`
+            },
+          }).then((res) => {
+            if (res.status === 200) {
+              toast({
+                title: 'User ' + element + ' dropped.',
+                status: 'success',
+                duration: 9000,
+                isClosable: true,
+              })
+              setIsDeleting(false);;
+            }
+          })
+        });
+        setIsDeleting(false);
+        onClose3();
+      }
+    }, [isLoading, isDeleting, authStatus])
 
     async function fetchData() {
       const response = await fetch(process.env.NEXT_PUBLIC_SERVER + "api/users/all", {
@@ -219,7 +250,7 @@ import {
             overflowWrap="break-word"
             flexWrap="wrap"
             >
-            <UserTable users={data} />
+            <UserTable users={data} onChange={handleCheckboxChange}/>
             </Box>
             <Spacer/>      
             </VStack>
@@ -316,7 +347,7 @@ import {
                   <Button ref={cancelRef} onClick={onClose3}>
                     Cancel
                   </Button>
-                  <Button onClick={handleDelete} isLoading={isLoading} bg="cyanAlpha" color = "white" ml={3}>
+                  <Button onClick={() => setIsDeleting(true)} isLoading={isDeleting} bg="cyanAlpha" color = "white" ml={3}>
                     Delete
                   </Button>
                 </AlertDialogFooter>
