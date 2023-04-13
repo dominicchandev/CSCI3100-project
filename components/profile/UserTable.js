@@ -29,7 +29,9 @@ import {
    * @returns
    */
   export function UserTable(props) {
-    const { users } = props;
+    const users  = props.users;
+    const onChange = props.onChange;
+
     return (
       <TableContainer>
         <Table variant="simple" layout="fixed" overflowWrap="anywhere">
@@ -40,6 +42,7 @@ import {
               <UserTableRow
                 key={`user-table-row-${user.id}`}
                 user={user}
+                onChange={onChange}
               />
             ))}
           </Tbody>
@@ -71,14 +74,16 @@ import {
    * @returns
    */
   export function UserTableRow(props) {
-    const { user } = props;
+    const user = props.user;
     const { id, name, email } = user;
+    const onChange = props.onChange;
+
     return (
       <Tr w="full">
         <ColumnElem content={name} />
         <ColumnElem content={email} />
         <Td textAlign="center">
-          <Checkbox value={`delete-user-${id}`}></Checkbox>
+          <Checkbox value={id} onChange={onChange}></Checkbox>
         </Td>
       </Tr>
     );
