@@ -1,4 +1,5 @@
 import smtplib, ssl
+from jose import jwt
 
 from sqlalchemy.orm import Session
 from email.message import EmailMessage
@@ -7,6 +8,7 @@ from fastapi import Depends
 
 from server.models import UsersModel
 from server.crud.base import CRUDBase
+from server.crud.token import create_access_token
 from server.utils.setting import Setting
 from server.schema.user import UserCreate, UserUpdate
 from server.security.auth import salt_and_hash, get_token_data
@@ -62,7 +64,21 @@ class UserCRUD(CRUDBase):
         return code
 
     def verifyCode(self, email: str, code: str):
-        return code == self.genVerificationCode(email)
+        if code == self.genVerificationCode(email):
+            verified = True
+            verify_token = create_access_token(data={
+                "email": email,
+                "otp": code,
+            })
+            return verified, verify_token
+        else:
+            return False, 0
+        
+    def verifyToken(self, token: str):
+        payload = jwt.decode(token, setting.SECRET_KEY, algorithms=[setting.HASH_ALGORITHM])
+        email = payload.get("email")
+        code = payload.get("otp")
+        return code == self.genVerificationCode(email), email
 
     def sendVerificationEmail(self, db: Session, email: str):
         if self.read_by_email(db, email) == None:

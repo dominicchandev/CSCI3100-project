@@ -26,7 +26,7 @@ export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [errMsg, setErrMsg] = useState("");
     const toast = useToast();
-    const email = localStorage.getItem("email");;
+    const email = localStorage.getItem("email");
 
     const handleSubmit = (e) => {
         setIsLoading(true)
@@ -54,9 +54,11 @@ export default function LoginPage() {
                 },
             }).then((res) => {
                 if (res.status === 200) {
-                    localStorage.setItem("email", email);
-                    localStorage.setItem("otp", code);
-                    router.push("/login/changepw")
+                    res.json().then((result) => {
+                        const token = result.verify_token;
+                        localStorage.setItem("verify_token", token);
+                        router.push("/login/changepw")
+                    });
                 } else {
                     toast({
                         title: "Error",

@@ -27,21 +27,36 @@ export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [errMsg, setErrMsg] = useState("");
     const toast = useToast();
+    const token = localStorage.getItem("verify_token");
 
     const handleSubmit = (e) => {
         setIsLoading(true)
         setErrMsg("")
         e.preventDefault();
-        if (password1 === password2) {
+        if (password1 === password2 && password1 != "") {
             //update the password for the user
-            toast({
-                title: "Success",
-                description: "Your password is changed.",
-                status: "success",
-                duration: 9000,
-                isClosable: true,
-            });
-            router.push("/login")
+            const formData = new FormData();
+            formData.append("verify_token", token);
+            formData.append("new_password", password1);
+            const plainFormData = Object.fromEntries(formData.entries());
+            fetch(process.env.NEXT_PUBLIC_SERVER + "api/users/password", {
+                method: "PUT",
+                body: JSON.stringify(plainFormData),
+                headers: {
+                  "Content-Type": "application/json",
+                },
+            }).then((res) => {
+                if (res.status === 200) {
+                    toast({
+                        title: "Success",
+                        description: "Your password is changed.",
+                        status: "success",
+                        duration: 9000,
+                        isClosable: true,
+                    });
+                    router.push("/login");
+                }
+            })
         } else {
             toast({
                 title: "Error",
