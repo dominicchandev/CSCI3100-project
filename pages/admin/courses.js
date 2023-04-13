@@ -25,6 +25,7 @@ import {
   import { ResultTable } from "@/components/ResultTable";
   import { CourseBox } from '@/components/CourseBox';
   import { AddCourseModal } from '@/components/AddCourseModal';
+  import { AdminResultTable } from "@/components/AdminResultTable";
 
   export default function Home() {
     const { colorMode, toggleColorMode } = useColorMode();
@@ -185,25 +186,24 @@ import {
         setIsLoading(false); 
     }, [authStatus, status, isDeleting])
 
+
     return (
       <HStack spacing={10} alignItems="flex-start">
           <SideBar colorMode={colorMode} isAdmin={role === "admin"}/>
           <VStack width="100%" pr="20px" pt="25px" spacing={10}>
-
           <CourseBox name={name} page="Courses"/>
-            <Box maxW="100%" borderRadius="15px" background="#FFFFFF">
-                <VStack mt="20px" ml="10px" alignItems="left">
-                    <Text
-                        textAlign={["left"]}
-                        align = "left"
-                        lineHeight="1.4"
-                        fontWeight="bold"
-                        fontSize="18px"
-                        color="Gray.Gray-700"
-                        width="141px"
-                        height="25px"
-                        >
-                        Search Courses
+            <VStack mt="20px" ml="10px" alignItems="left">
+                <Text
+                    textAlign={["left"]}
+                    align = "left"
+                    lineHeight="1.4"
+                    fontWeight="bold"
+                    fontSize="18px"
+                    color="Gray.Gray-700"
+                    width="141px"
+                    height="25px"
+                    >
+                    Search Courses
                     </Text>
                     <Divider/>
                     <Wrap align='center' justify='full'>
@@ -335,18 +335,22 @@ import {
                       </HStack>
                     </Flex>
                 </VStack>
-            </Box>
-
             <Box
+            position="absolute"
             borderRadius="15px"
-            w="100%"
+            top = "350px"
+            right = "10px"
+            w="80%"
             background="#FFFFFF"
+            ml = "10px"
+            mr = "10px"
+            overflowWrap="anywhere"
             >
             <VStack>
             <Box overflowWrap="break-word" flexWrap="wrap">
             <VStack>
                 <Box overflowWrap="break-word" flexWrap="wrap">
-                <ResultTable courses={courses} status={status} onChange={handleCheckboxChange}/>
+                <AdminResultTable courses={courses} status={status}/>
                 </Box>
                 <Spacer />
             </VStack>
