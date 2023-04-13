@@ -40,6 +40,7 @@ import {
   import { useRef, useState, useEffect } from "react";
   import { useAuth } from "@/utils/hooks/useAuth";
   import { ResultTable } from "@/components/ResultTable";
+  import { CourseBox } from '@/components/CourseBox';
 
   export default function Home() {
     const { colorMode, toggleColorMode } = useColorMode();
@@ -173,106 +174,26 @@ import {
         setIsLoading(false); 
     }, [authStatus, status])
 
-    // if (authStatus === "loading") {
-    //     return <Text>Loading...</Text>;
-    // }
-
     return (
-        <Box>
-        <HStack mt="10px" pt= "10px">
+      // <Box>
+      <HStack spacing={10} alignItems="flex-start">
           <SideBar colorMode={colorMode} isAdmin={role === "admin"}/>
-          <Spacer/>
-          <VStack>
-            <Box
-              position="absolute"
-              ml = "10px"
-              borderRadius="15px"
-              height="100px"
-              top = "20px"
-              right = "0px"
-              w="80%"
-              background="#40DDCF"
-              mr = "10px"
-            >
-              <HStack>
-              <VStack align = "left" mt="10px" ml = "10px" pt= "10px">
-                <Breadcrumb >
-                <BreadcrumbItem color="White">
-                <BreadcrumbLink href='' color="White" >{name}</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbItem color="White">
-                <BreadcrumbLink href='' color="White" >Courses</BreadcrumbLink>
-                </BreadcrumbItem>
-                </Breadcrumb>
-                <Text
-                align="left"
-                color="White"
-                fontWeight="bold">Courses</Text>
-              </VStack>
-              <Spacer/>
-              <HStack spacing = "20px" mr="10px" mt="10px">
-                <Button onClick={toggleColorMode} leftIcon={colorMode === 'light'? <BsMoonStarsFill /> : <MdWbSunny />} size = "xs" colorScheme={colorMode === 'light'? 'whiteAlpha' : 'blackAlpha'} variant='ghost'>
-                {colorMode === 'light' ? 'DARK' : 'LIGHT'} MODE
-                </Button>
-                <Button onClick={onOpen} leftIcon={<HiUser />} size = "xs" colorScheme={colorMode === 'light'? 'whiteAlpha' : 'blackAlpha'} variant='ghost'>
-                LOGOUT
-                </Button>
-                <AlertDialog
-                motionPreset='slideInBottom'
-                leastDestructiveRef={cancelRef}
-                onClose={onClose}
-                isOpen={isOpen}
-                isCentered
-                >
-                <AlertDialogOverlay />
-                <AlertDialogContent>
-                  <AlertDialogHeader>Logout</AlertDialogHeader>
-                  <AlertDialogCloseButton />
-                  <AlertDialogBody>
-                  Are you sure to logout?
-                  </AlertDialogBody>
-                  <AlertDialogFooter>
-                    <Button ref={cancelRef} onClick={onClose}>
-                      Cancel
-                    </Button>
-                    <Button onClick={handleLogout} bg="cyanAlpha" color = "white" ml={3}>
-                      Logout
-                    </Button>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-                </AlertDialog>
-              </HStack>
-              </HStack>
-            </Box>
-            <Spacer/>
-            <Box
-            position="absolute"
-            ml = "10px"
-            borderRadius="15px"
-            top = "120px"
-            right = "10px"
-            w="80%"
-            background="#FFFFFF"
-            mr = "10px"
-            overflowWrap="anywhere"
-            >
-            <VStack>
-            <Box
-            overflowWrap="break-word"
-            flexWrap="wrap"
-            >
-            <VStack mt="20px" ml="10px" alignItems="left">
-                <Text
-                    textAlign={["left"]}
-                    align = "left"
-                    lineHeight="1.4"
-                    fontWeight="bold"
-                    fontSize="18px"
-                    color="Gray.Gray-700"
-                    width="141px"
-                    height="25px"
-                    >
-                    Search Courses
+          <VStack width="100%" pr="20px" pt="25px" spacing={10}>
+
+          <CourseBox name={name} page="Courses"/>
+            <Box maxW="100%" borderRadius="15px" background="#FFFFFF">
+                <VStack mt="20px" ml="10px" alignItems="left">
+                    <Text
+                        textAlign={["left"]}
+                        align = "left"
+                        lineHeight="1.4"
+                        fontWeight="bold"
+                        fontSize="18px"
+                        color="Gray.Gray-700"
+                        width="141px"
+                        height="25px"
+                        >
+                        Search Courses
                     </Text>
                     <Divider/>
                     <Wrap align='center' justify='full'>
@@ -386,37 +307,27 @@ import {
                         </FormControl>
                     </WrapItem>
                     </Wrap>
-                    <Flex justify="flex-end" pb="8px">
-                    <HStack right = "10px" bottom = "20px" mt="10px" mr="7px">
-                    <Button fontSize="14px" type="reset" onClick={handleReset} color= "black" borderColor="cyanAlpha" variant = "outline" >
-                        Reset
-                    </Button>
-                    <Button leftIcon={<HiOutlinePlusCircle />} iconSize="xl" fontSize="14px" type="submit" color= "black" borderColor="cyanAlpha" variant = "outline" >
-                        Add Course
-                    </Button>
-                    <Button fontSize="14px" type="submit" onClick={handleShow} color= "black" borderColor="cyanAlpha" variant = "outline" isLoading={isLoading}>
-                        Show All Courses
-                    </Button>
-                    <Button fontSize="14px" type="submit" bg='cyanAlpha' color = "white" variant = "solid" onClick={handleSubmit} isLoading={isLoading}>
-                        Search Course
-                    </Button>
+                    <HStack mt="20px" mr="10px" maxW="100%">
+                      <Button fontSize="14px" type="reset" onClick={handleReset} color= "black" borderColor="cyanAlpha" variant = "outline" >
+                          Reset
+                      </Button>
+                      <Button leftIcon={<HiOutlinePlusCircle />} iconSize="xl" fontSize="14px" type="submit" color= "black" borderColor="cyanAlpha" variant = "outline" >
+                          Add Course
+                      </Button>
+                      <Button fontSize="14px" type="submit" onClick={handleShow} color= "black" borderColor="cyanAlpha" variant = "outline" isLoading={isLoading}>
+                          Show All Courses
+                      </Button>
+                      <Button fontSize="14px" type="submit" bg='cyanAlpha' color = "white" variant = "solid" onClick={handleSubmit} isLoading={isLoading}>
+                          Search Course
+                      </Button>
                     </HStack>
-                    </Flex>
                 </VStack>
             </Box>
-            <Spacer/>
-            </VStack>
-            </Box>
+
             <Box
-            position="absolute"
             borderRadius="15px"
-            top = "350px"
-            right = "10px"
-            w="80%"
+            w="100%"
             background="#FFFFFF"
-            ml = "10px"
-            mr = "10px"
-            overflowWrap="anywhere"
             >
             <VStack>
             <Box overflowWrap="break-word" flexWrap="wrap">
@@ -443,6 +354,6 @@ import {
             </Box>
         </VStack>
         </HStack>
-      </Box>
+      // </Box>
     )
   }
