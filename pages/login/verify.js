@@ -26,7 +26,7 @@ export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [errMsg, setErrMsg] = useState("");
     const toast = useToast();
-    const { email } = router.query;
+    const email = localStorage.getItem("email");;
 
     const handleSubmit = (e) => {
         setIsLoading(true)
@@ -42,7 +42,31 @@ export default function LoginPage() {
             });
         } else {
             // check if the code matches
-            router.push("/login/changepw")
+            const formData = new FormData();
+            formData.append("email", email);
+            formData.append("otp", code);
+            const plainFormData = Object.fromEntries(formData.entries());
+            fetch(process.env.NEXT_PUBLIC_SERVER + "api/users/email/verification", {
+                method: "POST",
+                body: JSON.stringify(plainFormData),
+                headers: {
+                  "Content-Type": "application/json",
+                },
+            }).then((res) => {
+                if (res.status === 200) {
+                    localStorage.setItem("email", email);
+                    localStorage.setItem("otp", code);
+                    router.push("/login/changepw")
+                } else {
+                    toast({
+                        title: "Error",
+                        description: "Code does not match.",
+                        status: "error",
+                        duration: 9000,
+                        isClosable: true,
+                    });
+                }
+            })
         }
         setIsLoading(false)
     };

@@ -14,6 +14,7 @@ class UserEmail(BaseModel):
 
 class UserVerifyEmail(UserEmail):
     otp: str
+
 class UserChangePassword(UserVerifyEmail):
     new_password: str
 
