@@ -49,7 +49,6 @@ export default function Home() {
               />
               <CourseTable 
                 courses={courses} 
-                onChange={handleCheckboxChange}
                 title = "Registered Course(s)"
               />
         </VStack>

@@ -74,9 +74,11 @@ export function CourseTable(props) {
             isClosable: true,
           });
         }
-      })
+      }).finally(() => {
       setIsDropping(false);
       setDropped(true);
+      }
+      )
     }
   }, [authStatus, isDropping])
 
