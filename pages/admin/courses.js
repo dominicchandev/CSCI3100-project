@@ -39,7 +39,7 @@ import {
   import { HiOutlinePlusCircle } from 'react-icons/hi'
   import { useRef, useState, useEffect } from "react";
   import { useAuth } from "@/utils/hooks/useAuth";
-  import { ResultTable } from "@/components/ResultTable";
+  import { AdminResultTable } from "@/components/AdminResultTable";
 
   export default function Home() {
     const { colorMode, toggleColorMode } = useColorMode();
@@ -422,7 +422,7 @@ import {
             <Box overflowWrap="break-word" flexWrap="wrap">
             <VStack>
                 <Box overflowWrap="break-word" flexWrap="wrap">
-                <ResultTable courses={courses} status={status}/>
+                <AdminResultTable courses={courses} status={status}/>
                 </Box>
                 <Spacer />
             </VStack>
