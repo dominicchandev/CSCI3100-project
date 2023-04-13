@@ -54,6 +54,7 @@ export default function LoginPage() {
                         duration: 9000,
                         isClosable: true,
                     });
+                    sessionStorage.removeItem("verify_token");
                     router.push("/login");
                 }
             })

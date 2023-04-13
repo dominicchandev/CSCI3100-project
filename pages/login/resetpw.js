@@ -21,15 +21,15 @@ import { NavigationBar } from "@/components/navigationbar";
 
 export default function LoginPage() {
     const { colorMode } = useColorMode();
-    const router = useRouter()
+    const router = useRouter();
     const [email, setEmail] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [errMsg, setErrMsg] = useState("");
     const toast = useToast();
 
     const handleSubmit = (e) => {
-        setIsLoading(true)
-        setErrMsg("")
+        setIsLoading(true);
+        setErrMsg("");
         e.preventDefault();
         if (email === "") {
             toast({
@@ -54,7 +54,7 @@ export default function LoginPage() {
             }).then((res) => {
                 if (res.status === 200) {
                     sessionStorage.setItem("email", email);
-                    router.push("/login/verify")
+                    router.push("/login/verify");
                 } else {
                     toast({
                         title: "Error",
@@ -64,9 +64,9 @@ export default function LoginPage() {
                         isClosable: true,
                     });
                 }
-            })
+            });
         }
-        setIsLoading(false)
+        setIsLoading(false);
     };
 
     return (

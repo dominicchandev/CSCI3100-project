@@ -29,8 +29,8 @@ export default function LoginPage() {
     const email = sessionStorage.getItem("email");
 
     const handleSubmit = (e) => {
-        setIsLoading(true)
-        setErrMsg("")
+        setIsLoading(true);
+        setErrMsg("");
         e.preventDefault();
         if (code === "") {
             toast({
@@ -56,8 +56,9 @@ export default function LoginPage() {
                 if (res.status === 200) {
                     res.json().then((result) => {
                         const token = result.verify_token;
+                        sessionStorage.removeItem("email");
                         sessionStorage.setItem("verify_token", token);
-                        router.push("/login/changepw")
+                        router.push("/login/changepw");
                     });
                 } else {
                     toast({
@@ -68,17 +69,17 @@ export default function LoginPage() {
                         isClosable: true,
                     });
                 }
-            })
+            });
         }
-        setIsLoading(false)
+        setIsLoading(false);
     };
     
     const handleClick = (e) => {
-        setIsLoading(true)
-        setErrMsg("")
+        setIsLoading(true);
+        setErrMsg("");
         e.preventDefault();
         // resend the code from backend
-        setIsLoading(false)
+        setIsLoading(false);
     }
 
     return (

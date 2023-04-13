@@ -36,7 +36,7 @@ def verify_otp(user: UserVerifyEmail):
 
 @router.put("/password")
 async def reset_password(user: UserChangePassword, db: Session = Depends(get_db)):
-    verified, email = userCRUD.verifyToken(token=user.verify_token)
+    verified, email = userCRUD.extractVerifyToken(token=user.verify_token)
     if not verified:
         raise HTTPException(status_code=403, detail="Token error. Pleases try again.")
     userCRUD.update_password(db=db, email=email, password=user.new_password)

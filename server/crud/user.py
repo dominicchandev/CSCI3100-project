@@ -68,17 +68,17 @@ class UserCRUD(CRUDBase):
             verified = True
             verify_token = create_access_token(data={
                 "email": email,
-                "otp": code,
+                "verified": verified,
             })
             return verified, verify_token
         else:
             return False, 0
         
-    def verifyToken(self, token: str):
+    def extractVerifyToken(self, token: str):
         payload = jwt.decode(token, setting.SECRET_KEY, algorithms=[setting.HASH_ALGORITHM])
         email = payload.get("email")
-        code = payload.get("otp")
-        return code == self.genVerificationCode(email), email
+        verified = payload.get("verified")
+        return verified, email
 
     def sendVerificationEmail(self, db: Session, email: str):
         if self.read_by_email(db, email) == None:
