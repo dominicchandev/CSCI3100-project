@@ -16,9 +16,8 @@ export function CompanyIntro() {
 
     return (
         <Box 
-            w="50%" 
+            minW="500px"
             h="600px"
-            position="sticky" 
             right="0px" 
             top="0" 
             pl="10px" 
