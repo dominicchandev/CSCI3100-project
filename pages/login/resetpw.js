@@ -42,7 +42,28 @@ export default function LoginPage() {
         } else {
             // send a verification code in the backend
             // pass on the email to verify
-            router.push("/login/verify")
+            const formData = new FormData();
+            formData.append("email", email);
+            const plainFormData = Object.fromEntries(formData.entries());
+            fetch(process.env.NEXT_PUBLIC_SERVER + "api/users/email", {
+                method: "POST",
+                body: JSON.stringify(plainFormData),
+                headers: {
+                  "Content-Type": "application/json",
+                },
+            }).then((res) => {
+                if (res.status === 200) {
+                    router.push("/login/verify")
+                } else {
+                    toast({
+                        title: "Error",
+                        description: "Email not registered.",
+                        status: "error",
+                        duration: 9000,
+                        isClosable: true,
+                    });
+                }
+            })
         }
         setIsLoading(false)
     };

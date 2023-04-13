@@ -89,6 +89,8 @@ async def register_courses(course_ids: list, db: Session = Depends(get_db), toke
 
 @router.put("/dropCourse")
 async def drop_many(course_ids: list, db: Session = Depends(get_db), token_data: TokenData = Depends(get_token_data)):
+    if (len(course_ids) == 0):
+        raise HTTPException(status_code=204, detail="No courses are selected")
     return usercourseCRUD.drop_many(db=db, user_id=token_data.id, course_ids=course_ids)
 
 @router.get("/{user_id}/courses")
