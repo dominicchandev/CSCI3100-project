@@ -4,9 +4,6 @@ import {
     Button, 
     useColorMode,
     Box, 
-    Breadcrumb, 
-    BreadcrumbItem, 
-    BreadcrumbLink, 
     HStack,
     VStack,
     Wrap,
@@ -16,35 +13,22 @@ import {
     Input,
     Divider,
     Select,
-    Stack,
     Text,
-    Link,
-    Avatar,
-    AvatarBadge,
     useDisclosure,
-    AlertDialog,
-    AlertDialogBody,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogContent,
-    AlertDialogCloseButton,
-    AlertDialogOverlay,
     useToast
     } from '@chakra-ui/react'
   import { SideBar } from '@/components/sidebar';
   import { useRouter } from "next/router";
-  import { BsMoonStarsFill } from "react-icons/bs";
-  import { HiUser } from "react-icons/hi"
-  import { MdSettings, MdWbSunny } from 'react-icons/md'
   import { HiOutlinePlusCircle } from 'react-icons/hi'
   import { useRef, useState, useEffect } from "react";
   import { useAuth } from "@/utils/hooks/useAuth";
   import { ResultTable } from "@/components/ResultTable";
   import { CourseBox } from '@/components/CourseBox';
+  import { AddCourseModal } from '@/components/AddCourseModal';
 
   export default function Home() {
     const { colorMode, toggleColorMode } = useColorMode();
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const { isOpen: isOpen2, onOpen: onOpen2, onClose: onClose2 } = useDisclosure();
     const { token, authStatus, email, name, role } = useAuth();
     const [status, setStatus] = useState(false);
     const [courseid, setCourseID] = useState("");
@@ -55,16 +39,11 @@ import {
     const [endtime, setEndTime] = useState("");
     const [courses, setCourses] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [selectedCourses, setSelectedCourses] = useState(new Set())
+    const [isDeleting, setIsDeleting] = useState(false)
     const [errMsg, setErrMsg] = useState("");
     const router = useRouter();
     const toast = useToast();
-    const cancelRef = useRef();
-
-    const handleLogout = (e) => { 
-      e.preventDefault();
-      localStorage.removeItem("accessToken");
-      router.push("/login");
-    };
 
     function handleReset(){
         setCourseID("");
@@ -115,7 +94,39 @@ import {
         setCourses(data);
     };
 
+    const handleCheckboxChange = (e) => {
+      e.preventDefault();
+      if (e.target.checked) {
+        setSelectedCourses(prev => new Set(prev.add(e.target.value)))
+      }
+      else {
+        setSelectedCourses(prev => new Set([...prev].filter(x => x !== e.target.value)))
+      }
+    }
+
     useEffect(() => {
+        if (authStatus === "auth" && isDeleting === true) {
+          var dataArray = Array.from(selectedCourses);
+          dataArray.forEach(async (element) => {
+            await fetch(process.env.NEXT_PUBLIC_SERVER + "api/courses/" + element, {
+              method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${token}`
+              },
+            }).then((res) => {
+              if (res.status === 200) {
+                toast({
+                  title: 'Course ' + element + ' deleted.',
+                  status: 'success',
+                  duration: 9000,
+                  isClosable: true,
+                });
+              }
+            })
+          });
+          setIsDeleting(false);
+          setStatus(true);
+        }
         if (authStatus === "auth" && role!="admin") {
           router.push("/unauthorized")
         }
@@ -172,10 +183,9 @@ import {
         }
         setStatus(false);
         setIsLoading(false); 
-    }, [authStatus, status])
+    }, [authStatus, status, isDeleting])
 
     return (
-      // <Box>
       <HStack spacing={10} alignItems="flex-start">
           <SideBar colorMode={colorMode} isAdmin={role === "admin"}/>
           <VStack width="100%" pr="20px" pt="25px" spacing={10}>
@@ -307,20 +317,23 @@ import {
                         </FormControl>
                     </WrapItem>
                     </Wrap>
-                    <HStack mt="20px" mr="10px" maxW="100%">
+                    <Flex justify="flex-end" pb="8px">
+                      <HStack right = "10px" bottom = "20px" mt="10px" mr="7px">
                       <Button fontSize="14px" type="reset" onClick={handleReset} color= "black" borderColor="cyanAlpha" variant = "outline" >
                           Reset
                       </Button>
-                      <Button leftIcon={<HiOutlinePlusCircle />} iconSize="xl" fontSize="14px" type="submit" color= "black" borderColor="cyanAlpha" variant = "outline" >
+                      <Button onClick={onOpen2} leftIcon={<HiOutlinePlusCircle />} iconSize="xl" fontSize="14px" type="submit" color= "black" borderColor="cyanAlpha" variant = "outline" >
                           Add Course
                       </Button>
+                      <AddCourseModal isOpen={isOpen2} onClose={onClose2}/>
                       <Button fontSize="14px" type="submit" onClick={handleShow} color= "black" borderColor="cyanAlpha" variant = "outline" isLoading={isLoading}>
                           Show All Courses
                       </Button>
                       <Button fontSize="14px" type="submit" bg='cyanAlpha' color = "white" variant = "solid" onClick={handleSubmit} isLoading={isLoading}>
                           Search Course
                       </Button>
-                    </HStack>
+                      </HStack>
+                    </Flex>
                 </VStack>
             </Box>
 
@@ -333,7 +346,7 @@ import {
             <Box overflowWrap="break-word" flexWrap="wrap">
             <VStack>
                 <Box overflowWrap="break-word" flexWrap="wrap">
-                <ResultTable courses={courses} status={status}/>
+                <ResultTable courses={courses} status={status} onChange={handleCheckboxChange}/>
                 </Box>
                 <Spacer />
             </VStack>
@@ -341,19 +354,20 @@ import {
             <Spacer />
             <Flex justify="flex-end" pb="10px">
                   <Button
+                    onClick={() => setIsDeleting(true)}
                     fontSize="14px"
                     type="submit"
                     bg="cyanAlpha"
                     color="white"
                     variant="solid"
+                    isLoading={isDeleting}
                   >
-                    Confirm Delete Course(s)
+                    Confirm Delete Course
                   </Button>
             </Flex>
             </VStack>
             </Box>
-        </VStack>
-        </HStack>
-      // </Box>
+          </VStack>
+      </HStack>
     )
   }

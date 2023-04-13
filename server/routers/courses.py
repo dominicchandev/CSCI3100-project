@@ -20,6 +20,9 @@ dropbox_handler = DropBoxHandler()
 async def create_course(course: CourseCreate, db: Session = Depends(get_db), token_data: TokenData = Depends(get_token_data)):
     if token_data.role != "admin":
         raise HTTPException(status_code=401, detail="Unauthorized user")
+    db_course = courseCRUD.read(db=db, id=course.id)
+    if db_course:
+        raise HTTPException(status_code=400, detail=f"Course {course.id} already exists")
     db_course = courseCRUD.create(db=db, course=course)
     return db_course
 
