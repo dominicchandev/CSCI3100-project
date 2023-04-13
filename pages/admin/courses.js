@@ -192,6 +192,7 @@ import {
           <SideBar colorMode={colorMode} isAdmin={role === "admin"}/>
           <VStack width="100%" pr="20px" pt="25px" spacing={10}>
           <CourseBox name={name} page="Courses"/>
+          <Box maxWidth="100%" borderRadius="15px" bg="white">
             <VStack mt="20px" ml="10px" alignItems="left">
                 <Text
                     textAlign={["left"]}
@@ -317,60 +318,26 @@ import {
                         </FormControl>
                     </WrapItem>
                     </Wrap>
-                    <Flex justify="flex-end" pb="8px">
-                      <HStack right = "10px" bottom = "20px" mt="10px" mr="7px">
-                      <Button fontSize="14px" type="reset" onClick={handleReset} color= "black" borderColor="cyanAlpha" variant = "outline" >
-                          Reset
-                      </Button>
-                      <Button onClick={onOpen2} leftIcon={<HiOutlinePlusCircle />} iconSize="xl" fontSize="14px" type="submit" color= "black" borderColor="cyanAlpha" variant = "outline" >
-                          Add Course
-                      </Button>
-                      <AddCourseModal isOpen={isOpen2} onClose={onClose2}/>
-                      <Button fontSize="14px" type="submit" onClick={handleShow} color= "black" borderColor="cyanAlpha" variant = "outline" isLoading={isLoading}>
-                          Show All Courses
-                      </Button>
-                      <Button fontSize="14px" type="submit" bg='cyanAlpha' color = "white" variant = "solid" onClick={handleSubmit} isLoading={isLoading}>
-                          Search Course
-                      </Button>
+                    <Flex justify="flex-end" pb="8px" maxW="100%">
+                      <HStack maxWidth="100%" right="10px" bottom = "20px" mt="10px" mr="7px">
+                        <Button fontSize="14px" type="reset" onClick={handleReset} color= "black" borderColor="cyanAlpha" variant = "outline" >
+                            Reset
+                        </Button>
+                        <Button onClick={onOpen2} leftIcon={<HiOutlinePlusCircle />} iconSize="xl" fontSize="14px" type="submit" color= "black" borderColor="cyanAlpha" variant = "outline" >
+                            Add Course
+                        </Button>
+                        <AddCourseModal isOpen={isOpen2} onClose={onClose2}/>
+                        <Button fontSize="14px" type="submit" onClick={handleShow} color= "black" borderColor="cyanAlpha" variant = "outline" isLoading={isLoading}>
+                            Show All Courses
+                        </Button>
+                        <Button fontSize="14px" type="submit" bg='cyanAlpha' color = "white" variant = "solid" onClick={handleSubmit} isLoading={isLoading}>
+                            Search Course
+                        </Button>
                       </HStack>
                     </Flex>
-                </VStack>
-            <Box
-            position="absolute"
-            borderRadius="15px"
-            top = "350px"
-            right = "10px"
-            w="80%"
-            background="#FFFFFF"
-            ml = "10px"
-            mr = "10px"
-            overflowWrap="anywhere"
-            >
-            <VStack>
-            <Box overflowWrap="break-word" flexWrap="wrap">
-            <VStack>
-                <Box overflowWrap="break-word" flexWrap="wrap">
-                <AdminResultTable courses={courses} status={status}/>
-                </Box>
-                <Spacer />
             </VStack>
-            </Box>
-            <Spacer />
-            <Flex justify="flex-end" pb="10px">
-                  <Button
-                    onClick={() => setIsDeleting(true)}
-                    fontSize="14px"
-                    type="submit"
-                    bg="cyanAlpha"
-                    color="white"
-                    variant="solid"
-                    isLoading={isDeleting}
-                  >
-                    Confirm Delete Course
-                  </Button>
-            </Flex>
-            </VStack>
-            </Box>
+          </Box>
+          <AdminResultTable courses={courses} status={status}/>
           </VStack>
       </HStack>
     )
