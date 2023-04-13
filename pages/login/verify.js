@@ -26,7 +26,7 @@ export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [errMsg, setErrMsg] = useState("");
     const toast = useToast();
-    const email = localStorage.getItem("email");
+    const email = sessionStorage.getItem("email");
 
     const handleSubmit = (e) => {
         setIsLoading(true)
@@ -56,7 +56,7 @@ export default function LoginPage() {
                 if (res.status === 200) {
                     res.json().then((result) => {
                         const token = result.verify_token;
-                        localStorage.setItem("verify_token", token);
+                        sessionStorage.setItem("verify_token", token);
                         router.push("/login/changepw")
                     });
                 } else {

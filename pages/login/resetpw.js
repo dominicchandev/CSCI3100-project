@@ -53,7 +53,7 @@ export default function LoginPage() {
                 },
             }).then((res) => {
                 if (res.status === 200) {
-                    localStorage.setItem("email", email);
+                    sessionStorage.setItem("email", email);
                     router.push("/login/verify")
                 } else {
                     toast({

@@ -27,7 +27,7 @@ export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [errMsg, setErrMsg] = useState("");
     const toast = useToast();
-    const token = localStorage.getItem("verify_token");
+    const token = sessionStorage.getItem("verify_token");
 
     const handleSubmit = (e) => {
         setIsLoading(true)
