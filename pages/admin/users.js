@@ -63,41 +63,44 @@ import {
         setIsLoading(false);
         return;
         };
-    const formData = new FormData();
-    formData.append("name", newname);
-    formData.append("email", newemail);
-    formData.append("password", password);
+      const formData = new FormData();
+      formData.append("name", newname);
+      formData.append("email", newemail);
+      formData.append("password", password);
 
-    const plainFormData = Object.fromEntries(formData.entries());
-    const formDataJsonString = JSON.stringify(plainFormData);
-    console.log(newname);
-    fetch(process.env.NEXT_PUBLIC_SERVER + 'api/users', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: formDataJsonString
-    })
-    .then((res) => {
-        if (res.status === 200) {
-            console.log("New user");
-            onClose2();
-            toast({
-              title: "Success",
-              description: `New user ${newname} created`,
-              status: "success",
-              duration: 9000,
-              isClosable: true,
-          });
-        } else if (res.status === 400) {
-            setErrMsg("Email already registered")
-            console.log("Email already registered");
-        } else {
-            console.log(res.json())
-        }
-    })
-    .catch((err) => console.log("Error: ", err))
-    .finally(() => setIsLoading(false));
+      const plainFormData = Object.fromEntries(formData.entries());
+      const formDataJsonString = JSON.stringify(plainFormData);
+      console.log(newname);
+      fetch(process.env.NEXT_PUBLIC_SERVER + 'api/users', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: formDataJsonString
+      })
+      .then((res) => {
+          if (res.status === 200) {
+              console.log("New user");
+              onClose2();
+              toast({
+                title: "Success",
+                description: `New user ${newname} created`,
+                status: "success",
+                duration: 9000,
+                isClosable: true,
+            });
+          } else if (res.status === 400) {
+              setErrMsg("Email already registered")
+              console.log("Email already registered");
+          } else {
+              console.log(res.json())
+          }
+      })
+      .catch((err) => console.log("Error: ", err))
+      .finally(() => setIsLoading(false));
+      setNewName("");
+      setNewEmail("");
+      setPassword("");
     };
 
     const handleLogout = (e) => { 
@@ -117,17 +120,9 @@ import {
     }
 
     useEffect(() => {
-      if (authStatus === "auth") {
-        console.log(`profile token: ${token}`);
-        fetchData();
-      }
-      if (authStatus === "auth" && role!=="admin"){
-        router.push("/unauthorized")
-      }
       if (authStatus === "auth" && isDeleting === true){
         var dataArray = Array.from(selectedUsers);
         dataArray.forEach(async (element) => {
-          setIsDeleting(true);
           await fetch(process.env.NEXT_PUBLIC_SERVER + "api/users/" + element, {
             method: "DELETE",
             headers: {
@@ -136,17 +131,23 @@ import {
           }).then((res) => {
             if (res.status === 200) {
               toast({
-                title: 'User ' + element + ' dropped.',
+                title: 'User ' + element + ' deleted.',
                 status: 'success',
                 duration: 9000,
                 isClosable: true,
-              })
-              setIsDeleting(false);;
+              });
             }
           })
         });
         setIsDeleting(false);
         onClose3();
+      }
+      if (authStatus === "auth") {
+        console.log(`profile token: ${token}`);
+        fetchData();
+      }
+      if (authStatus === "auth" && role!=="admin"){
+        router.push("/unauthorized")
       }
     }, [isLoading, isDeleting, authStatus])
 
