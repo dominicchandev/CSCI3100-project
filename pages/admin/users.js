@@ -161,31 +161,19 @@ import {
       const data = await response.json();
       setData(data);
     }
-    
-    // if (!data || authStatus === "loading") {
-    //   return <Text>Loading...</Text>;
-    // }
 
-    // the 3 boxes in create users do not align, as well as the labels
     return (
-      <Box>
-        <HStack mt="10px" pt= "10px">
+        <HStack spacing={10} alignItems="flex-start">
           <SideBar colorMode={colorMode} isAdmin={role === "admin"}/>
-          <Spacer/>
-          <VStack>
+          <VStack width="100%" pr="20px" pt="25px" spacing={10}>
             <Box
-              position="absolute"
-              ml = "10px"
               borderRadius="15px"
               height="100px"
-              top = "20px"
-              right = "0px"
-              w="75%"
+              w="100%"
               background="#40DDCF"
-              mr = "10px"
             >
               <HStack>
-              <VStack align = "left" mt="10px" ml = "10px" pt= "10px">
+              <VStack align="left" mt="10px" ml = "10px" pt= "10px">
                 <Breadcrumb >
                 <BreadcrumbItem color="White">
                 <BreadcrumbLink href='' color="White" >{name}</BreadcrumbLink>
@@ -234,17 +222,10 @@ import {
               </HStack>
               </HStack>
             </Box>
-            <Spacer/>
             <Box
-            position="absolute"
-            ml = "10px"
             borderRadius="15px"
-            top = "120px"
-            right = "10px"
-            w="75%"
+            w="100%"
             background="#FFFFFF"
-            mr = "10px"
-            overflowWrap="anywhere"
             >
             <VStack>
             <Box
@@ -358,6 +339,5 @@ import {
             </Box>
           </VStack>
         </HStack>
-      </Box>
     )
   }

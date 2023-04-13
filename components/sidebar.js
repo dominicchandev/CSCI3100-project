@@ -68,7 +68,7 @@ export function SideBar(props) {
     return (
         <Box 
             pl="20px"
-            mt={props.mt ?? undefined}
+            mt="20px"
             height="100vh"
         >
             <HStack>

@@ -16,6 +16,7 @@ import {
 import { useRouter } from "next/router";
 import { useState, useRef } from "react";
 import { NavigationBar } from "@/components/navigationbar";
+import { ValidateEmail } from "@/utils/validation/email";
 
 export default function SignUpPage() {
   const { colorMode } = useColorMode();
@@ -41,6 +42,12 @@ export default function SignUpPage() {
         });
         setIsLoading(false);
         return;
+    }
+
+    if(!ValidateEmail(email)) {
+      setErrMsg("Invalid email");
+      setIsLoading(false);
+      return;
     }
 
     const formData = new FormData();

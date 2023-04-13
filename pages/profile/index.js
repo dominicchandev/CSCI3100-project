@@ -74,7 +74,7 @@ export default function Home() {
 
   return (
       <HStack spacing={10} alignItems="flex-start">
-        <SideBar colorMode={colorMode} mt="20px" isAdmin={role === "admin"}/>
+        <SideBar colorMode={colorMode} isAdmin={role === "admin"}/>
         <VStack width="100%" pr="20px" pt="25px" spacing={20}>
               <ProfileBox
                 email={email}
@@ -87,29 +87,23 @@ export default function Home() {
                 overflowWrap="anywhere"
               >
                 <VStack>
-                  <Box overflowWrap="break-word" flexWrap="wrap">
-                    <VStack>
-                      <Box overflowWrap="break-word" flexWrap="wrap">
-                        <CourseTable 
-                          courses={courses} 
-                          onChange={handleCheckboxChange}
-                        />
-                      </Box>
-                      <Spacer />
-                    </VStack>
-                    <Flex justify="flex-end">
-                      <Button
-                        onClick={() => setIsDroping(true)}
-                        type="submit"
-                        bg="cyanAlpha"
-                        color="white"
-                        variant="solid"
-                        isLoading={isDropping}
-                      >
-                        Confirm Drop Course
-                      </Button>
-                    </Flex>
-                  </Box>
+                      <CourseTable 
+                        courses={courses} 
+                        onChange={handleCheckboxChange}
+                      />
+                      <Flex width="100%">
+                        <Spacer/>
+                        <Button
+                          onClick={() => setIsDroping(true)}
+                          type="submit"
+                          bg="cyanAlpha"
+                          color="white"
+                          variant="solid"
+                          isLoading={isDropping}
+                        >
+                          Confirm Drop Course
+                        </Button>
+                      </Flex>
                   <Spacer />
                 </VStack>
               </Box>
