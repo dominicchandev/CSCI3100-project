@@ -74,7 +74,7 @@ export default function Home() {
 
   return (
       <HStack spacing={10} alignItems="flex-start">
-        <SideBar colorMode={colorMode} mt="20px" isAdmin={role === "admin"}/>
+        <SideBar colorMode={colorMode} isAdmin={role === "admin"}/>
         <VStack width="100%" pr="20px" pt="25px" spacing={20}>
               <ProfileBox
                 email={email}
