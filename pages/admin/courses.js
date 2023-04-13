@@ -22,7 +22,6 @@ import {
   import { HiOutlinePlusCircle } from 'react-icons/hi'
   import { useRef, useState, useEffect } from "react";
   import { useAuth } from "@/utils/hooks/useAuth";
-  import { ResultTable } from "@/components/ResultTable";
   import { CourseBox } from '@/components/CourseBox';
   import { AddCourseModal } from '@/components/AddCourseModal';
   import { AdminResultTable } from "@/components/AdminResultTable";
@@ -106,28 +105,6 @@ import {
     }
 
     useEffect(() => {
-        // if (authStatus === "auth" && isDeleting === true) {
-        //   var dataArray = Array.from(selectedCourses);
-        //   dataArray.forEach(async (element) => {
-        //     await fetch(process.env.NEXT_PUBLIC_SERVER + "api/courses/" + element, {
-        //       method: "DELETE",
-        //       headers: {
-        //         Authorization: `Bearer ${token}`
-        //       },
-        //     }).then((res) => {
-        //       if (res.status === 200) {
-        //         toast({
-        //           title: 'Course ' + element + ' deleted.',
-        //           status: 'success',
-        //           duration: 9000,
-        //           isClosable: true,
-        //         });
-        //       }
-        //     })
-        //   });
-        //   setIsDeleting(false);
-        //   setStatus(true);
-        // }
         if (authStatus === "auth" && role!="admin") {
           router.push("/unauthorized")
         }
