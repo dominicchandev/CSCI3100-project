@@ -34,7 +34,7 @@ export function CourseTable(props) {
   return (
     <>    
       <TableContainer>
-        <Table variant="simple" layout="fixed" overflowWrap="anywhere">
+        <Table variant="simple">
           <CourseTableHeadRow />
           <Tbody>
             {courses.map((course) => (
@@ -59,7 +59,7 @@ function CourseTableHeadRow() {
         <Th {...TH_STYLE}>COURSE NAME</Th>
         <Th {...TH_STYLE}>INSTRUCTOR</Th>
         <Th {...TH_STYLE}>DEPARTMENT</Th>
-        <Th {...TH_STYLE}>TIME</Th>
+        <Th {...TH_STYLE} style={{minWidth: "100px"}}>TIME</Th>
         <Th {...TH_STYLE}>LOCATION</Th>
         <Th {...TH_STYLE}>DROP COURSE</Th>
       </Tr>

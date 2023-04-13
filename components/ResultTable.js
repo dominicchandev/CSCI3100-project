@@ -49,8 +49,6 @@ export function ResultTable(props) {
   const [selectedCourses, setSelectedCourses] = useState(new Set())
   const [isRegistering, setIsRegistering] = useState(false)
 
-  console.log("HI");
-  
 
   const handleCheckboxChange = (e) => {
   e.preventDefault();
@@ -94,7 +92,6 @@ export function ResultTable(props) {
               // console.log(Object.keys(failed));
               {Object.keys(failed).map((errorType) => {
                 const failedCourses = failed[errorType];
-                // console.log("HI");
                 // console.log(errorType);
                 // console.log(failedCourses);
                 if (failedCourses.length !== 0){
@@ -114,7 +111,6 @@ export function ResultTable(props) {
           if (result.successful!=undefined && result.failed != undefined){
             {Object.keys(failed).map((errorType) => {
               const failedCourses = failed[errorType];
-              console.log("HI");
               console.log(errorType);
               console.log(failedCourses);
               if (failedCourses.length === 0){

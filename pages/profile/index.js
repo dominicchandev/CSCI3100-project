@@ -87,29 +87,23 @@ export default function Home() {
                 overflowWrap="anywhere"
               >
                 <VStack>
-                  <Box overflowWrap="break-word" flexWrap="wrap">
-                    <VStack>
-                      <Box overflowWrap="break-word" flexWrap="wrap">
-                        <CourseTable 
-                          courses={courses} 
-                          onChange={handleCheckboxChange}
-                        />
-                      </Box>
-                      <Spacer />
-                    </VStack>
-                    <Flex justify="flex-end">
-                      <Button
-                        onClick={() => setIsDroping(true)}
-                        type="submit"
-                        bg="cyanAlpha"
-                        color="white"
-                        variant="solid"
-                        isLoading={isDropping}
-                      >
-                        Confirm Drop Course
-                      </Button>
-                    </Flex>
-                  </Box>
+                      <CourseTable 
+                        courses={courses} 
+                        onChange={handleCheckboxChange}
+                      />
+                      <Flex width="100%">
+                        <Spacer/>
+                        <Button
+                          onClick={() => setIsDroping(true)}
+                          type="submit"
+                          bg="cyanAlpha"
+                          color="white"
+                          variant="solid"
+                          isLoading={isDropping}
+                        >
+                          Confirm Drop Course
+                        </Button>
+                      </Flex>
                   <Spacer />
                 </VStack>
               </Box>
