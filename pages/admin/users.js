@@ -131,9 +131,9 @@ import {
     }
 
     return (
-        <HStack mt="10px" pt= "10px" alignItems="flex-start">
+        <HStack spacing={10} alignItems="flex-start">
           <SideBar colorMode={colorMode} isAdmin={role === "admin"}/>
-          <VStack width="100%" pr="20px">
+          <VStack width="100%" pr="20px" pt="25px" spacing={10}>
             <Box
               borderRadius="15px"
               height="100px"
@@ -141,7 +141,7 @@ import {
               background="#40DDCF"
             >
               <HStack>
-              <VStack align = "left" mt="10px" ml = "10px" pt= "10px">
+              <VStack align="left" mt="10px" ml = "10px" pt= "10px">
                 <Breadcrumb >
                 <BreadcrumbItem color="White">
                 <BreadcrumbLink href='' color="White" >{name}</BreadcrumbLink>
