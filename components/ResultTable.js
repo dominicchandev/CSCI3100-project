@@ -256,7 +256,7 @@ export function ResultTableRow(props) {
         isClosable: true,
       });
     } else {
-      window.open({outline}, "_blank")
+      window.open(outline, "_blank")
   };
   }
 
