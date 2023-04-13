@@ -73,9 +73,8 @@ export function ResultTable(props) {
       }).then((res) => {
         if (res.status === 200) {
           res.json().then((result) => {
-          console.log(result);
           const { successful, failed } = result;
-          if (result.successful!=undefined && result.failed == undefined){
+          if ((result.successful!=undefined && result.successful.length !== 0) && (result.failed == undefined || result.failed.length === 0)){
             console.log(result.successful);
             successful.map((courses) => (
               toast({
@@ -87,8 +86,7 @@ export function ResultTable(props) {
             })
             ))
           }
-          if (result.successful==undefined && result.failed != undefined){
-               console.log(result.failed);
+          if ((result.successful==undefined || result.successful.length===0) && (result.failed != undefined && result.failed.length !== 0)){
               {Object.keys(failed).map((errorType) => {
                 const failedCourses = failed[errorType];
                 if (failedCourses.length !== 0){
@@ -105,12 +103,10 @@ export function ResultTable(props) {
                 })
                 }
               }
-          if (result.successful!=undefined && result.failed != undefined){
+          if ((result.successful!=undefined && result.successful.length!== 0 ) && (result.failed != undefined && result.failed.length !== 0)){
             {Object.keys(failed).map((errorType) => {
               const failedCourses = failed[errorType];
-              console.log(errorType);
-              console.log(failedCourses);
-              if (failedCourses.length === 0){
+              if (failedCourses.length !== 0){
                 {failedCourses.map((courseCode) => (
                 toast({
                   title: "Failed",
@@ -123,7 +119,7 @@ export function ResultTable(props) {
                 };
               })
               }
-          successful.map((courses) => (
+          result.successful.map((courses) => (
             toast({
             title: "Success",
             description: `Course ${courses} has been registered successfully.`,
@@ -174,7 +170,7 @@ export function ResultTable(props) {
             ))}
           </Tbody>
         </Table>
-        <Flex justify="flex-end" pb="10px" pt = "10px" pr = "10px">
+        <Flex justify="flex-end" pb="15px" pt = "15px" pr = "15px">
         <Button
           onClick={() => setIsRegistering(true)}
           type="submit"
@@ -182,6 +178,7 @@ export function ResultTable(props) {
           color="white"
           variant="solid"
           fontSize="sm"
+          isLoading={isRegistering}
         >
           Submit Registration
         </Button>
