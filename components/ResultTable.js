@@ -174,26 +174,20 @@ export function ResultTable(props) {
                 onChange={handleCheckboxChange}
               />
             ))}
-
-              <Tr w="full">
-              {[...Array(9)].map((_, i) => (
-                <Td key={i}></Td>
-              ))}
-                <Td>
-                  <Button
-                    onClick={() => setIsRegistering(true)}
-                    type="submit"
-                    bg="cyanAlpha"
-                    color="white"
-                    variant="solid"
-                    fontSize="sm"
-                  >
-                    Submit Registration
-                  </Button>
-                </Td>
-              </Tr>
           </Tbody>
         </Table>
+        <Flex justify="flex-end" pb="10px" pt = "10px" pr = "10px">
+        <Button
+          onClick={() => setIsRegistering(true)}
+          type="submit"
+          bg="cyanAlpha"
+          color="white"
+          variant="solid"
+          fontSize="sm"
+        >
+          Submit Registration
+        </Button>
+        </Flex>
       </TableContainer>
     </>
   );

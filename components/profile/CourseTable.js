@@ -9,7 +9,13 @@ import {
   Thead,
   Tr,
   VStack,
+  Spacer,
+  Button,
+  Flex,
+  useToast
 } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { useAuth } from "@/utils/hooks/useAuth";
 
 // CONSTS (don't repeat yourself!)
 const TH_STYLE = {
@@ -30,10 +36,76 @@ const TH_STYLE = {
 export function CourseTable(props) {
   const courses = props.courses;
   const onChange = props.onChange;
+  const title = props.title;
+  const [isDropping, setIsDropping] = useState(false)
+  const { token, authStatus, refreshAuthData} = useAuth();
+  const [selectedCourses, setSelectedCourses] = useState(new Set())
+  const [dropped, setDropped] = useState(false);
+  const toast = useToast();
 
+
+  const handleCheckboxChange = (e) => {
+    e.preventDefault();
+    if (e.target.checked) {
+      setSelectedCourses(prev => new Set(prev.add(e.target.value)))
+    }
+    else {
+      setSelectedCourses(prev => new Set([...prev].filter(x => x !== e.target.value)))
+    }
+  }
+
+  useEffect(() => {
+    if (authStatus === "auth" && isDropping === true) {
+      var data = Array.from(selectedCourses);
+      fetch(process.env.NEXT_PUBLIC_SERVER + "api/users/dropCourse", {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((res) => {
+        if (res.status === 200) {
+          toast({
+            title: 'Course dropped.',
+            description: "The courses are dropped",
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+          });
+        }
+      })
+      setIsDropping(false);
+      setDropped(true);
+    }
+  }, [authStatus, isDropping])
+
+  useEffect(() => {
+    if (authStatus === "auth" && dropped ==true) {
+      refreshAuthData();
+      setDropped(false);
+    }
+  }, [dropped, authStatus])
+
+
+  if (courses.length===0){
+    return(
+      <></>
+    );
+  } else{
   return (
     <>    
-      <TableContainer>
+      <TableContainer background="#FFFFFF" borderRadius="15px" pt = "15px" pl = "15px">
+      <Text
+          fontFamily="Helvetica"
+          lineHeight="1.4"
+          fontWeight="bold"
+          fontSize="18px"
+          color="Gray.Gray-700"
+          width="181px"
+          height="25px"
+        >{title}</Text>
+        <Spacer/>
         <Table variant="simple">
           <CourseTableHeadRow />
           <Tbody>
@@ -41,14 +113,28 @@ export function CourseTable(props) {
               <CourseTableRow
                 key={`course-table-row-${course.id}`}
                 course={course}
-                onChange={onChange}
+                onChange={handleCheckboxChange}
               />
             ))}
           </Tbody>
         </Table>
+        <Flex justify="flex-end" pb="15px" pt = "15px" pr = "15px">
+            <Button
+              onClick={() => setIsDropping(true)}
+              fontSize="sm"
+              type="submit"
+              bg="cyanAlpha"
+              color="white"
+              variant="solid"
+              // isLoading={isLoading}
+            >
+              Confirm Drop Course(s)
+            </Button>
+          </Flex>
       </TableContainer>
     </>
   );
+}
 }
 
 function CourseTableHeadRow() {
