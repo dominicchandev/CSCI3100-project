@@ -62,7 +62,7 @@ import {
                 width="100%"
                 background="#40DDCF"
             >
-                <HStack>
+                <HStack pr = "10px">
                     <VStack align="left" mt="10px" ml="10px" pt="10px">
                     <Breadcrumb>
                         <BreadcrumbItem color="White">
