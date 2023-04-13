@@ -26,8 +26,8 @@ const TH_STYLE = {
   fontWeight: "bold",
   fontSize: "10px",
   color: "#A0AEC0",
-  whiteSpace:"normal",
-  wordBreak:"break-word"
+  whiteSpace:"nowrap",
+  wordBreak:"break-word",
 };
 
 
@@ -156,41 +156,50 @@ export function ResultTable(props) {
     );
   } else{
   return (
-    <TableContainer background="#FFFFFF" borderRadius="15px" pt = "15px" pl = "15px">
-      <Text
-        fontFamily="Helvetica"
-        lineHeight="1.4"
-        fontWeight="bold"
-        fontSize="18px"
-        color="Gray.Gray-700"
-        width="181px"
-        height="25px"
-      >{title}</Text>
-      <Spacer/>
-      <Table variant="simple" layout="fixed" overflowWrap="anywhere">
-        <ResultTableHeadRow />
-        <Tbody>
-        {courses.map((course) => (
-            <ResultTableRow
-              key={`course-table-row-${course.id}`}
-              course={course}
-              onChange={handleCheckboxChange}
-            />
-          ))}
-        </Tbody>
-        <Flex justify="flex-end" pb="10px">
+    <>    
+      <TableContainer background="#FFFFFF" borderRadius="15px" pt = "15px" pl = "15px">
+        <Text
+          fontFamily="Helvetica"
+          lineHeight="1.4"
+          fontWeight="bold"
+          fontSize="18px"
+          color="Gray.Gray-700"
+          width="181px"
+          height="25px"
+        >{title}</Text>
+        <Spacer/>
+        <Table variant="simple">
+          <ResultTableHeadRow />
+          <Tbody>
+          {courses.map((course) => (
+              <ResultTableRow
+                key={`course-table-row-${course.id}`}
+                course={course}
+                onChange={handleCheckboxChange}
+              />
+            ))}
+
+              <Tr w="full">
+              {[...Array(9)].map((_, i) => (
+                <Td key={i}></Td>
+              ))}
+                <Td>
                   <Button
                     onClick={() => setIsRegistering(true)}
                     type="submit"
                     bg="cyanAlpha"
                     color="white"
                     variant="solid"
+                    fontSize="sm"
                   >
                     Submit Registration
                   </Button>
-                </Flex>
-      </Table>
-    </TableContainer>
+                </Td>
+              </Tr>
+          </Tbody>
+        </Table>
+      </TableContainer>
+    </>
   );
 }
 }
@@ -205,7 +214,7 @@ function ResultTableHeadRow() {
         <Th {...TH_STYLE}>COURSE NAME</Th>
         <Th {...TH_STYLE}>INSTRUCTOR</Th>
         <Th {...TH_STYLE}>DEPARTMENT</Th>
-        <Th {...TH_STYLE}>TIME</Th>
+        <Th {...TH_STYLE} style={{ minWidth: "100px" }}>TIME</Th>
         <Th {...TH_STYLE}>LOCATION</Th>
         <Th {...TH_STYLE}>CAPACITY</Th>
         <Th {...TH_STYLE}>ENROLLED</Th>
@@ -262,7 +271,7 @@ export function ResultTableRow(props) {
       <ColumnElem content={name} />
       <ColumnElem content={instructor} />
       <ColumnElem content={department} />
-      <ColumnElem content={times} />
+      <ColumnElem content={times}/>
       <ColumnElem content={locations} />
       <ColumnElem content={String(available_seats)} />
       <ColumnElem content={String(capacity)} />
