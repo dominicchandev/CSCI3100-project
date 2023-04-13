@@ -89,11 +89,8 @@ export function ResultTable(props) {
           }
           if (result.successful==undefined && result.failed != undefined){
                console.log(result.failed);
-              // console.log(Object.keys(failed));
               {Object.keys(failed).map((errorType) => {
                 const failedCourses = failed[errorType];
-                // console.log(errorType);
-                // console.log(failedCourses);
                 if (failedCourses.length !== 0){
                   {failedCourses.map((courseCode) => (
                   toast({
@@ -138,9 +135,10 @@ export function ResultTable(props) {
         }
           }
           )}
-        })
-          // router.push("/");
-      setIsRegistering(false);
+      }).finally(() => {
+        setIsRegistering(false);
+      })
+
     }
   }, [authStatus, isRegistering])
 
@@ -251,7 +249,7 @@ export function ResultTableRow(props) {
         isClosable: true,
       });
     } else {
-      window.open({outline}, "_blank")
+      window.open(outline, "_blank")
   };
   }
 

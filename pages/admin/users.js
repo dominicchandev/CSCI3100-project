@@ -45,6 +45,8 @@ import {
     const [newemail, setNewEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [selectedUsers, setSelectedUsers] = useState(new Set())
+    const [isDeleting, setIsDeleting] = useState(false)
     const [errMsg, setErrMsg] = useState("");
     const [data, setData] = useState([]);
     const cancelRef = React.useRef();
@@ -61,46 +63,44 @@ import {
         setIsLoading(false);
         return;
         };
-    const formData = new FormData();
-    formData.append("name", newname);
-    formData.append("email", newemail);
-    formData.append("password", password);
+      const formData = new FormData();
+      formData.append("name", newname);
+      formData.append("email", newemail);
+      formData.append("password", password);
 
-    const plainFormData = Object.fromEntries(formData.entries());
-    const formDataJsonString = JSON.stringify(plainFormData);
-    console.log(newname);
-    fetch(process.env.NEXT_PUBLIC_SERVER + 'api/users', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: formDataJsonString
-    })
-    .then((res) => {
-        if (res.status === 200) {
-            console.log("New user");
-            onClose2();
-            toast({
-              title: "Success",
-              description: `New user ${newname} created`,
-              status: "success",
-              duration: 9000,
-              isClosable: true,
-          });
-        } else if (res.status === 400) {
-            setErrMsg("Email already registered")
-            console.log("Email already registered");
-        } else {
-            console.log(res.json())
-        }
-    })
-    .catch((err) => console.log("Error: ", err))
-    .finally(() => setIsLoading(false));
-    };
-
-    const handleDelete = (e) => { 
-      e.preventDefault();
-      setIsLoading(false);
+      const plainFormData = Object.fromEntries(formData.entries());
+      const formDataJsonString = JSON.stringify(plainFormData);
+      console.log(newname);
+      fetch(process.env.NEXT_PUBLIC_SERVER + 'api/users', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: formDataJsonString
+      })
+      .then((res) => {
+          if (res.status === 200) {
+              console.log("New user");
+              onClose2();
+              toast({
+                title: "Success",
+                description: `New user ${newname} created`,
+                status: "success",
+                duration: 9000,
+                isClosable: true,
+            });
+          } else if (res.status === 400) {
+              setErrMsg("Email already registered")
+              console.log("Email already registered");
+          } else {
+              console.log(res.json())
+          }
+      })
+      .catch((err) => console.log("Error: ", err))
+      .finally(() => setIsLoading(false));
+      setNewName("");
+      setNewEmail("");
+      setPassword("");
     };
 
     const handleLogout = (e) => { 
@@ -109,7 +109,39 @@ import {
       router.push("/login");
     };
 
+    const handleCheckboxChange = (e) => {
+      e.preventDefault();
+      if (e.target.checked) {
+        setSelectedUsers(prev => new Set(prev.add(e.target.value)))
+      }
+      else {
+        setSelectedUsers(prev => new Set([...prev].filter(x => x !== e.target.value)))
+      }
+    }
+
     useEffect(() => {
+      if (authStatus === "auth" && isDeleting === true){
+        var dataArray = Array.from(selectedUsers);
+        dataArray.forEach(async (element) => {
+          await fetch(process.env.NEXT_PUBLIC_SERVER + "api/users/" + element, {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`
+            },
+          }).then((res) => {
+            if (res.status === 200) {
+              toast({
+                title: 'User ' + element + ' deleted.',
+                status: 'success',
+                duration: 9000,
+                isClosable: true,
+              });
+            }
+          })
+        });
+        setIsDeleting(false);
+        onClose3();
+      }
       if (authStatus === "auth") {
         console.log(`profile token: ${token}`);
         fetchData();
@@ -117,7 +149,7 @@ import {
       if (authStatus === "auth" && role!=="admin"){
         router.push("/unauthorized")
       }
-    }, [isLoading, authStatus])
+    }, [isLoading, isDeleting, authStatus])
 
     async function fetchData() {
       const response = await fetch(process.env.NEXT_PUBLIC_SERVER + "api/users/all", {
@@ -200,7 +232,7 @@ import {
             overflowWrap="break-word"
             flexWrap="wrap"
             >
-            <UserTable users={data} />
+            <UserTable users={data} onChange={handleCheckboxChange}/>
             </Box>
             <Spacer/>      
             </VStack>
@@ -297,7 +329,7 @@ import {
                   <Button ref={cancelRef} onClick={onClose3}>
                     Cancel
                   </Button>
-                  <Button onClick={handleDelete} isLoading={isLoading} bg="cyanAlpha" color = "white" ml={3}>
+                  <Button onClick={() => setIsDeleting(true)} isLoading={isDeleting} bg="cyanAlpha" color = "white" ml={3}>
                     Delete
                   </Button>
                 </AlertDialogFooter>

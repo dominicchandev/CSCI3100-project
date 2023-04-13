@@ -35,10 +35,8 @@ export function NavigationBar(props) {
     return (
     <Box>
         <Box 
-            position="sticky" 
             w="600px"
             rounded="15px"
-            top="0" 
             pl="10px" 
             boxShadow="0px 7px 23px 0px"
             bg="white" 
