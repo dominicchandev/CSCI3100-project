@@ -58,6 +58,19 @@ import {
     const router = useRouter();
     const toast = useToast();
     const cancelRef = useRef();
+    const [getRoute, setGetRoute] = useState(true);
+    const [lastPartOfRoute, setLastPartOfRoute] = useState("");
+  
+    useEffect(() => {
+      if (getRoute==true){
+      const currentUrl = document.URL;
+      const parts = currentUrl.split("/");
+      const temp = parts.pop();
+      setLastPartOfRoute(temp);
+      setGetRoute(false);
+      }
+    }, [getRoute]);
+    
 
     const handleLogout = (e) => { 
       e.preventDefault();
@@ -180,7 +193,7 @@ import {
     return (
         <Box>
         <HStack mt="10px" pt= "10px">
-          <SideBar colorMode={colorMode} isAdmin={role === "admin"}/>
+          <SideBar colorMode={colorMode} isAdmin={role === "admin"} onPage={lastPartOfRoute}/>
           <Spacer/>
           <VStack>
             <Box

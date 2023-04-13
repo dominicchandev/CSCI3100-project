@@ -36,7 +36,7 @@ export function SideBar(props) {
         if (onPage=="coursesbrowsing") {
             setcoursesBrowsingHighlight(true)
         }
-        if (onPage=="courses" && isAdmin) {
+        if (onPage=="courses" ) {
             setcoursesHighlight(true)
         } 
         if (onPage=="users") {

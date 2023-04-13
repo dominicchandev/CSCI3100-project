@@ -52,7 +52,18 @@ import {
     const cancelRef = React.useRef();
     const router = useRouter();
     const toast = useToast();
-    console.log(role);
+    const [getRoute, setGetRoute] = useState(true);
+    const [lastPartOfRoute, setLastPartOfRoute] = useState("");
+  
+    useEffect(() => {
+      if (getRoute==true){
+      const currentUrl = document.URL;
+      const parts = currentUrl.split("/");
+      const temp = parts.pop();
+      setLastPartOfRoute(temp);
+      setGetRoute(false);
+      }
+    }, [getRoute]);
     
     const handleCreate = (e) => { 
       e.preventDefault();
@@ -164,7 +175,7 @@ import {
 
     return (
         <HStack spacing={10} alignItems="flex-start">
-          <SideBar colorMode={colorMode} isAdmin={role === "admin"}/>
+          <SideBar colorMode={colorMode} isAdmin={role === "admin"} onPage={lastPartOfRoute}/>
           <VStack width="100%" pr="20px" pt="25px" spacing={10}>
             <Box
               borderRadius="15px"
@@ -236,8 +247,9 @@ import {
             </Box>
             <Spacer/>      
             </VStack>
-            <Flex marginTop="10" justify="flex-end">
-            <Button mr={4} mb={4} onClick={onOpen2} type="submit" leftIcon={<HiUserAdd />} color= "cyanAlpha" borderColor="cyanAlpha" variant = "outline">
+            <Flex marginTop="10px" justify="flex-end" pr = "15px" pb = "15px">
+              <HStack>
+            <Button onClick={onOpen2} type="submit" leftIcon={<HiUserAdd />} color= "cyanAlpha" borderColor="cyanAlpha" variant = "outline">
                 Create User
             </Button>
             <AlertDialog
@@ -308,9 +320,10 @@ import {
               </AlertDialogFooter>
             </AlertDialogContent>
             </AlertDialog>
-            <Button onClick={onOpen3} mr={2} leftIcon={<HiUserRemove />} type="submit" bg='cyanAlpha' color = "white" variant = "solid">
+            <Button onClick={onOpen3} leftIcon={<HiUserRemove />} type="submit" bg='cyanAlpha' color = "white" variant = "solid">
                 Delete User
             </Button>
+            </HStack>
             <AlertDialog
               motionPreset='slideInBottom'
               leastDestructiveRef={cancelRef}
