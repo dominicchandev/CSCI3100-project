@@ -43,11 +43,11 @@ import {
     const { courses } = props;
     const { title } = props;
     const { isLoading } = props;
-    const { status } = props;
     const toast = useToast();
     const { token, authStatus} = useAuth();
     const [selectedCourses, setSelectedCourses] = useState(new Set())
     const [isRegistering, setIsRegistering] = useState(false)
+    const [isDeleting, setIsDeleting] = useState(false);
   
   
     const handleCheckboxChange = (e) => {
@@ -60,6 +60,39 @@ import {
     }
     }
   
+    useEffect(() => {
+      if (authStatus === "auth" && isDeleting === true) {
+        var dataArray = Array.from(selectedCourses);
+        dataArray.forEach(async (element) => {
+          await fetch(process.env.NEXT_PUBLIC_SERVER + "api/courses/" + element, {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`
+            },
+          }).then((res) => {
+            if (res.status === 200) {
+              toast({
+                title: 'Course ' + element + ' deleted.',
+                status: 'success',
+                duration: 9000,
+                isClosable: true,
+              });
+            }
+            else {
+              toast({
+                title: 'Failed to delete Course ' + element,
+                status: 'success',
+                duration: 9000,
+                isClosable: true,
+              });
+            }
+          }).finally(() => {
+            setIsDeleting(false);
+          })
+        })
+      }
+    }, [authStatus, isDeleting])
+
     useEffect(() => {
       if (authStatus === "auth" && isRegistering === true) {
         var data = Array.from(selectedCourses);
@@ -192,6 +225,26 @@ import {
                     </Button>
                   </Td>
                 </Tr>
+
+                <Tr w="full">
+                {[...Array(9)].map((_, i) => (
+                  <Td key={i}></Td>
+                ))}
+                  <Td>
+                    <Button
+                      onClick={() => setIsDeleting(true)}
+                      fontSize="14px"
+                      type="submit"
+                      bg="cyanAlpha"
+                      color="white"
+                      variant="solid"
+                      isLoading={isDeleting}
+                    >
+                      Confirm Delete Course
+                    </Button>
+                  </Td>
+                </Tr>
+
             </Tbody>
           </Table>
         </TableContainer>
