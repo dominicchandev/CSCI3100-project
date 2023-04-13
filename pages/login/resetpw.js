@@ -21,15 +21,15 @@ import { NavigationBar } from "@/components/navigationbar";
 
 export default function LoginPage() {
     const { colorMode } = useColorMode();
-    const router = useRouter()
+    const router = useRouter();
     const [email, setEmail] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [errMsg, setErrMsg] = useState("");
     const toast = useToast();
 
     const handleSubmit = (e) => {
-        setIsLoading(true)
-        setErrMsg("")
+        setIsLoading(true);
+        setErrMsg("");
         e.preventDefault();
         if (email === "") {
             toast({
@@ -42,9 +42,31 @@ export default function LoginPage() {
         } else {
             // send a verification code in the backend
             // pass on the email to verify
-            router.push("/login/verify")
+            const formData = new FormData();
+            formData.append("email", email);
+            const plainFormData = Object.fromEntries(formData.entries());
+            fetch(process.env.NEXT_PUBLIC_SERVER + "api/users/email", {
+                method: "POST",
+                body: JSON.stringify(plainFormData),
+                headers: {
+                  "Content-Type": "application/json",
+                },
+            }).then((res) => {
+                if (res.status === 200) {
+                    sessionStorage.setItem("email", email);
+                    router.push("/login/verify");
+                } else {
+                    toast({
+                        title: "Error",
+                        description: "Email not registered.",
+                        status: "error",
+                        duration: 9000,
+                        isClosable: true,
+                    });
+                }
+            });
         }
-        setIsLoading(false)
+        setIsLoading(false);
     };
 
     return (

@@ -26,11 +26,11 @@ export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [errMsg, setErrMsg] = useState("");
     const toast = useToast();
-    const { email } = router.query;
+    const email = sessionStorage.getItem("email");
 
     const handleSubmit = (e) => {
-        setIsLoading(true)
-        setErrMsg("")
+        setIsLoading(true);
+        setErrMsg("");
         e.preventDefault();
         if (code === "") {
             toast({
@@ -42,17 +42,44 @@ export default function LoginPage() {
             });
         } else {
             // check if the code matches
-            router.push("/login/changepw")
+            const formData = new FormData();
+            formData.append("email", email);
+            formData.append("otp", code);
+            const plainFormData = Object.fromEntries(formData.entries());
+            fetch(process.env.NEXT_PUBLIC_SERVER + "api/users/email/verification", {
+                method: "POST",
+                body: JSON.stringify(plainFormData),
+                headers: {
+                  "Content-Type": "application/json",
+                },
+            }).then((res) => {
+                if (res.status === 200) {
+                    res.json().then((result) => {
+                        const token = result.verify_token;
+                        sessionStorage.removeItem("email");
+                        sessionStorage.setItem("verify_token", token);
+                        router.push("/login/changepw");
+                    });
+                } else {
+                    toast({
+                        title: "Error",
+                        description: "Code does not match.",
+                        status: "error",
+                        duration: 9000,
+                        isClosable: true,
+                    });
+                }
+            });
         }
-        setIsLoading(false)
+        setIsLoading(false);
     };
     
     const handleClick = (e) => {
-        setIsLoading(true)
-        setErrMsg("")
+        setIsLoading(true);
+        setErrMsg("");
         e.preventDefault();
         // resend the code from backend
-        setIsLoading(false)
+        setIsLoading(false);
     }
 
     return (
