@@ -12,10 +12,11 @@ import {
   HStack,
   Flex,
   useColorMode,
+  useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { CompanyIntro } from "@/components/companyintro";
 import { NavigationBar } from "@/components/navigationbar";
 import { useAuth } from "@/utils/hooks/useAuth";
@@ -28,12 +29,10 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
   const toast = useToast();
+  const boxColor = useColorModeValue("whitePure", "#1a202c")
+
 
   const { authStatus } = useAuth();
-
-  // useEffect(() => {
-  //   if (authStatus === "auth") router.push("/");
-  // }, [authStatus, router]);
 
   const handleSubmit = (e) => {
     setIsLoading(true);
@@ -81,9 +80,9 @@ export default function LoginPage() {
   } else{
     
   return (
-    <Flex bg = "white" height ="100vh">
-      <Box w="50%" h="100%" bg="white">
-        <VStack>
+    <Flex bg = {boxColor} height ="100vh">
+      <Box w="50%" h="100%" pr="20px" pl="20px">
+        <VStack width="100%">
           <NavigationBar colorMode={colorMode} />
 
           <VStack
@@ -125,7 +124,6 @@ export default function LoginPage() {
                   Email
                 </FormLabel>
                 <Input
-                  w="300px"
                   placeholder="Your email address"
                   fontSize="12px"
                   type="text"
@@ -145,7 +143,6 @@ export default function LoginPage() {
                   Password
                 </FormLabel>
                 <Input
-                  w="300px"
                   placeholder="Your password"
                   fontSize="12px"
                   type="password"
@@ -164,7 +161,6 @@ export default function LoginPage() {
               fontWeight="regular"
               fontSize="14px"
               color="Gray.Gray-400"
-              width="237px"
               height="20px"
             >
               <span>Forgot password? </span>
@@ -191,7 +187,6 @@ export default function LoginPage() {
               fontWeight="regular"
               fontSize="14px"
               color="Gray.Gray-400"
-              width="202.5px"
               height="19.5px"
             >
               <span>{"Don't have an account?"} </span>
@@ -204,8 +199,9 @@ export default function LoginPage() {
           </VStack>
         </VStack>
       </Box>
-      <Spacer />
-      <CompanyIntro colorMode={colorMode} />
+      <Box width="50%">
+        <CompanyIntro colorMode={colorMode} />
+      </Box>
     </Flex>
   );
 }

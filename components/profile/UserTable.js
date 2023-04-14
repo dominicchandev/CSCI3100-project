@@ -10,6 +10,8 @@ import {
     Thead,
     Tr,
     VStack,
+    useColorModeValue,
+    useColorMode
   } from "@chakra-ui/react";
   
   // CONSTS (don't repeat yourself!)
@@ -29,9 +31,13 @@ import {
    * @returns
    */
   export function UserTable(props) {
-    const { users } = props;
+    const users  = props.users;
+    const onChange = props.onChange;
+      const boxColor = useColorModeValue("whitePure", "darkAlpha")
+
+
     return (
-      <TableContainer>
+      <TableContainer background={boxColor} borderRadius="15px" pt = "15px" pl = "15px">
         <Table variant="simple" layout="fixed" overflowWrap="anywhere">
         <TableCaption placement="top" textAlign="left" fontWeight="bold" fontSize="xl">Users</TableCaption>
           <UserTableHeadRow />
@@ -40,6 +46,7 @@ import {
               <UserTableRow
                 key={`user-table-row-${user.id}`}
                 user={user}
+                onChange={onChange}
               />
             ))}
           </Tbody>
@@ -71,20 +78,24 @@ import {
    * @returns
    */
   export function UserTableRow(props) {
-    const { user } = props;
+    const user = props.user;
     const { id, name, email } = user;
+    const onChange = props.onChange;
+
     return (
       <Tr w="full">
         <ColumnElem content={name} />
         <ColumnElem content={email} />
-        <Td textAlign="center">
-          <Checkbox value={`delete-user-${id}`}></Checkbox>
+        <Td alignContent="center">
+          <Checkbox value={id} onChange={onChange} colorScheme = 'teal'></Checkbox>
         </Td>
       </Tr>
     );
     
     function ColumnElem(props) {
       const { content } = props;
+      const { colorMode, toggleColorMode } = useColorMode();
+
       if (typeof content === "string")
         return (
           <Td
@@ -92,7 +103,7 @@ import {
             lineHeight="1.4"
             fontWeight="bold"
             fontSize="12px"
-            color="#2D3748"
+            color= {colorMode === 'light'? "greyLight" : "greyDark"}
             whiteSpace="normal"
             wordBreak="break-word"
           >
@@ -106,7 +117,7 @@ import {
           lineHeight="1.4"
           fontWeight="bold"
           fontSize="12px"
-          color="#2D3748"
+          color= {colorMode === 'light'? "greyLight" : "greyDark"}
           whiteSpace="normal"
           wordBreak="break-word"
         >

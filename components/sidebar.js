@@ -12,7 +12,7 @@ import Image from "next/image";
 import { SidebarButton } from "./sidebarbutton";
 import { useEffect, useState } from "react";
 import { HiUser, HiUserGroup } from "react-icons/hi"
-import { GoBook } from "react-icons/go"
+import { GoBook, GoSearch } from "react-icons/go"
 import { useRouter } from "next/router";
 
 export function SideBar(props) {
@@ -36,7 +36,7 @@ export function SideBar(props) {
         if (onPage=="coursesbrowsing") {
             setcoursesBrowsingHighlight(true)
         }
-        if (onPage=="courses" && isAdmin) {
+        if (onPage=="courses" ) {
             setcoursesHighlight(true)
         } 
         if (onPage=="users") {
@@ -68,7 +68,7 @@ export function SideBar(props) {
     return (
         <Box 
             pl="20px"
-            mt={props.mt ?? undefined}
+            mt="20px"
             height="100vh"
         >
             <HStack>
@@ -91,7 +91,7 @@ export function SideBar(props) {
             <VStack mt="25px" spacing="15px">
                 <SidebarButton 
                     text="Courses Browsing" 
-                    icon={<GoBook color={coursesBrowsingHighlight ? "white" : "#40DDCF"} size={21}/>}
+                    icon={<GoSearch color={coursesBrowsingHighlight ? "white" : "#40DDCF"} size={19}/>}
                     extend={extend} 
                     highlight={coursesBrowsingHighlight}
                     onClick={coursesBrowsingOnClick}

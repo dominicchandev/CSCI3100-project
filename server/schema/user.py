@@ -14,7 +14,9 @@ class UserEmail(BaseModel):
 
 class UserVerifyEmail(UserEmail):
     otp: str
-class UserChangePassword(UserVerifyEmail):
+
+class UserChangePassword(BaseModel):
+    verify_token: str
     new_password: str
 
 class UserCreate(UserBase):

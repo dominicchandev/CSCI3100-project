@@ -7,7 +7,8 @@ import {
     Divider,
     Center,
     Spacer,
-    Flex
+    Flex,
+    useColorModeValue,
 } from "@chakra-ui/react";
 import Image from "next/image";
 
@@ -16,9 +17,8 @@ export function CompanyIntro() {
 
     return (
         <Box 
-            w="50%" 
+            minW="500px"
             h="600px"
-            position="sticky" 
             right="0px" 
             top="0" 
             pl="10px" 

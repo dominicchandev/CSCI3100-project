@@ -2,7 +2,6 @@ import {
     Flex, 
     Spacer, 
     Button, 
-    useColorMode,
     FormControl,
     FormLabel,
     Input,
@@ -23,7 +22,9 @@ import {
     AlertDialogContent,
     AlertDialogCloseButton,
     AlertDialogOverlay,
-    useToast
+    useToast,
+    useColorModeValue,
+    useColorMode
     } from '@chakra-ui/react'
   import { SideBar } from '@/components/sidebar'
   import { BsMoonStarsFill } from "react-icons/bs";
@@ -34,7 +35,9 @@ import {
   import { useRef, useState, useEffect } from "react";
   import React from "react";
   import { UserTable } from "@/components/profile/UserTable";
-  
+  import { CourseBox } from '@/components/CourseBox';
+  import { ValidateEmail } from '@/utils/validation/email';
+
   export default function Home() {
     const { colorMode, toggleColorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -45,12 +48,27 @@ import {
     const [newemail, setNewEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [selectedUsers, setSelectedUsers] = useState(new Set())
+    const [isDeleting, setIsDeleting] = useState(false)
     const [errMsg, setErrMsg] = useState("");
     const [data, setData] = useState([]);
     const cancelRef = React.useRef();
     const router = useRouter();
     const toast = useToast();
-    console.log(role);
+    const [getRoute, setGetRoute] = useState(true);
+    const [lastPartOfRoute, setLastPartOfRoute] = useState("");
+  
+    const boxColor = useColorModeValue("whitePure", "darkAlpha")
+
+    useEffect(() => {
+      if (getRoute==true){
+      const currentUrl = document.URL;
+      const parts = currentUrl.split("/");
+      const temp = parts.pop();
+      setLastPartOfRoute(temp);
+      setGetRoute(false);
+      }
+    }, [getRoute]);
     
     const handleCreate = (e) => { 
       e.preventDefault();
@@ -60,47 +78,50 @@ import {
         setErrMsg("Name, email and password are required.");
         setIsLoading(false);
         return;
-        };
-    const formData = new FormData();
-    formData.append("name", newname);
-    formData.append("email", newemail);
-    formData.append("password", password);
+      };
+      if (!ValidateEmail(newemail)) {
+        setErrMsg("Invalid email");
+        setIsLoading(false);
+        return;
+      }
+      const formData = new FormData();
+      formData.append("name", newname);
+      formData.append("email", newemail);
+      formData.append("password", password);
 
-    const plainFormData = Object.fromEntries(formData.entries());
-    const formDataJsonString = JSON.stringify(plainFormData);
-    console.log(newname);
-    fetch(process.env.NEXT_PUBLIC_SERVER + 'api/users', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: formDataJsonString
-    })
-    .then((res) => {
-        if (res.status === 200) {
-            console.log("New user");
-            onClose2();
-            toast({
-              title: "Success",
-              description: `New user ${newname} created`,
-              status: "success",
-              duration: 9000,
-              isClosable: true,
-          });
-        } else if (res.status === 400) {
-            setErrMsg("Email already registered")
-            console.log("Email already registered");
-        } else {
-            console.log(res.json())
-        }
-    })
-    .catch((err) => console.log("Error: ", err))
-    .finally(() => setIsLoading(false));
-    };
-
-    const handleDelete = (e) => { 
-      e.preventDefault();
-      setIsLoading(false);
+      const plainFormData = Object.fromEntries(formData.entries());
+      const formDataJsonString = JSON.stringify(plainFormData);
+      console.log(newname);
+      fetch(process.env.NEXT_PUBLIC_SERVER + 'api/users', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: formDataJsonString
+      })
+      .then((res) => {
+          if (res.status === 200) {
+              console.log("New user");
+              onClose2();
+              toast({
+                title: "Success",
+                description: `New user ${newname} created`,
+                status: "success",
+                duration: 9000,
+                isClosable: true,
+            });
+          } else if (res.status === 400) {
+              setErrMsg("Email already registered")
+              console.log("Email already registered");
+          } else {
+              console.log(res.json())
+          }
+      })
+      .catch((err) => console.log("Error: ", err))
+      .finally(() => setIsLoading(false));
+      setNewName("");
+      setNewEmail("");
+      setPassword("");
     };
 
     const handleLogout = (e) => { 
@@ -109,7 +130,39 @@ import {
       router.push("/login");
     };
 
+    const handleCheckboxChange = (e) => {
+      e.preventDefault();
+      if (e.target.checked) {
+        setSelectedUsers(prev => new Set(prev.add(e.target.value)))
+      }
+      else {
+        setSelectedUsers(prev => new Set([...prev].filter(x => x !== e.target.value)))
+      }
+    }
+
     useEffect(() => {
+      if (authStatus === "auth" && isDeleting === true){
+        var dataArray = Array.from(selectedUsers);
+        dataArray.forEach(async (element) => {
+          await fetch(process.env.NEXT_PUBLIC_SERVER + "api/users/" + element, {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`
+            },
+          }).then((res) => {
+            if (res.status === 200) {
+              toast({
+                title: 'User ' + element + ' deleted.',
+                status: 'success',
+                duration: 9000,
+                isClosable: true,
+              });
+            }
+          })
+        });
+        setIsDeleting(false);
+        onClose3();
+      }
       if (authStatus === "auth") {
         console.log(`profile token: ${token}`);
         fetchData();
@@ -117,7 +170,7 @@ import {
       if (authStatus === "auth" && role!=="admin"){
         router.push("/unauthorized")
       }
-    }, [isLoading, authStatus])
+    }, [isLoading, isDeleting, authStatus])
 
     async function fetchData() {
       const response = await fetch(process.env.NEXT_PUBLIC_SERVER + "api/users/all", {
@@ -129,102 +182,29 @@ import {
       const data = await response.json();
       setData(data);
     }
-    
-    // if (!data || authStatus === "loading") {
-    //   return <Text>Loading...</Text>;
-    // }
 
-    // the 3 boxes in create users do not align, as well as the labels
     return (
-      <Box>
-        <HStack mt="10px" pt= "10px">
-          <SideBar colorMode={colorMode} isAdmin={role === "admin"}/>
-          <Spacer/>
-          <VStack>
+        <HStack spacing={10} alignItems="flex-start">
+          <SideBar colorMode={colorMode} isAdmin={role === "admin"} onPage={lastPartOfRoute}/>
+          <VStack width="100%" pr="20px" pt="25px" spacing={10}>
+          <CourseBox name={name} page="Users"/>
             <Box
-              position="absolute"
-              ml = "10px"
-              borderRadius="15px"
-              height="100px"
-              top = "20px"
-              right = "0px"
-              w="75%"
-              background="#40DDCF"
-              mr = "10px"
-            >
-              <HStack>
-              <VStack align = "left" mt="10px" ml = "10px" pt= "10px">
-                <Breadcrumb >
-                <BreadcrumbItem color="White">
-                <BreadcrumbLink href='' color="White" >{name}</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbItem color="White">
-                <BreadcrumbLink href='' color="White" >Users</BreadcrumbLink>
-                </BreadcrumbItem>
-                </Breadcrumb>
-                <Text
-                align="left"
-                color="White"
-                fontWeight="bold">Users</Text>
-              </VStack>
-              <Spacer/>
-              <HStack spacing = "20px" mr="10px" mt="10px">
-                <Button onClick={toggleColorMode} leftIcon={colorMode === 'light'? <BsMoonStarsFill /> : <MdWbSunny />} size = "xs" colorScheme={colorMode === 'light'? 'whiteAlpha' : 'blackAlpha'} variant='ghost'>
-                {colorMode === 'light' ? 'DARK' : 'LIGHT'} MODE
-                </Button>
-                <Button onClick={onOpen} leftIcon={<HiUser />} size = "xs" colorScheme={colorMode === 'light'? 'whiteAlpha' : 'blackAlpha'} variant='ghost'>
-                LOGOUT
-                </Button>
-                <AlertDialog
-                motionPreset='slideInBottom'
-                leastDestructiveRef={cancelRef}
-                onClose={onClose}
-                isOpen={isOpen}
-                isCentered
-                >
-                <AlertDialogOverlay />
-                <AlertDialogContent>
-                  <AlertDialogHeader>Logout</AlertDialogHeader>
-                  <AlertDialogCloseButton />
-                  <AlertDialogBody>
-                  Are you sure to logout?
-                  </AlertDialogBody>
-                  <AlertDialogFooter>
-                    <Button ref={cancelRef} onClick={onClose}>
-                      Cancel
-                    </Button>
-                    <Button onClick={handleLogout} bg="cyanAlpha" color = "white" ml={3}>
-                      Logout
-                    </Button>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-                </AlertDialog>
-              </HStack>
-              </HStack>
-            </Box>
-            <Spacer/>
-            <Box
-            position="absolute"
-            ml = "10px"
             borderRadius="15px"
-            top = "120px"
-            right = "10px"
-            w="75%"
-            background="#FFFFFF"
-            mr = "10px"
-            overflowWrap="anywhere"
+            w="100%"
+            background= {boxColor}
             >
             <VStack>
             <Box
             overflowWrap="break-word"
             flexWrap="wrap"
             >
-            <UserTable users={data} />
+            <UserTable users={data} onChange={handleCheckboxChange}/>
             </Box>
             <Spacer/>      
             </VStack>
-            <Flex marginTop="10" justify="flex-end">
-            <Button mr={4} mb={4} onClick={onOpen2} type="submit" leftIcon={<HiUserAdd />} color= "cyanAlpha" borderColor="cyanAlpha" variant = "outline">
+            <Flex marginTop="10px" justify="flex-end" pr = "15px" pb = "15px">
+              <HStack>
+            <Button onClick={onOpen2} type="submit" leftIcon={<HiUserAdd />} color= "teal" borderColor="teal" variant = "outline">
                 Create User
             </Button>
             <AlertDialog
@@ -295,9 +275,10 @@ import {
               </AlertDialogFooter>
             </AlertDialogContent>
             </AlertDialog>
-            <Button onClick={onOpen3} mr={2} leftIcon={<HiUserRemove />} type="submit" bg='cyanAlpha' color = "white" variant = "solid">
+            <Button onClick={onOpen3} leftIcon={<HiUserRemove />} type="submit" bg='teal' color = "white" variant = "solid">
                 Delete User
             </Button>
+            </HStack>
             <AlertDialog
               motionPreset='slideInBottom'
               leastDestructiveRef={cancelRef}
@@ -316,7 +297,7 @@ import {
                   <Button ref={cancelRef} onClick={onClose3}>
                     Cancel
                   </Button>
-                  <Button onClick={handleDelete} isLoading={isLoading} bg="cyanAlpha" color = "white" ml={3}>
+                  <Button onClick={() => setIsDeleting(true)} isLoading={isDeleting} bg="cyanAlpha" color = "white" ml={3}>
                     Delete
                   </Button>
                 </AlertDialogFooter>
@@ -326,6 +307,5 @@ import {
             </Box>
           </VStack>
         </HStack>
-      </Box>
     )
   }

@@ -29,18 +29,17 @@ async def send_otp(user: UserEmail, db: Session = Depends(get_db)):
 
 @router.post("/email/verification")
 def verify_otp(user: UserVerifyEmail):
-    verified = userCRUD.verifyCode(email=user.email, code=user.otp)
+    verified, verify_token = userCRUD.verifyCode(email=user.email, code=user.otp)
     if not verified:
         raise HTTPException(status_code=403, detail="Email verification failed")
-    return {"verified" : verified}
+    return {"verified" : verified, "verify_token" : verify_token}
 
 @router.put("/password")
 async def reset_password(user: UserChangePassword, db: Session = Depends(get_db)):
-    verified = userCRUD.verifyCode(email=user.email, code=user.otp)
+    verified, email = userCRUD.extractVerifyToken(token=user.verify_token)
     if not verified:
-        raise HTTPException(status_code=403, detail="Email verification failed")
-    
-    userCRUD.update_password(db=db, email=user.email, password=user.new_password)
+        raise HTTPException(status_code=403, detail="Token error. Pleases try again.")
+    userCRUD.update_password(db=db, email=email, password=user.new_password)
     return {"message" : "Successfully reset password"}
         
 @router.get("/all")
@@ -89,6 +88,8 @@ async def register_courses(course_ids: list, db: Session = Depends(get_db), toke
 
 @router.put("/dropCourse")
 async def drop_many(course_ids: list, db: Session = Depends(get_db), token_data: TokenData = Depends(get_token_data)):
+    if (len(course_ids) == 0):
+        raise HTTPException(status_code=204, detail="No courses are selected")
     return usercourseCRUD.drop_many(db=db, user_id=token_data.id, course_ids=course_ids)
 
 @router.get("/{user_id}/courses")

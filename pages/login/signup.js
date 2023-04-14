@@ -11,11 +11,13 @@ import {
   useToast,
   Flex,
   useColorMode,
+  useColorModeValue,
   VStack
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useState, useRef } from "react";
 import { NavigationBar } from "@/components/navigationbar";
+import { ValidateEmail } from "@/utils/validation/email";
 
 export default function SignUpPage() {
   const { colorMode } = useColorMode();
@@ -26,6 +28,9 @@ export default function SignUpPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
   const toast = useToast();
+  const boxColor = useColorModeValue("whitePure", "#1a202c")
+  const formColor = useColorModeValue("whitePure", "#1f2737")
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -41,6 +46,12 @@ export default function SignUpPage() {
         });
         setIsLoading(false);
         return;
+    }
+
+    if(!ValidateEmail(email)) {
+      setErrMsg("Invalid email");
+      setIsLoading(false);
+      return;
     }
 
     const formData = new FormData();
@@ -97,7 +108,7 @@ export default function SignUpPage() {
                   a wonderful course management experience with us:)
                 </Text>
 
-                <VStack pb="20px" pt="25px" spacing="10px" bg = "white" w = "370px" h = "460px" borderRadius="15px" mt = "15px">
+                <VStack pb="20px" pt="25px" spacing="10px" bg = {formColor} w = "370px" h = "460px" borderRadius="15px" mt = "15px">
                   <form onSubmit={handleSubmit}>
                     <Text
                     lineHeight="1.4"

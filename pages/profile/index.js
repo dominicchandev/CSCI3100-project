@@ -18,101 +18,52 @@ import { ProfileBox } from "@/components/profile/profileBox";
 
 export default function Home() {
   const { colorMode, toggleColorMode } = useColorMode();
-  const { token, authStatus, courses, email, name, role } = useAuth();
-  const [selectedCourses, setSelectedCourses] = useState(new Set())
-  const [isDropping, setIsDroping] = useState(false)
-  const toast = useToast();
-  const router = useRouter();
+  const { token, authStatus, courses, email, name, role, userId, refreshAuthData } = useAuth();
   const [getRoute, setGetRoute] = useState(true)
   const [lastPartOfRoute, setLastPartOfRoute] = useState("");
+  const [dropped, setDropped] = useState(false)
 
-
+ 
   useEffect(() => {
     if (getRoute==true){
     const currentUrl = document.URL;
     setLastPartOfRoute(document.URL.substring(currentUrl.lastIndexOf("/") + 1));
     console.log(lastPartOfRoute);
-     console.log(getRoute);
+    console.log(getRoute);
     setGetRoute(false);
     }
   }, [getRoute]);
 
-  const handleCheckboxChange = (e) => {
-    e.preventDefault();
-    if (e.target.checked) {
-      setSelectedCourses(prev => new Set(prev.add(e.target.value)))
-    }
-    else {
-      setSelectedCourses(prev => new Set([...prev].filter(x => x !== e.target.value)))
-    }
-  }
-  
   useEffect(() => {
-    if (authStatus === "auth" && isDropping === true) {
-      var data = Array.from(selectedCourses);
-      fetch(process.env.NEXT_PUBLIC_SERVER + "api/users/dropCourse", {
-        method: "PUT",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }).then((res) => {
-        if (res.status === 200) {
-          toast({
-            title: 'Course dropped.',
-            description: "The courses are dropped",
-            status: 'success',
-            duration: 9000,
-            isClosable: true,
-          });
-        }
-      })
-      setIsDroping(false);
+    console.log("UO")
+    console.log(dropped);
+    console.log(courses);
+    if (authStatus === "auth" && dropped == true) {  
+      refreshAuthData();
+      console.log("DO YOU");
+      console.log(courses);
+      setDropped(false);
     }
-  }, [authStatus, isDropping])
+  }, [dropped, authStatus])
+
+  useEffect(() => {
+      console.log(courses)
+  }, [courses])
 
   return (
       <HStack spacing={10} alignItems="flex-start">
-        <SideBar colorMode={colorMode} mt="20px" isAdmin={role === "admin"}/>
+        <SideBar colorMode={colorMode} isAdmin={role === "admin"} onPage={lastPartOfRoute}/>
         <VStack width="100%" pr="20px" pt="25px" spacing={20}>
               <ProfileBox
                 email={email}
                 name={name}
+                userId={userId}
               />
-              <Box
-                borderRadius="15px"
-                width="100%"
-                background="#FFFFFF"
-                overflowWrap="anywhere"
-              >
-                <VStack>
-                  <Box overflowWrap="break-word" flexWrap="wrap">
-                    <VStack>
-                      <Box overflowWrap="break-word" flexWrap="wrap">
-                        <CourseTable 
-                          courses={courses} 
-                          onChange={handleCheckboxChange}
-                        />
-                      </Box>
-                      <Spacer />
-                    </VStack>
-                    <Flex justify="flex-end">
-                      <Button
-                        onClick={() => setIsDroping(true)}
-                        type="submit"
-                        bg="cyanAlpha"
-                        color="white"
-                        variant="solid"
-                        isLoading={isDropping}
-                      >
-                        Confirm Drop Course
-                      </Button>
-                    </Flex>
-                  </Box>
-                  <Spacer />
-                </VStack>
-              </Box>
+              <CourseTable 
+                courses={courses} 
+                title = "Registered Course(s)"
+                setDropped={setDropped}
+              />
         </VStack>
       </HStack>
 
