@@ -22,6 +22,7 @@ import {
     AlertDialogContent,
     AlertDialogCloseButton,
     AlertDialogOverlay,
+    useColorModeValue
   } from "@chakra-ui/react";
   import { BsMoonStarsFill } from "react-icons/bs";
   import { HiUser } from "react-icons/hi";
@@ -34,6 +35,8 @@ import {
     const email = props.email;
     const name = props.name;
     const schedule = props.schedule;
+    const boxColor = useColorModeValue("cyanAlpha", "darkBeta")
+
 
     const { colorMode, toggleColorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -48,12 +51,11 @@ import {
   
     return (
         <>
-        
             <Box
                 borderRadius="15px"
                 height="300px"
                 width="100%"
-                background="#40DDCF"
+                bg= {boxColor}
             >
                 <HStack pr = "10px">
                     <VStack align="left" mt="10px" ml="10px" pt="10px">
@@ -82,14 +84,14 @@ import {
                     </VStack>
                     <Spacer />
                     <HStack spacing="20px" mr="10px" mt="10px">
-                    <Button onClick={toggleColorMode} leftIcon={colorMode === 'light'? <BsMoonStarsFill /> : <MdWbSunny />} size = "xs" colorScheme={colorMode === 'light'? 'whiteAlpha' : 'blackAlpha'} variant='ghost'>
+                    <Button onClick={toggleColorMode} leftIcon={colorMode === 'light'? <BsMoonStarsFill /> : <MdWbSunny />} size = "xs" color="#FFFFFF" variant='ghost'>
                     {colorMode === 'light' ? 'DARK' : 'LIGHT'} MODE
                     </Button>
                     <Button
                         onClick={onOpen}
                         leftIcon={<HiUser />}
                         size="xs"
-                        colorScheme={colorMode === 'light'? 'whiteAlpha' : 'blackAlpha'}
+                        color= "#FFFFFF"
                         variant="ghost"
                         >
                         LOGOUT
@@ -147,9 +149,9 @@ import {
                                 lineHeight="1.4"
                                 fontWeight="bold"
                                 fontSize="18px"
-                                color="Gray.Gray-700"
                                 width="143.5px"
                                 height="25px"
+                                color = {colorMode === 'light'? "darkPure" : "darkPure"}
                                 >
                                 {name}
                             </Text>
@@ -158,9 +160,10 @@ import {
                                 lineHeight="1.4"
                                 fontWeight="regular"
                                 fontSize="14px"
-                                color="Gray.Gray-500"
+
                                 width="178px"
                                 height="17px"
+                                color = {colorMode === 'light'? "darkPure" : "darkPure"}
                                 >
                                 {email}
                             </Text>
@@ -171,7 +174,7 @@ import {
                                 <Button
                                 leftIcon={<MdSettings />}
                                 size="xs"
-                                colorScheme="teal"
+                                color= {colorMode === 'light'? "teal" : "teal"}
                                 variant="ghost"
                                 onClick={() => localStorage.removeItem("accessToken")}
                                 >

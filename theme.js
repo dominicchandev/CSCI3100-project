@@ -11,8 +11,14 @@ const styles = {
 };
 
 const colors = {
+    whitePure: "#FFFFFF",
+    darkPure: "#000000",
+    darkAlpha: "#011628",
+    darkBeta: "#13b1a3",
     cyanAlpha: "#40DDCF",
     buttoncolour: "#151928",
+    greyLight: "#2D3748",
+    greyDark: "#8791a1",
     text: {
         dark: "#000",
         light: "#fff"

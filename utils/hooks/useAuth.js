@@ -19,8 +19,7 @@ export function useAuth() {
     if (!local_token) {
       setAuthStatus("unauth");
     }
-  
-    fetch(`http://localhost:8000/api/users/me`, {
+    fetch(process.env.NEXT_PUBLIC_SERVER + `api/users/me`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${local_token}`,
@@ -39,6 +38,8 @@ export function useAuth() {
       token_expired.current = true;
     })
     .finally(() => {
+      console.log("ER");
+      console.log(courses);
       setToken(local_token)
     })
   }

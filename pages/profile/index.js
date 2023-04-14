@@ -38,6 +38,21 @@ export default function Home() {
     }
   }, [getRoute]);
 
+  useEffect(() => {
+    console.log("UO")
+    console.log(dropped);
+    console.log(courses);
+    if (authStatus === "auth" && dropped == true) {  
+      refreshAuthData();
+      console.log("DO YOU");
+      console.log(courses);
+      setDropped(false);
+    }
+  }, [dropped, authStatus])
+
+  useEffect(() => {
+      console.log(courses)
+  }, [courses])
 
   return (
       <HStack spacing={10} alignItems="flex-start">
@@ -50,6 +65,7 @@ export default function Home() {
               <CourseTable 
                 courses={courses} 
                 title = "Registered Course(s)"
+                setDropped={setDropped}
               />
         </VStack>
       </HStack>

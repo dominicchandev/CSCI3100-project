@@ -14,6 +14,8 @@ import {
   Link,
   Spacer,
   Flex,
+  useColorModeValue,
+  useColorMode
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/utils/hooks/useAuth";
@@ -48,6 +50,7 @@ export function ResultTable(props) {
   const { token, authStatus} = useAuth();
   const [selectedCourses, setSelectedCourses] = useState(new Set())
   const [isRegistering, setIsRegistering] = useState(false)
+  const boxColor = useColorModeValue("whitePure", "darkAlpha")
 
 
   const handleCheckboxChange = (e) => {
@@ -147,7 +150,7 @@ export function ResultTable(props) {
   } else{
   return (
     <>    
-      <TableContainer background="#FFFFFF" borderRadius="15px" pt = "15px" pl = "15px">
+      <TableContainer background={boxColor}  borderRadius="15px" pt = "15px" pl = "15px">
         <Text
           fontFamily="Helvetica"
           lineHeight="1.4"
@@ -174,7 +177,7 @@ export function ResultTable(props) {
         <Button
           onClick={() => setIsRegistering(true)}
           type="submit"
-          bg="cyanAlpha"
+          bg="teal"
           color="white"
           variant="solid"
           fontSize="sm"
@@ -261,18 +264,19 @@ export function ResultTableRow(props) {
       <ColumnElem content={String(available_seats)} />
       <ColumnElem content={String(capacity)} />
       <Td textAlign="center">
-        <Button value={`outline-${id}`} onClick={handleOnClick} variant="outline" fontSize="10px" color="#40DDCF">VIEW</Button>
+        <Button value={`outline-${id}`} colorScheme = 'teal' onClick={handleOnClick} variant="outline" fontSize="10px" color="#40DDCF">VIEW</Button>
       </Td>
       <Td textAlign="center">
-        <Checkbox value={id} onChange={onChange}></Checkbox>
+        <Checkbox value={id} onChange={onChange} colorScheme = 'teal'></Checkbox>
       </Td>
     </Tr>
   );
 
   function ColumnElem(props) {
     const { content } = props;
-    console.log("ERRR");
-    console.log(content);
+    const { colorMode, toggleColorMode } = useColorMode();
+
+
     if (typeof content === "string" || typeof content === "int" )
       return (
         <Td
@@ -280,9 +284,9 @@ export function ResultTableRow(props) {
           lineHeight="1.4"
           fontWeight="bold"
           fontSize="12px"
-          color="#2D3748"
           whiteSpace="normal"
           wordBreak="break-word"
+          color= {colorMode === 'light'? "greyLight" : "greyDark"}
         >
           {content}
         </Td>
@@ -295,7 +299,7 @@ export function ResultTableRow(props) {
         lineHeight="1.4"
         fontWeight="bold"
         fontSize="12px"
-        color="#2D3748"
+        color= {colorMode === 'light'? "greyLight" : "greyDark"}
         whiteSpace="normal"
         wordBreak="break-word"
       >

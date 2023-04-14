@@ -8,7 +8,9 @@ import {
     IconButton,
     Icon,
     Divider,
-    Center
+    Center,
+    useColorModeValue,
+    useColorMode
 } from "@chakra-ui/react";
 import Image from "next/image";
 import { useState } from "react";
@@ -16,21 +18,11 @@ import { HiUserAdd } from "react-icons/hi"
 import { AiFillUnlock } from 'react-icons/ai'
 import { BsMoonStarsFill } from 'react-icons/bs'
 import { Stack, Text, Menu } from '@chakra-ui/react'
+import { MdWbSunny } from "react-icons/md";
+
 
 export function NavigationBar(props) {
-    const [darkmodeHighlight, setDarkmodeHighlight] = useState(false)
-    const [signinHighlight, setSigninHighlight] = useState(false)
-    const colorMode = props.colorMode
-
-    function darkmodeOnClick() {
-        setDarkmodeHighlight(true)
-        setSigninHighlight(false)
-    }
-
-    function signinOnClick() {
-        setDarkmodeHighlight(false)
-        setSigninHighlight(true)
-    }
+    const { colorMode, toggleColorMode } = useColorMode();
 
     return (
     <Box>
@@ -54,8 +46,8 @@ export function NavigationBar(props) {
                     height={71}
                 />
                 <Spacer/>
-                <Button leftIcon={<BsMoonStarsFill />} size = "xs" colorScheme='#2D3748' variant='ghost'>
-                DARK MODE
+                <Button onClick={toggleColorMode} leftIcon={colorMode === 'light'? <BsMoonStarsFill /> : <MdWbSunny />} size = "xs" color="#FFFFFF" variant='ghost'>
+                    {colorMode === 'light' ? 'DARK' : 'LIGHT'} MODE
                 </Button>
                 <Link href="/login">
                 <Button leftIcon={<AiFillUnlock />} size = "xs" colorScheme='#2D3748' variant='ghost'>
