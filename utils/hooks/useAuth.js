@@ -32,7 +32,7 @@ export function useAuth() {
       setEmail(data.email);
       setName(data.name);
       setRole(data.role);
-      setUserId(data.userId);
+      setUserId(data.id);
     })
     .catch((err) => {
       token_expired.current = true;
@@ -68,12 +68,13 @@ export function useAuth() {
     })
     .then((res) => res.json())
     .then((data) => {
+      console.log(data)
       token_expired.current = false;
       setCourses(data.courses);
       setEmail(data.email);
       setName(data.name);
       setRole(data.role);
-      setUserId(data.userId);
+      setUserId(data.id);
     })
     .catch((err) => {
       token_expired.current = true;

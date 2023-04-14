@@ -36,7 +36,7 @@ import {
   import React from "react";
   import { UserTable } from "@/components/profile/UserTable";
   import { CourseBox } from '@/components/CourseBox';
-
+  import { ValidateEmail } from '@/utils/validation/email';
 
   export default function Home() {
     const { colorMode, toggleColorMode } = useColorMode();
@@ -78,7 +78,12 @@ import {
         setErrMsg("Name, email and password are required.");
         setIsLoading(false);
         return;
-        };
+      };
+      if (!ValidateEmail(newemail)) {
+        setErrMsg("Invalid email");
+        setIsLoading(false);
+        return;
+      }
       const formData = new FormData();
       formData.append("name", newname);
       formData.append("email", newemail);

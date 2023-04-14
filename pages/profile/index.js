@@ -18,11 +18,7 @@ import { ProfileBox } from "@/components/profile/profileBox";
 
 export default function Home() {
   const { colorMode, toggleColorMode } = useColorMode();
-  const { token, authStatus, courses, email, name, role, refreshAuthData } = useAuth();
-  const [selectedCourses, setSelectedCourses] = useState(new Set())
-  const [isDropping, setIsDroping] = useState(false)
-  const toast = useToast();
-  const router = useRouter();
+  const { token, authStatus, courses, email, name, role, userId, refreshAuthData } = useAuth();
   const [getRoute, setGetRoute] = useState(true)
   const [lastPartOfRoute, setLastPartOfRoute] = useState("");
   const [dropped, setDropped] = useState(false)
@@ -61,6 +57,7 @@ export default function Home() {
               <ProfileBox
                 email={email}
                 name={name}
+                userId={userId}
               />
               <CourseTable 
                 courses={courses} 

@@ -176,9 +176,9 @@ import {
           }
             }
             )}
-          })
-            // router.push("/");
-        setIsRegistering(false);
+        }).finally(() => {
+          setIsRegistering(false);
+        })
       }
     }, [authStatus, isRegistering])
   
@@ -221,10 +221,11 @@ import {
                     <Button
                       onClick={() => setIsRegistering(true)}
                       type="submit"
-                      bg="cyanAlpha"
+                      bg="teal"
                       color="white"
                       variant="solid"
                       fontSize="sm"
+                      isLoading={isRegistering}
                     >
                       Submit Registration
                     </Button>
@@ -240,7 +241,7 @@ import {
                       onClick={() => setIsDeleting(true)}
                       fontSize="14px"
                       type="submit"
-                      bg="cyanAlpha"
+                      bg="teal"
                       color="white"
                       variant="solid"
                       isLoading={isDeleting}
@@ -252,7 +253,7 @@ import {
 
             </Tbody>
           </Table>
-          <Flex justify="flex-end" pb="15px" pt = "15px" pr = "15px">
+          {/* <Flex justify="flex-end" pb="15px" pt = "15px" pr = "15px">
         <Button
           onClick={() => setIsRegistering(true)}
           type="submit"
@@ -264,7 +265,7 @@ import {
         >
           Submit Registration
         </Button>
-        </Flex>
+        </Flex> */}
         </TableContainer>
       </>
     );
@@ -396,7 +397,6 @@ import {
         <Td textAlign="center">
             <input type="file" className="form-control"
             onChange={handleChange}></input>
-            {/* <Button onClick={handleUpload} value={id} isLoading={isUploading}>Upload</Button> */}
             <Button colorScheme = 'teal' onClick={handleUpload} value={id} isLoading={isUploading}>Upload</Button>
         </Td>
         <Td textAlign="center">

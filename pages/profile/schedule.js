@@ -10,6 +10,7 @@ import { Schedule } from "@/components/schedule";
 import { ProfileBox } from "@/components/profile/profileBox";
 import { useRouter } from "next/router";
 
+
 export default function SchedulePage() {
   const { colorMode, toggleColorMode } = useColorMode();
   const { token, authStatus, courses, email, name , role, userId} = useAuth();
@@ -20,16 +21,17 @@ export default function SchedulePage() {
       router.push("/login")
     }
   }, [authStatus])
-  
+ 
   return (
     <>    
       <HStack spacing={10} alignItems="flex-start">
-          <SideBar colorMode={colorMode} isAdmin={role === "admin"}/>
+          <SideBar colorMode={colorMode} isAdmin={role === "admin"} onPage="profile"/>
           <VStack width="100%" pr="20px" pt="25px" spacing={20}>
                 <ProfileBox
                   email={email}
                   name={name}
                   schedule={true}
+                  userId={userId}
                 />
                 <Schedule courses={courses}/>
           </VStack>

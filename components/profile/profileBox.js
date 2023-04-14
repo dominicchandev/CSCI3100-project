@@ -34,6 +34,7 @@ import {
   export function ProfileBox(props) {
     const email = props.email;
     const name = props.name;
+    const userId = props.userId;
     const schedule = props.schedule;
     const boxColor = useColorModeValue("cyanAlpha", "darkBeta")
 
@@ -166,6 +167,18 @@ import {
                                 color = {colorMode === 'light'? "darkPure" : "darkPure"}
                                 >
                                 {email}
+                            </Text>
+                            <Text
+                                fontFamily="Helvetica"
+                                lineHeight="1.4"
+                                fontWeight="regular"
+                                fontSize="14px"
+
+                                width="178px"
+                                height="17px"
+                                color = {colorMode === 'light'? "darkPure" : "darkPure"}
+                                >
+                                {userId}
                             </Text>
                             </Box>
                             <Spacer />
