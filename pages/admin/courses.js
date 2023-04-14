@@ -4,9 +4,6 @@ import {
     Button, 
     useColorMode,
     Box, 
-    Breadcrumb, 
-    BreadcrumbItem, 
-    BreadcrumbLink, 
     HStack,
     VStack,
     Wrap,
@@ -16,34 +13,23 @@ import {
     Input,
     Divider,
     Select,
-    Stack,
     Text,
-    Link,
-    Avatar,
-    AvatarBadge,
     useDisclosure,
-    AlertDialog,
-    AlertDialogBody,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogContent,
-    AlertDialogCloseButton,
-    AlertDialogOverlay,
     useToast
     } from '@chakra-ui/react'
   import { SideBar } from '@/components/sidebar';
   import { useRouter } from "next/router";
-  import { BsMoonStarsFill } from "react-icons/bs";
-  import { HiUser } from "react-icons/hi"
-  import { MdSettings, MdWbSunny } from 'react-icons/md'
   import { HiOutlinePlusCircle } from 'react-icons/hi'
   import { useRef, useState, useEffect } from "react";
   import { useAuth } from "@/utils/hooks/useAuth";
   import { ResultTable } from "@/components/ResultTable";
+  import { CourseBox } from '@/components/CourseBox';
+  import { AddCourseModal } from '@/components/AddCourseModal';
+  import { AdminResultTable } from "@/components/AdminResultTable";
 
   export default function Home() {
     const { colorMode, toggleColorMode } = useColorMode();
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const { isOpen: isOpen2, onOpen: onOpen2, onClose: onClose2 } = useDisclosure();
     const { token, authStatus, email, name, role } = useAuth();
     const [status, setStatus] = useState(false);
     const [courseid, setCourseID] = useState("");
@@ -54,6 +40,8 @@ import {
     const [endtime, setEndTime] = useState("");
     const [courses, setCourses] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [selectedCourses, setSelectedCourses] = useState(new Set())
+    const [isDeleting, setIsDeleting] = useState(false)
     const [errMsg, setErrMsg] = useState("");
     const router = useRouter();
     const toast = useToast();
@@ -127,7 +115,39 @@ import {
         setCourses(data);
     };
 
+    const handleCheckboxChange = (e) => {
+      e.preventDefault();
+      if (e.target.checked) {
+        setSelectedCourses(prev => new Set(prev.add(e.target.value)))
+      }
+      else {
+        setSelectedCourses(prev => new Set([...prev].filter(x => x !== e.target.value)))
+      }
+    }
+
     useEffect(() => {
+        if (authStatus === "auth" && isDeleting === true) {
+          var dataArray = Array.from(selectedCourses);
+          dataArray.forEach(async (element) => {
+            await fetch(process.env.NEXT_PUBLIC_SERVER + "api/courses/" + element, {
+              method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${token}`
+              },
+            }).then((res) => {
+              if (res.status === 200) {
+                toast({
+                  title: 'Course ' + element + ' deleted.',
+                  status: 'success',
+                  duration: 9000,
+                  isClosable: true,
+                });
+              }
+            })
+          });
+          setIsDeleting(false);
+          setStatus(true);
+        }
         if (authStatus === "auth" && role!="admin") {
           router.push("/unauthorized")
         }
@@ -184,96 +204,15 @@ import {
         }
         setStatus(false);
         setIsLoading(false); 
-    }, [authStatus, status])
+    }, [authStatus, status, isDeleting])
 
-    // if (authStatus === "loading") {
-    //     return <Text>Loading...</Text>;
-    // }
 
     return (
-        <Box>
-        <HStack mt="10px" pt= "10px">
-          <SideBar colorMode={colorMode} isAdmin={role === "admin"} onPage={lastPartOfRoute}/>
-          <Spacer/>
-          <VStack>
-            <Box
-              position="absolute"
-              ml = "10px"
-              borderRadius="15px"
-              height="100px"
-              top = "20px"
-              right = "0px"
-              w="80%"
-              background="#40DDCF"
-              mr = "10px"
-            >
-              <HStack>
-              <VStack align = "left" mt="10px" ml = "10px" pt= "10px">
-                <Breadcrumb >
-                <BreadcrumbItem color="White">
-                <BreadcrumbLink href='' color="White" >{name}</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbItem color="White">
-                <BreadcrumbLink href='' color="White" >Courses</BreadcrumbLink>
-                </BreadcrumbItem>
-                </Breadcrumb>
-                <Text
-                align="left"
-                color="White"
-                fontWeight="bold">Courses</Text>
-              </VStack>
-              <Spacer/>
-              <HStack spacing = "20px" mr="10px" mt="10px">
-                <Button onClick={toggleColorMode} leftIcon={colorMode === 'light'? <BsMoonStarsFill /> : <MdWbSunny />} size = "xs" colorScheme={colorMode === 'light'? 'whiteAlpha' : 'blackAlpha'} variant='ghost'>
-                {colorMode === 'light' ? 'DARK' : 'LIGHT'} MODE
-                </Button>
-                <Button onClick={onOpen} leftIcon={<HiUser />} size = "xs" colorScheme={colorMode === 'light'? 'whiteAlpha' : 'blackAlpha'} variant='ghost'>
-                LOGOUT
-                </Button>
-                <AlertDialog
-                motionPreset='slideInBottom'
-                leastDestructiveRef={cancelRef}
-                onClose={onClose}
-                isOpen={isOpen}
-                isCentered
-                >
-                <AlertDialogOverlay />
-                <AlertDialogContent>
-                  <AlertDialogHeader>Logout</AlertDialogHeader>
-                  <AlertDialogCloseButton />
-                  <AlertDialogBody>
-                  Are you sure to logout?
-                  </AlertDialogBody>
-                  <AlertDialogFooter>
-                    <Button ref={cancelRef} onClick={onClose}>
-                      Cancel
-                    </Button>
-                    <Button onClick={handleLogout} bg="cyanAlpha" color = "white" ml={3}>
-                      Logout
-                    </Button>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-                </AlertDialog>
-              </HStack>
-              </HStack>
-            </Box>
-            <Spacer/>
-            <Box
-            position="absolute"
-            ml = "10px"
-            borderRadius="15px"
-            top = "120px"
-            right = "10px"
-            w="80%"
-            background="#FFFFFF"
-            mr = "10px"
-            overflowWrap="anywhere"
-            >
-            <VStack>
-            <Box
-            overflowWrap="break-word"
-            flexWrap="wrap"
-            >
+      <HStack spacing={10} alignItems="flex-start">
+          <SideBar colorMode={colorMode} isAdmin={role === "admin"}/>
+          <VStack width="100%" pr="20px" pt="25px" spacing={10}>
+          <CourseBox name={name} page="Courses"/>
+          <Box maxWidth="100%" borderRadius="15px" bg="white">
             <VStack mt="20px" ml="10px" alignItems="left">
                 <Text
                     textAlign={["left"]}
@@ -399,63 +338,27 @@ import {
                         </FormControl>
                     </WrapItem>
                     </Wrap>
-                    <Flex justify="flex-end" pb="8px">
-                    <HStack right = "10px" bottom = "20px" mt="10px" mr="7px">
-                    <Button fontSize="14px" type="reset" onClick={handleReset} color= "black" borderColor="cyanAlpha" variant = "outline" >
-                        Reset
-                    </Button>
-                    <Button leftIcon={<HiOutlinePlusCircle />} iconSize="xl" fontSize="14px" type="submit" color= "black" borderColor="cyanAlpha" variant = "outline" >
-                        Add Course
-                    </Button>
-                    <Button fontSize="14px" type="submit" onClick={handleShow} color= "black" borderColor="cyanAlpha" variant = "outline" isLoading={isLoading}>
-                        Show All Courses
-                    </Button>
-                    <Button fontSize="14px" type="submit" bg='cyanAlpha' color = "white" variant = "solid" onClick={handleSubmit} isLoading={isLoading}>
-                        Search Course
-                    </Button>
-                    </HStack>
+                    <Flex justify="flex-end" pb="8px" maxW="100%">
+                      <HStack maxWidth="100%" right="10px" bottom = "20px" mt="10px" mr="7px">
+                        <Button fontSize="14px" type="reset" onClick={handleReset} color= "black" borderColor="cyanAlpha" variant = "outline" >
+                            Reset
+                        </Button>
+                        <Button onClick={onOpen2} leftIcon={<HiOutlinePlusCircle />} iconSize="xl" fontSize="14px" type="submit" color= "black" borderColor="cyanAlpha" variant = "outline" >
+                            Add Course
+                        </Button>
+                        <AddCourseModal isOpen={isOpen2} onClose={onClose2}/>
+                        <Button fontSize="14px" type="submit" onClick={handleShow} color= "black" borderColor="cyanAlpha" variant = "outline" isLoading={isLoading}>
+                            Show All Courses
+                        </Button>
+                        <Button fontSize="14px" type="submit" bg='cyanAlpha' color = "white" variant = "solid" onClick={handleSubmit} isLoading={isLoading}>
+                            Search Course
+                        </Button>
+                      </HStack>
                     </Flex>
-                </VStack>
-            </Box>
-            <Spacer/>
             </VStack>
-            </Box>
-            <Box
-            position="absolute"
-            borderRadius="15px"
-            top = "350px"
-            right = "10px"
-            w="80%"
-            background="#FFFFFF"
-            ml = "10px"
-            mr = "10px"
-            overflowWrap="anywhere"
-            >
-            <VStack>
-            <Box overflowWrap="break-word" flexWrap="wrap">
-            <VStack>
-                <Box overflowWrap="break-word" flexWrap="wrap">
-                <ResultTable courses={courses} status={status}/>
-                </Box>
-                <Spacer />
-            </VStack>
-            </Box>
-            <Spacer />
-            <Flex justify="flex-end" pb="10px">
-                  <Button
-                    fontSize="14px"
-                    type="submit"
-                    bg="cyanAlpha"
-                    color="white"
-                    variant="solid"
-                  >
-                    Confirm Delete Course(s)
-                  </Button>
-            </Flex>
-            </VStack>
-            </Box>
-        </VStack>
-        </HStack>
-      </Box>
+          </Box>
+          <AdminResultTable courses={courses} status={status}/>
+          </VStack>
+      </HStack>
     )
   }
