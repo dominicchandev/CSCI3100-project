@@ -136,6 +136,7 @@ export function ResultTable(props) {
           )}
       }).finally(() => {
         setIsRegistering(false);
+        setSelectedCourses(new Set());
       })
 
     }

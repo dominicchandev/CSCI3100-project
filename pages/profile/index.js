@@ -46,8 +46,6 @@ export default function Home() {
   useEffect(() => {
     if (authStatus === "auth" && dropped == true) {  
       refreshAuthData();
-      console.log("DO YOU");
-      console.log(courses);
       setDropped(false);
     }
   }, [dropped, authStatus])

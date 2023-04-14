@@ -2,14 +2,17 @@ import {
     Box,
     Text,
     Center,
-    Table, Thead, Tr, Th, Tbody
+    Table, Thead, Tr, Th, Tbody,
+    useColorMode,
+    useColorModeValue,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
-
 
 export function Schedule(props) {
    const courses = props.courses;
    const startTime = new Date(0, 0, 0, 8, 0, 0, 0);
+   const { colorMode, toggleColorMode } = useColorMode();
+
 
    
    function getRowTime(rowNumber) {
@@ -65,22 +68,22 @@ export function Schedule(props) {
         <Thead>
             <Tr>
             <Th></Th>
-            <Th>Monday</Th>
-            <Th>Tuesday</Th>
-            <Th>Wednesday</Th>
-            <Th>Thursday</Th>
-            <Th>Friday</Th>
+            <Th color= {colorMode === 'light'? "darkPure" : "whitePure"} >Monday</Th>
+            <Th color= {colorMode === 'light'? "darkPure" : "whitePure"}>Tuesday</Th>
+            <Th color= {colorMode === 'light'? "darkPure" : "whitePure"}>Wednesday</Th>
+            <Th color= {colorMode === 'light'? "darkPure" : "whitePure"}>Thursday</Th>
+            <Th color= {colorMode === 'light'? "darkPure" : "whitePure"}>Friday</Th>
             </Tr>
         </Thead>
         <Tbody>
             {[...Array(24)].map((_, i) => (
             <Tr key={i}>
-                <Th>{getRowTime(i)}</Th>
-                <Th id={`Monday${getRowTime(i)}`} sx={{ border: "1px solid" }}></Th>
-                <Th id={`Tuesday${getRowTime(i)}`} sx={{ border: "1px solid" }}></Th>
-                <Th id={`Wednesday${getRowTime(i)}`} sx={{ border: "1px solid" }}></Th>
-                <Th id={`Thursday${getRowTime(i)}`} sx={{ border: "1px solid" }}></Th>
-                <Th id={`Friday${getRowTime(i)}`} sx={{ border: "1px solid" }}></Th>
+                <Th >{getRowTime(i)}</Th>
+                <Th color= {colorMode === 'light'? "darkPure" : "whitePure"} id={`Monday${getRowTime(i)}`} sx={{ border: "1px solid" }}></Th>
+                <Th color= {colorMode === 'light'? "darkPure" : "whitePure"} id={`Tuesday${getRowTime(i)}`} sx={{ border: "1px solid" }}></Th>
+                <Th color= {colorMode === 'light'? "darkPure" : "whitePure"} id={`Wednesday${getRowTime(i)}`} sx={{ border: "1px solid" }}></Th>
+                <Th color= {colorMode === 'light'? "darkPure" : "whitePure"} id={`Thursday${getRowTime(i)}`} sx={{ border: "1px solid" }}></Th>
+                <Th color= {colorMode === 'light'? "darkPure" : "whitePure"} id={`Friday${getRowTime(i)}`} sx={{ border: "1px solid" }}></Th>
             </Tr>
             ))}
         </Tbody>

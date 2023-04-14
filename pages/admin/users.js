@@ -259,7 +259,7 @@ import {
                   <Input
                       placeholder="New user's password"
                       fontSize="12px"
-                      type="text"
+                      type="password"
                       id="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}

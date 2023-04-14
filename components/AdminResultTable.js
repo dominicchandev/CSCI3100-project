@@ -287,7 +287,7 @@ import {
           <Th {...TH_STYLE}>CAPACITY</Th>
           <Th {...TH_STYLE}>ENROLLED</Th>
           <Th {...TH_STYLE}>COURSE OUTLINE</Th>
-          <Th {...TH_STYLE}>REGISTER COURSE</Th>
+          <Th {...TH_STYLE}>REGISTER/ DELETE COURSE</Th>
         </Tr>
       </Thead>
     );
