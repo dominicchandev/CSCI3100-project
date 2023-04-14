@@ -12,6 +12,7 @@ import {
     HStack,
     Flex,
     useColorMode,
+    useColorModeValue,
     VStack
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
@@ -28,6 +29,8 @@ export default function LoginPage() {
     const [errMsg, setErrMsg] = useState("");
     const toast = useToast();
     const token = sessionStorage.getItem("verify_token");
+    const boxColor = useColorModeValue("whitePure", "#1a202c")
+
 
     const handleSubmit = (e) => {
         setIsLoading(true)
@@ -71,7 +74,7 @@ export default function LoginPage() {
     };
 
     return (
-        <Flex bg="white">
+        <Flex bg={boxColor} height ="100vh">
             <Box w="50%" h='100%' pr="20px" pl="20px">
                 <VStack>
                     <NavigationBar colorMode={colorMode}/>

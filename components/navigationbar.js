@@ -29,6 +29,7 @@ export function NavigationBar(props) {
         <Box 
             w="600px"
             rounded="15px"
+            mt="15px"
             pl="10px" 
             boxShadow="0px 7px 23px 0px"
             bg="white" 
@@ -46,11 +47,11 @@ export function NavigationBar(props) {
                     height={71}
                 />
                 <Spacer/>
-                <Button onClick={toggleColorMode} leftIcon={colorMode === 'light'? <BsMoonStarsFill /> : <MdWbSunny />} size = "xs" color="#FFFFFF" variant='ghost'>
+                <Button onClick={toggleColorMode} leftIcon={colorMode === 'light'? <BsMoonStarsFill /> : <MdWbSunny />} size = "xs" color={colorMode === 'light'? "#2D3748" : "#2D3748"} variant='ghost'>
                     {colorMode === 'light' ? 'DARK' : 'LIGHT'} MODE
                 </Button>
                 <Link href="/login">
-                <Button leftIcon={<AiFillUnlock />} size = "xs" colorScheme='#2D3748' variant='ghost'>
+                <Button leftIcon={<AiFillUnlock />} size = "xs" color={colorMode === 'light'? "#2D3748" : "#2D3748"} variant='ghost'>
                 SIGN IN
                 </Button>
                 </Link>
