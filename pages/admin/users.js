@@ -170,6 +170,9 @@ import {
       if (authStatus === "auth" && role!=="admin"){
         router.push("/unauthorized")
       }
+      if (authStatus === "unauth"){
+        router.push("/login")
+      }
     }, [isLoading, isDeleting, authStatus])
 
     async function fetchData() {
