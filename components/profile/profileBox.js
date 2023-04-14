@@ -161,8 +161,6 @@ import {
                                 lineHeight="1.4"
                                 fontWeight="regular"
                                 fontSize="14px"
-
-                                width="178px"
                                 height="17px"
                                 color = {colorMode === 'light'? "darkPure" : "darkPure"}
                                 >
