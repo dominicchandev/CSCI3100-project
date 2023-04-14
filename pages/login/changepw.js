@@ -63,6 +63,8 @@ export default function LoginPage() {
                     localStorage.removeItem("verify_token");
                     router.push("/login");
                 }
+            }).finally(() => {
+                setIsLoading(false);
             })
         } else {
             toast({
@@ -72,8 +74,8 @@ export default function LoginPage() {
                 duration: 9000,
                 isClosable: true,
             });
+            setIsLoading(false)
         }
-        setIsLoading(false)
     };
 
     return (
