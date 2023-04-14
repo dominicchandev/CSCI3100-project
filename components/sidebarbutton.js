@@ -38,9 +38,12 @@ function setBgColor(hightlight, colorMode) {
     return "transparent"
 }
 
-function setIconBg(highlight) {
+function setIconBg(highlight, colorMode) {
     if (highlight) {
+        if (colorMode === 'light') {
         return "#40DDCF"
+        }
+        return "darkBeta"
     }
     return "white"
 }
