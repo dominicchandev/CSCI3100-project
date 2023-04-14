@@ -71,9 +71,11 @@ export default function LoginPage() {
             console.log(res.json());
           }
         })
-        .catch((err) => console.log("Error: ", err));
+        .catch((err) => console.log("Error: ", err))
+        .finally(() => {
+          setIsLoading(false);
+        });
     }
-    setIsLoading(false);
   };
   if (authStatus=="auth"){
     router.push("/profile");

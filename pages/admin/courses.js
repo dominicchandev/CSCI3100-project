@@ -128,6 +128,9 @@ import {
     }
 
     useEffect(() => {
+      if (authStatus === "unauth"){
+        router.push("/login")
+      }
         if (authStatus === "auth" && role!="admin") {
           router.push("/unauthorized")
         }

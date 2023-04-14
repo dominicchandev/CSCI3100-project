@@ -16,12 +16,21 @@ import { useRouter } from "next/router";
 import { ProfileBox } from "@/components/profile/profileBox";
 
 
+
 export default function Home() {
   const { colorMode, toggleColorMode } = useColorMode();
   const { token, authStatus, courses, email, name, role, userId, refreshAuthData } = useAuth();
   const [getRoute, setGetRoute] = useState(true)
   const [lastPartOfRoute, setLastPartOfRoute] = useState("");
   const [dropped, setDropped] = useState(false)
+  const router = useRouter();
+
+  useEffect(() => {
+    if (authStatus ==="unauth"){
+      router.push("login")
+    }
+  }, [authStatus])
+
 
  
   useEffect(() => {
@@ -35,16 +44,12 @@ export default function Home() {
   }, [getRoute]);
 
   useEffect(() => {
-    console.log("UO")
-    console.log(dropped);
-    console.log(courses);
     if (authStatus === "auth" && dropped == true) {  
       refreshAuthData();
-      console.log("DO YOU");
-      console.log(courses);
       setDropped(false);
     }
   }, [dropped, authStatus])
+
 
   useEffect(() => {
       console.log(courses)

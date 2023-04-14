@@ -186,7 +186,7 @@ export default function Courses() {
   // else if (authStatus=="loading")
   //   {
   //     return(
-  //       <Text>loading...</Text>
+  //       <Text>Loading...</Text>
   //     )
   //   }
     else {

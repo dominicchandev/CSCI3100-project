@@ -170,6 +170,9 @@ import {
       if (authStatus === "auth" && role!=="admin"){
         router.push("/unauthorized")
       }
+      if (authStatus === "unauth"){
+        router.push("/login")
+      }
     }, [isLoading, isDeleting, authStatus])
 
     async function fetchData() {
@@ -256,7 +259,7 @@ import {
                   <Input
                       placeholder="New user's password"
                       fontSize="12px"
-                      type="text"
+                      type="password"
                       id="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
