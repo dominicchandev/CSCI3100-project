@@ -16,7 +16,7 @@ import {
     VStack
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { CompanyIntro } from '@/components/companyintro'
 import { NavigationBar } from "@/components/navigationbar";
 
@@ -27,9 +27,12 @@ export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [errMsg, setErrMsg] = useState("");
     const toast = useToast();
-    const email = sessionStorage.getItem("email");
-      const boxColor = useColorModeValue("whitePure", "#1a202c")
+    const boxColor = useColorModeValue("whitePure", "#1a202c")
+    const [email, setEmail] = useState("");
 
+    useEffect(() => {
+        setEmail(localStorage.getItem("email"))
+    }, []);
 
     const handleSubmit = (e) => {
         setIsLoading(true);
@@ -59,8 +62,8 @@ export default function LoginPage() {
                 if (res.status === 200) {
                     res.json().then((result) => {
                         const token = result.verify_token;
-                        sessionStorage.removeItem("email");
-                        sessionStorage.setItem("verify_token", token);
+                        localStorage.removeItem("email");
+                        localStorage.setItem("verify_token", token);
                         router.push("/login/changepw");
                     });
                 } else {

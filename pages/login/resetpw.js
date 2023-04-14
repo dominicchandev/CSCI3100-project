@@ -55,7 +55,7 @@ export default function LoginPage() {
                 },
             }).then((res) => {
                 if (res.status === 200) {
-                    sessionStorage.setItem("email", email);
+                    localStorage.setItem("email", email);
                     router.push("/login/verify");
                 } else {
                     toast({
