@@ -7,7 +7,8 @@ import {
     Divider,
     Center,
     Spacer,
-    Flex
+    Flex,
+    useColorModeValue,
 } from "@chakra-ui/react";
 import Image from "next/image";
 

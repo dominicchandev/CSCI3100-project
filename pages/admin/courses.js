@@ -3,6 +3,7 @@ import {
     Spacer, 
     Button, 
     useColorMode,
+    useColorModeValue,
     Box, 
     HStack,
     VStack,
@@ -44,6 +45,28 @@ import {
     const [errMsg, setErrMsg] = useState("");
     const router = useRouter();
     const toast = useToast();
+    const cancelRef = useRef();
+    const [getRoute, setGetRoute] = useState(true);
+    const [lastPartOfRoute, setLastPartOfRoute] = useState("");
+  
+    const boxColor = useColorModeValue("whitePure", "darkAlpha")
+
+    useEffect(() => {
+      if (getRoute==true){
+      const currentUrl = document.URL;
+      const parts = currentUrl.split("/");
+      const temp = parts.pop();
+      setLastPartOfRoute(temp);
+      setGetRoute(false);
+      }
+    }, [getRoute]);
+    
+
+    const handleLogout = (e) => { 
+      e.preventDefault();
+      localStorage.removeItem("accessToken");
+      router.push("/login");
+    };
 
     function handleReset(){
         setCourseID("");
@@ -166,10 +189,10 @@ import {
 
     return (
       <HStack spacing={10} alignItems="flex-start">
-          <SideBar colorMode={colorMode} isAdmin={role === "admin"}/>
+          <SideBar colorMode={colorMode} isAdmin={role === "admin"} onPage={lastPartOfRoute}/>
           <VStack width="100%" pr="20px" pt="25px" spacing={10}>
           <CourseBox name={name} page="Courses"/>
-          <Box maxWidth="100%" borderRadius="15px" bg="white">
+          <Box maxWidth="100%" borderRadius="15px" bg={boxColor}>
             <VStack mt="20px" ml="10px" alignItems="left">
                 <Text
                     textAlign={["left"]}
@@ -295,19 +318,19 @@ import {
                         </FormControl>
                     </WrapItem>
                     </Wrap>
-                    <Flex justify="flex-end" pb="8px" maxW="100%">
+                    <Flex justify="flex-end" pb="15px" pr="15px" maxW="100%">
                       <HStack maxWidth="100%" right="10px" bottom = "20px" mt="10px" mr="7px">
-                        <Button fontSize="14px" type="reset" onClick={handleReset} color= "black" borderColor="cyanAlpha" variant = "outline" >
+                        <Button fontSize="14px" type="reset" onClick={handleReset} color= {colorMode === 'light'? "black" : "white"} borderColor="teal" variant = "outline" >
                             Reset
                         </Button>
-                        <Button onClick={onOpen2} leftIcon={<HiOutlinePlusCircle />} iconSize="xl" fontSize="14px" type="submit" color= "black" borderColor="cyanAlpha" variant = "outline" >
+                        <Button onClick={onOpen2} leftIcon={<HiOutlinePlusCircle />} iconSize="xl" fontSize="14px" type="submit" color= {colorMode === 'light'? "black" : "white"}  borderColor="teal" variant = "outline" >
                             Add Course
                         </Button>
                         <AddCourseModal isOpen={isOpen2} onClose={onClose2}/>
-                        <Button fontSize="14px" type="submit" onClick={handleShow} color= "black" borderColor="cyanAlpha" variant = "outline" isLoading={isLoading}>
+                        <Button fontSize="14px" type="submit" onClick={handleShow} color= {colorMode === 'light'? "black" : "white"}  borderColor="teal" variant = "outline" isLoading={isLoading}>
                             Show All Courses
                         </Button>
-                        <Button fontSize="14px" type="submit" bg='cyanAlpha' color = "white" variant = "solid" onClick={handleSubmit} isLoading={isLoading}>
+                        <Button fontSize="14px" type="submit" bg='teal' color = "white" variant = "solid" onClick={handleSubmit} isLoading={isLoading}>
                             Search Course
                         </Button>
                       </HStack>

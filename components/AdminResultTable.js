@@ -14,6 +14,8 @@ import {
     Link,
     Spacer,
     Flex,
+    useColorModeValue,
+    useColorMode,
   } from "@chakra-ui/react";
   import React, { useEffect, useState } from "react";
   import { useAuth } from "@/utils/hooks/useAuth";
@@ -50,6 +52,8 @@ import {
     const [isRegistering, setIsRegistering] = useState(false)
     const [isDeleting, setIsDeleting] = useState(false);
   
+    const boxColor = useColorModeValue("whitePure", "darkAlpha")
+
   
     const handleCheckboxChange = (e) => {
     e.preventDefault();
@@ -187,7 +191,7 @@ import {
     } else{
     return (
       <>    
-        <TableContainer background="#FFFFFF" borderRadius="15px" pt = "15px" pl = "15px">
+        <TableContainer background={boxColor} borderRadius="15px" pt = "15px" pl = "15px">
           <Text
             fontFamily="Helvetica"
             lineHeight="1.4"
@@ -248,6 +252,19 @@ import {
 
             </Tbody>
           </Table>
+          <Flex justify="flex-end" pb="15px" pt = "15px" pr = "15px">
+        <Button
+          onClick={() => setIsRegistering(true)}
+          type="submit"
+          bg="teal"
+          color="white"
+          variant="solid"
+          fontSize="sm"
+          isLoading={isRegistering}
+        >
+          Submit Registration
+        </Button>
+        </Flex>
         </TableContainer>
       </>
     );
@@ -379,18 +396,19 @@ import {
         <Td textAlign="center">
             <input type="file" className="form-control"
             onChange={handleChange}></input>
-            <Button onClick={handleUpload} value={id} isLoading={isUploading}>Upload</Button>
+            {/* <Button onClick={handleUpload} value={id} isLoading={isUploading}>Upload</Button> */}
+            <Button colorScheme = 'teal' onClick={handleUpload} value={id} isLoading={isUploading}>Upload</Button>
         </Td>
         <Td textAlign="center">
-          <Checkbox value={id} onChange={onChange}></Checkbox>
+          <Checkbox value={id} onChange={onChange} colorScheme = 'teal' ></Checkbox>
         </Td>
       </Tr>
     );
   
     function ColumnElem(props) {
       const { content } = props;
-    //   console.log("ERRR");
-    //   console.log(content);
+      const { colorMode, toggleColorMode } = useColorMode();
+
       if (typeof content === "string" || typeof content === "int" )
         return (
           <Td
@@ -398,9 +416,10 @@ import {
             lineHeight="1.4"
             fontWeight="bold"
             fontSize="12px"
-            color="#2D3748"
             whiteSpace="normal"
             wordBreak="break-word"
+            color= {colorMode === 'light'? "greyLight" : "greyDark"}
+
           >
             {content}
           </Td>
@@ -413,7 +432,7 @@ import {
           lineHeight="1.4"
           fontWeight="bold"
           fontSize="12px"
-          color="#2D3748"
+          color= {colorMode === 'light'? "greyLight" : "greyDark"}
           whiteSpace="normal"
           wordBreak="break-word"
         >
