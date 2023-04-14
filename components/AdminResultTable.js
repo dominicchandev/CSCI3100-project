@@ -298,23 +298,20 @@ import {
       return schedule.location;
     });
     const toast = useToast();
+    const { token, authStatus} = useAuth();
     const [pdfFile, setPdfFile] = useState(null);
     const [pdfError, setPdfError] = useState('');
     const allowedFiles = ['application/pdf'];
     const handleChange = (e) => {
+	  	if (e.target.files) {
         let selectedFile = e.target.files[0];
-		if (selectedFile && allowedFiles.includes(selectedFile.type)){
-            let reader = new FileReader();
-            reader.readAsDataURL(selectedFile);
-            reader.onloadend = (e) => {
-                setPdfError('');
-                setPdfFile(e.target.result);
-            };
-
+        if (selectedFile && allowedFiles.includes(selectedFile.type)){
+            setPdfFile(selectedFile);
         } else {
             setPdfError('Not PDF. Pleases select a PDF.');
         }
-	};
+      }
+	  };
     const handleUpload = (e) => {
         if (pdfError != ''){
             toast({
@@ -333,35 +330,33 @@ import {
                 isClosable: true,
             });
         }else{
-            fetch(pdfFile)
-            .then(res => res.blob())
-            .then(blob => {
-                fetch(process.env.NEXT_PUBLIC_SERVER + "api/courses/outline", {
-                    method: "POST",
-                    body: blob,
-                    headers: {
-                      "Content-Type": "multipart/form-data",
-                    },
-                }).then((res) => {
-                    if (res.status === 200) {
-                        toast({
-                            title: "Success",
-                            description: "Course outline has been uploaded successfully.",
-                            status: "success",
-                            duration: 9000,
-                            isClosable: true,
-                        })
-                    } else {
-                        toast({
-                            title: "Error",
-                            description: "Unable to upload course outline.",
-                            status: "error",
-                            duration: 9000,
-                            isClosable: true,
-                        });
-                    }
-                });
-            });
+          let formData = new FormData();
+          formData.append("course_outline", pdfFile, pdfFile.name);
+          fetch(process.env.NEXT_PUBLIC_SERVER + "api/courses/outline", {
+              method: "POST",
+              body: formData,
+              headers: {
+                  Authorization: `Bearer ${token}`
+              },
+          }).then((res) => {
+              if (res.status === 200) {
+                  toast({
+                      title: "Success",
+                      description: "Course outline has been uploaded successfully.",
+                      status: "success",
+                      duration: 9000,
+                      isClosable: true,
+                  })
+              } else {
+                  toast({
+                      title: "Error",
+                      description: "Unable to upload course outline.",
+                      status: "error",
+                      duration: 9000,
+                      isClosable: true,
+                  });
+              }
+          });
         }
     };
   
