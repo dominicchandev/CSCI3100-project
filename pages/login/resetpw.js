@@ -91,7 +91,7 @@ export default function LoginPage() {
                     maxWidth="100%"
                     textAlign="left"
                     >
-                    Don't worry, we'll send you a message to help reset your password.
+                    {"Don't worry, we'll send you a message to help reset your password."}
                     </Text>
                     <form onSubmit={handleSubmit}>
                         <FormControl>

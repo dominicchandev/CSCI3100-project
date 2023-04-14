@@ -95,7 +95,7 @@ export default function LoginPage() {
                     alignContent="left"
                     textAlign="left">
                     <Text lineHeight="1.3" fontWeight="bold" fontSize="32px" color="#40DDCF" >
-                    Let us know it's you
+                    {"Let us know it's you"}
                     </Text>
                     <Text
                     lineHeight="1.4"
@@ -134,7 +134,7 @@ export default function LoginPage() {
                         width="220.5px"
                         height="19.5px"
                     >
-                    <span>Didn't get the code? </span>
+                    <span>{"Didn't get the code?"}</span>
                     <Box as="span" fontWeight="bold" color="#40DDCF">
                     <Link fontSize="sm" onClick={handleClick}>Resend Code</Link>
                     </Box>
