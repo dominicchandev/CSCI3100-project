@@ -29,9 +29,9 @@ export default function LoginPage() {
     const [errMsg, setErrMsg] = useState("");
     const toast = useToast();
     const boxColor = useColorModeValue("whitePure", "#1a202c")
-    
+    const [verifyToken, setVerifyToken] = useState("");
     useEffect(() => {
-        const token = localStorage.getItem("verify_token");
+        setVerifyToken(localStorage.getItem("verify_token"));
     }, [])
         
 
@@ -42,7 +42,7 @@ export default function LoginPage() {
         if (password1 === password2 && password1 != "") {
             //update the password for the user
             const formData = new FormData();
-            formData.append("verify_token", token);
+            formData.append("verify_token", verifyToken);
             formData.append("new_password", password1);
             const plainFormData = Object.fromEntries(formData.entries());
             fetch(process.env.NEXT_PUBLIC_SERVER + "api/users/password", {
