@@ -23,7 +23,8 @@ import {
   Divider,
   Text,
   Link,
-  useToast
+  useToast,
+  useColorModeValue
  } from '@chakra-ui/react'
 import { ReactIcon } from '@chakra-ui/icons'
 import { GoBook, GoThreeBars } from 'react-icons/go'
@@ -58,6 +59,8 @@ export default function Courses() {
   const router = useRouter();
   const [getRoute, setGetRoute] = useState(true)
   const [lastPartOfRoute, setLastPartOfRoute] = useState("");
+  
+  const boxColor = useColorModeValue("whitePure", "darkAlpha")
 
   useEffect(() => {
     if (getRoute==true){
@@ -194,7 +197,7 @@ export default function Courses() {
       <Box width="100%">
         <VStack pr="20px" pt="25px" spacing={10}>
           <CourseBox name={name} page={"Courses Browsing"}/>
-          <Box backgroundColor="#FFFFFF" borderRadius={"15px"} padding="15px 10px 10px 10px">
+          <Box bg = {boxColor} borderRadius={"15px"} padding="15px 10px 10px 10px">
           <VStack alignItems="left">
             <Text
               textAlign={["left"]}
@@ -325,7 +328,7 @@ export default function Courses() {
                 <Button type="reset" onClick={handleReset} colorScheme="teal" variant = "outline" >
                     Reset
                 </Button>
-                <Button type="submit" bg='cyanAlpha' color = "white" variant = "solid" onClick={handleSubmit} isLoading={isLoading}>
+                <Button type="submit" bg='teal' color = "white" variant = "solid" onClick={handleSubmit} isLoading={isLoading}>
                     Search Course
                 </Button>
               </HStack>

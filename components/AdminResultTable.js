@@ -14,6 +14,8 @@ import {
     Link,
     Spacer,
     Flex,
+    useColorModeValue,
+    useColorMode,
   } from "@chakra-ui/react";
   import React, { useEffect, useState } from "react";
   import { useAuth } from "@/utils/hooks/useAuth";
@@ -43,12 +45,15 @@ import {
     const { courses } = props;
     const { title } = props;
     const { isLoading } = props;
+    // const { status } = props;
     const toast = useToast();
     const { token, authStatus} = useAuth();
     const [selectedCourses, setSelectedCourses] = useState(new Set())
     const [isRegistering, setIsRegistering] = useState(false)
     const [isDeleting, setIsDeleting] = useState(false);
   
+    const boxColor = useColorModeValue("whitePure", "darkAlpha")
+
   
     const handleCheckboxChange = (e) => {
     e.preventDefault();
@@ -186,7 +191,7 @@ import {
     } else{
     return (
       <>    
-        <TableContainer background="#FFFFFF" borderRadius="15px" pt = "15px" pl = "15px">
+        <TableContainer background={boxColor} borderRadius="15px" pt = "15px" pl = "15px">
           <Text
             fontFamily="Helvetica"
             lineHeight="1.4"
@@ -247,6 +252,19 @@ import {
 
             </Tbody>
           </Table>
+          <Flex justify="flex-end" pb="15px" pt = "15px" pr = "15px">
+        <Button
+          onClick={() => setIsRegistering(true)}
+          type="submit"
+          bg="teal"
+          color="white"
+          variant="solid"
+          fontSize="sm"
+          isLoading={isRegistering}
+        >
+          Submit Registration
+        </Button>
+        </Flex>
         </TableContainer>
       </>
     );
@@ -301,8 +319,10 @@ import {
     const { token, authStatus} = useAuth();
     const [pdfFile, setPdfFile] = useState(null);
     const [pdfError, setPdfError] = useState('');
+    const [isUploading, setIsUploading] = useState(false);
     const allowedFiles = ['application/pdf'];
     const handleChange = (e) => {
+<<<<<<< HEAD
 	  	if (e.target.files) {
         let selectedFile = e.target.files[0];
         if (selectedFile && allowedFiles.includes(selectedFile.type)){
@@ -312,6 +332,18 @@ import {
         }
       }
 	  };
+=======
+        if (e.target.files) {
+            let selectedFile = e.target.files[0];
+		    if (selectedFile && allowedFiles.includes(selectedFile.type)){
+                setPdfFile(selectedFile);
+            } else {
+                setPdfError('Not PDF. Pleases select a PDF.');
+            }
+        }
+	};
+
+>>>>>>> da35f56c7a2436e5434bdcd4f7b25416fda52f61
     const handleUpload = (e) => {
         if (pdfError != ''){
             toast({
@@ -330,6 +362,7 @@ import {
                 isClosable: true,
             });
         }else{
+<<<<<<< HEAD
           let formData = new FormData();
           formData.append("course_outline", pdfFile, pdfFile.name);
           fetch(process.env.NEXT_PUBLIC_SERVER + "api/courses/outline", {
@@ -357,6 +390,38 @@ import {
                   });
               }
           });
+=======
+            let formData = new FormData();
+            formData.append("course_outline", pdfFile, pdfFile.name);
+            setIsUploading(true);
+            fetch(process.env.NEXT_PUBLIC_SERVER + "api/courses/outline", {
+                method: "POST",
+                body: formData,
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+            }).then((res) => {
+                if (res.status === 200) {
+                    toast({
+                        title: "Success",
+                        description: "Course outline has been uploaded successfully.",
+                        status: "success",
+                        duration: 9000,
+                        isClosable: true,
+                    })
+                } else {
+                    toast({
+                        title: "Error",
+                        description: "Unable to upload course outline.",
+                        status: "error",
+                        duration: 9000,
+                        isClosable: true,
+                    });
+                }
+            }).finally(() => {
+              setIsUploading(false);
+            });
+>>>>>>> da35f56c7a2436e5434bdcd4f7b25416fda52f61
         }
     };
   
@@ -373,18 +438,19 @@ import {
         <Td textAlign="center">
             <input type="file" className="form-control"
             onChange={handleChange}></input>
-            <Button onClick={handleUpload} value={id}>Upload</Button>
+            {/* <Button onClick={handleUpload} value={id} isLoading={isUploading}>Upload</Button> */}
+            <Button colorScheme = 'teal' onClick={handleUpload} value={id} isLoading={isUploading}>Upload</Button>
         </Td>
         <Td textAlign="center">
-          <Checkbox value={id} onChange={onChange}></Checkbox>
+          <Checkbox value={id} onChange={onChange} colorScheme = 'teal' ></Checkbox>
         </Td>
       </Tr>
     );
   
     function ColumnElem(props) {
       const { content } = props;
-    //   console.log("ERRR");
-    //   console.log(content);
+      const { colorMode, toggleColorMode } = useColorMode();
+
       if (typeof content === "string" || typeof content === "int" )
         return (
           <Td
@@ -392,9 +458,10 @@ import {
             lineHeight="1.4"
             fontWeight="bold"
             fontSize="12px"
-            color="#2D3748"
             whiteSpace="normal"
             wordBreak="break-word"
+            color= {colorMode === 'light'? "greyLight" : "greyDark"}
+
           >
             {content}
           </Td>
@@ -407,7 +474,7 @@ import {
           lineHeight="1.4"
           fontWeight="bold"
           fontSize="12px"
-          color="#2D3748"
+          color= {colorMode === 'light'? "greyLight" : "greyDark"}
           whiteSpace="normal"
           wordBreak="break-word"
         >

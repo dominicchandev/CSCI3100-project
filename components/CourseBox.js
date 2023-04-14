@@ -22,6 +22,7 @@ import {
     AlertDialogContent,
     AlertDialogCloseButton,
     AlertDialogOverlay,
+    useColorModeValue
   } from "@chakra-ui/react";
   import { BsMoonStarsFill } from "react-icons/bs";
   import { HiUser } from "react-icons/hi";
@@ -33,6 +34,8 @@ import {
   export function CourseBox(props) {
     const name = props.name;
     const page = props.page;
+    const boxColor = useColorModeValue("cyanAlpha", "darkBeta")
+
 
     const getlink = () => {
         if (page === "Courses Browsing") {
@@ -60,9 +63,9 @@ import {
                 borderRadius="15px"
                 height="130px"
                 width="100%"
-                background="#40DDCF"
+                bg= {boxColor}
             >
-                <HStack>
+                <HStack pr = "10px">
                     <VStack align="left" mt="10px" ml="10px" pt="10px">
                     <Breadcrumb>
                         <BreadcrumbItem color="White">
@@ -83,14 +86,14 @@ import {
                     </VStack>
                     <Spacer />
                     <HStack spacing="20px" mr="10px" mt="10px">
-                    <Button onClick={toggleColorMode} leftIcon={colorMode === 'light'? <BsMoonStarsFill /> : <MdWbSunny />} size = "xs" colorScheme={colorMode === 'light'? 'whiteAlpha' : 'blackAlpha'} variant='ghost'>
+                    <Button onClick={toggleColorMode} leftIcon={colorMode === 'light'? <BsMoonStarsFill /> : <MdWbSunny />} size = "xs"  color="#FFFFFF" variant='ghost'>
                     {colorMode === 'light' ? 'DARK' : 'LIGHT'} MODE
                     </Button>
                     <Button
                         onClick={onOpen}
                         leftIcon={<HiUser />}
                         size="xs"
-                        colorScheme={colorMode === 'light'? 'whiteAlpha' : 'blackAlpha'}
+                        color="#FFFFFF"
                         variant="ghost"
                         >
                         LOGOUT

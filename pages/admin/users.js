@@ -2,7 +2,6 @@ import {
     Flex, 
     Spacer, 
     Button, 
-    useColorMode,
     FormControl,
     FormLabel,
     Input,
@@ -23,7 +22,9 @@ import {
     AlertDialogContent,
     AlertDialogCloseButton,
     AlertDialogOverlay,
-    useToast
+    useToast,
+    useColorModeValue,
+    useColorMode
     } from '@chakra-ui/react'
   import { SideBar } from '@/components/sidebar'
   import { BsMoonStarsFill } from "react-icons/bs";
@@ -34,7 +35,9 @@ import {
   import { useRef, useState, useEffect } from "react";
   import React from "react";
   import { UserTable } from "@/components/profile/UserTable";
-  
+  import { CourseBox } from '@/components/CourseBox';
+
+
   export default function Home() {
     const { colorMode, toggleColorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -52,7 +55,20 @@ import {
     const cancelRef = React.useRef();
     const router = useRouter();
     const toast = useToast();
-    console.log(role);
+    const [getRoute, setGetRoute] = useState(true);
+    const [lastPartOfRoute, setLastPartOfRoute] = useState("");
+  
+    const boxColor = useColorModeValue("whitePure", "darkAlpha")
+
+    useEffect(() => {
+      if (getRoute==true){
+      const currentUrl = document.URL;
+      const parts = currentUrl.split("/");
+      const temp = parts.pop();
+      setLastPartOfRoute(temp);
+      setGetRoute(false);
+      }
+    }, [getRoute]);
     
     const handleCreate = (e) => { 
       e.preventDefault();
@@ -164,68 +180,13 @@ import {
 
     return (
         <HStack spacing={10} alignItems="flex-start">
-          <SideBar colorMode={colorMode} isAdmin={role === "admin"}/>
+          <SideBar colorMode={colorMode} isAdmin={role === "admin"} onPage={lastPartOfRoute}/>
           <VStack width="100%" pr="20px" pt="25px" spacing={10}>
-            <Box
-              borderRadius="15px"
-              height="100px"
-              w="100%"
-              background="#40DDCF"
-            >
-              <HStack>
-              <VStack align="left" mt="10px" ml = "10px" pt= "10px">
-                <Breadcrumb >
-                <BreadcrumbItem color="White">
-                <BreadcrumbLink href='' color="White" >{name}</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbItem color="White">
-                <BreadcrumbLink href='' color="White" >Users</BreadcrumbLink>
-                </BreadcrumbItem>
-                </Breadcrumb>
-                <Text
-                align="left"
-                color="White"
-                fontWeight="bold">Users</Text>
-              </VStack>
-              <Spacer/>
-              <HStack spacing = "20px" mr="10px" mt="10px">
-                <Button onClick={toggleColorMode} leftIcon={colorMode === 'light'? <BsMoonStarsFill /> : <MdWbSunny />} size = "xs" colorScheme={colorMode === 'light'? 'whiteAlpha' : 'blackAlpha'} variant='ghost'>
-                {colorMode === 'light' ? 'DARK' : 'LIGHT'} MODE
-                </Button>
-                <Button onClick={onOpen} leftIcon={<HiUser />} size = "xs" colorScheme={colorMode === 'light'? 'whiteAlpha' : 'blackAlpha'} variant='ghost'>
-                LOGOUT
-                </Button>
-                <AlertDialog
-                motionPreset='slideInBottom'
-                leastDestructiveRef={cancelRef}
-                onClose={onClose}
-                isOpen={isOpen}
-                isCentered
-                >
-                <AlertDialogOverlay />
-                <AlertDialogContent>
-                  <AlertDialogHeader>Logout</AlertDialogHeader>
-                  <AlertDialogCloseButton />
-                  <AlertDialogBody>
-                  Are you sure to logout?
-                  </AlertDialogBody>
-                  <AlertDialogFooter>
-                    <Button ref={cancelRef} onClick={onClose}>
-                      Cancel
-                    </Button>
-                    <Button onClick={handleLogout} bg="cyanAlpha" color = "white" ml={3}>
-                      Logout
-                    </Button>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-                </AlertDialog>
-              </HStack>
-              </HStack>
-            </Box>
+          <CourseBox name={name} page="Users"/>
             <Box
             borderRadius="15px"
             w="100%"
-            background="#FFFFFF"
+            background= {boxColor}
             >
             <VStack>
             <Box
@@ -236,8 +197,9 @@ import {
             </Box>
             <Spacer/>      
             </VStack>
-            <Flex marginTop="10" justify="flex-end">
-            <Button mr={4} mb={4} onClick={onOpen2} type="submit" leftIcon={<HiUserAdd />} color= "cyanAlpha" borderColor="cyanAlpha" variant = "outline">
+            <Flex marginTop="10px" justify="flex-end" pr = "15px" pb = "15px">
+              <HStack>
+            <Button onClick={onOpen2} type="submit" leftIcon={<HiUserAdd />} color= "teal" borderColor="teal" variant = "outline">
                 Create User
             </Button>
             <AlertDialog
@@ -308,9 +270,10 @@ import {
               </AlertDialogFooter>
             </AlertDialogContent>
             </AlertDialog>
-            <Button onClick={onOpen3} mr={2} leftIcon={<HiUserRemove />} type="submit" bg='cyanAlpha' color = "white" variant = "solid">
+            <Button onClick={onOpen3} leftIcon={<HiUserRemove />} type="submit" bg='teal' color = "white" variant = "solid">
                 Delete User
             </Button>
+            </HStack>
             <AlertDialog
               motionPreset='slideInBottom'
               leastDestructiveRef={cancelRef}

@@ -14,6 +14,8 @@ import {
   Link,
   Spacer,
   Flex,
+  useColorModeValue,
+  useColorMode
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/utils/hooks/useAuth";
@@ -48,6 +50,7 @@ export function ResultTable(props) {
   const { token, authStatus} = useAuth();
   const [selectedCourses, setSelectedCourses] = useState(new Set())
   const [isRegistering, setIsRegistering] = useState(false)
+  const boxColor = useColorModeValue("whitePure", "darkAlpha")
 
 
   const handleCheckboxChange = (e) => {
@@ -73,9 +76,8 @@ export function ResultTable(props) {
       }).then((res) => {
         if (res.status === 200) {
           res.json().then((result) => {
-          console.log(result);
           const { successful, failed } = result;
-          if (result.successful!=undefined && result.failed == undefined){
+          if ((result.successful!=undefined && result.successful.length !== 0) && (result.failed == undefined || result.failed.length === 0)){
             console.log(result.successful);
             successful.map((courses) => (
               toast({
@@ -87,8 +89,7 @@ export function ResultTable(props) {
             })
             ))
           }
-          if (result.successful==undefined && result.failed != undefined){
-               console.log(result.failed);
+          if ((result.successful==undefined || result.successful.length===0) && (result.failed != undefined && result.failed.length !== 0)){
               {Object.keys(failed).map((errorType) => {
                 const failedCourses = failed[errorType];
                 if (failedCourses.length !== 0){
@@ -105,12 +106,10 @@ export function ResultTable(props) {
                 })
                 }
               }
-          if (result.successful!=undefined && result.failed != undefined){
+          if ((result.successful!=undefined && result.successful.length!== 0 ) && (result.failed != undefined && result.failed.length !== 0)){
             {Object.keys(failed).map((errorType) => {
               const failedCourses = failed[errorType];
-              console.log(errorType);
-              console.log(failedCourses);
-              if (failedCourses.length === 0){
+              if (failedCourses.length !== 0){
                 {failedCourses.map((courseCode) => (
                 toast({
                   title: "Failed",
@@ -123,7 +122,7 @@ export function ResultTable(props) {
                 };
               })
               }
-          successful.map((courses) => (
+          result.successful.map((courses) => (
             toast({
             title: "Success",
             description: `Course ${courses} has been registered successfully.`,
@@ -151,7 +150,7 @@ export function ResultTable(props) {
   } else{
   return (
     <>    
-      <TableContainer background="#FFFFFF" borderRadius="15px" pt = "15px" pl = "15px">
+      <TableContainer background={boxColor}  borderRadius="15px" pt = "15px" pl = "15px">
         <Text
           fontFamily="Helvetica"
           lineHeight="1.4"
@@ -172,27 +171,21 @@ export function ResultTable(props) {
                 onChange={handleCheckboxChange}
               />
             ))}
-
-              <Tr w="full">
-              {[...Array(9)].map((_, i) => (
-                <Td key={i}></Td>
-              ))}
-                <Td>
-                  <Button
-                    onClick={() => setIsRegistering(true)}
-                    type="submit"
-                    bg="cyanAlpha"
-                    color="white"
-                    variant="solid"
-                    fontSize="sm"
-                    isLoading={isRegistering}
-                  >
-                    Submit Registration
-                  </Button>
-                </Td>
-              </Tr>
           </Tbody>
         </Table>
+        <Flex justify="flex-end" pb="15px" pt = "15px" pr = "15px">
+        <Button
+          onClick={() => setIsRegistering(true)}
+          type="submit"
+          bg="teal"
+          color="white"
+          variant="solid"
+          fontSize="sm"
+          isLoading={isRegistering}
+        >
+          Submit Registration
+        </Button>
+        </Flex>
       </TableContainer>
     </>
   );
@@ -271,18 +264,19 @@ export function ResultTableRow(props) {
       <ColumnElem content={String(available_seats)} />
       <ColumnElem content={String(capacity)} />
       <Td textAlign="center">
-        <Button value={`outline-${id}`} onClick={handleOnClick} variant="outline" fontSize="10px" color="#40DDCF">VIEW</Button>
+        <Button value={`outline-${id}`} colorScheme = 'teal' onClick={handleOnClick} variant="outline" fontSize="10px" color="#40DDCF">VIEW</Button>
       </Td>
       <Td textAlign="center">
-        <Checkbox value={id} onChange={onChange}></Checkbox>
+        <Checkbox value={id} onChange={onChange} colorScheme = 'teal'></Checkbox>
       </Td>
     </Tr>
   );
 
   function ColumnElem(props) {
     const { content } = props;
-    console.log("ERRR");
-    console.log(content);
+    const { colorMode, toggleColorMode } = useColorMode();
+
+
     if (typeof content === "string" || typeof content === "int" )
       return (
         <Td
@@ -290,9 +284,9 @@ export function ResultTableRow(props) {
           lineHeight="1.4"
           fontWeight="bold"
           fontSize="12px"
-          color="#2D3748"
           whiteSpace="normal"
           wordBreak="break-word"
+          color= {colorMode === 'light'? "greyLight" : "greyDark"}
         >
           {content}
         </Td>
@@ -305,7 +299,7 @@ export function ResultTableRow(props) {
         lineHeight="1.4"
         fontWeight="bold"
         fontSize="12px"
-        color="#2D3748"
+        color= {colorMode === 'light'? "greyLight" : "greyDark"}
         whiteSpace="normal"
         wordBreak="break-word"
       >
