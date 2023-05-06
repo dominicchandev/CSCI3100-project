@@ -9,6 +9,8 @@ Group ID: C1
 |Chan Ching Yan|115512569| 
 |Chan Tin Lok|1155126874|
 
+# OS
+This readme is based on ubuntu macine.
 
 # Pre-requisite
 `python`: version >= 3.8.10
@@ -18,18 +20,17 @@ Install pnpm by
 npm install -g pnpm
 ```
 
-Also, please add `.env`, `client_secrets.json`, `credentials.json` and `settings.yaml` to the root directory.
+Also, please add `.env` to the root directory.
 
 # Dependencies
 
 ## API Server
-If you want to start the api server without using docker, install the python dependencies by the following command:
+If you want to start the api server, install the python dependencies by the following command:
 ```bash
-cd server
-python3 -m virtualenv venv
-source venv/bin/activate
+python3 -m virtualenv server/venv
+source server/venv/bin/activate
 pip install --upgrade pip
-pip install -r requirements.txt
+pip install -r server/requirements.txt
 ```
 
 ## Frontend

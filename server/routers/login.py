@@ -10,6 +10,7 @@ from server.database import get_db
 
 router = APIRouter()
 
+# login api
 @router.post("/login", response_model=Token)
 async def login_for_access_token(db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()):
     user: UsersModel = authenticate_user(db=db, email=form_data.username, password=form_data.password)

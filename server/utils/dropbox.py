@@ -10,6 +10,7 @@ refresh_token = setting.DROPBOX_REFERSH_TOKEN
 client_id = setting.DROPBOX_CLIENT_ID
 client_secret = setting.DROPBOX_CLIENT_SECRET
 
+# Handle dropbox service
 class DropBoxHandler:
     def __init__(self) -> None:
         self.dbx = None
