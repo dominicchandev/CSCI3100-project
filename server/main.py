@@ -5,7 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from server.routers import courses, users, login
 app = FastAPI()
 
-origins = ["http://54.206.204.182:3000"]
+origins = ["http://localhost:3000"]
+
 
 app.add_middleware(
     CORSMiddleware,

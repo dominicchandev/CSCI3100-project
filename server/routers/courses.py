@@ -16,6 +16,7 @@ courseCRUD = CourseCRUD()
 usercourseCRUD = UserCourseCRUD()
 dropbox_handler = DropBoxHandler()
 
+# create course api
 @router.post("/", response_model=CourseSchema)
 async def create_course(course: CourseCreate, db: Session = Depends(get_db), token_data: TokenData = Depends(get_token_data)):
     if token_data.role != "admin":
@@ -26,12 +27,14 @@ async def create_course(course: CourseCreate, db: Session = Depends(get_db), tok
     db_course = courseCRUD.create(db=db, course=course)
     return db_course
 
+# read all courses api
 @router.get("/all")
 async def get_all_courses(db: Session = Depends(get_db), token_data: TokenData = Depends(get_token_data)):
     if token_data.role != "admin":
         raise HTTPException(status_code=401, detail="Unauthorized user")
     return courseCRUD.read_all(db=db)
 
+# upload course outline api
 @router.post("/outline", response_model=CourseSchema)
 async def upload_course_outline(course_outline: UploadFile, db: Session = Depends(get_db), token_data: TokenData = Depends(get_token_data)):
     if token_data.role != "admin":
@@ -55,6 +58,7 @@ async def upload_course_outline(course_outline: UploadFile, db: Session = Depend
         os.remove('temp/' + course_outline.filename)
     return db_course
 
+# search course api
 @router.get("/search")
 async def search_courses(
     course_id: str = None,
@@ -81,6 +85,7 @@ async def search_courses(
         courses.remove(None)
     return courses
 
+# read course api
 @router.get("/{course_id}", response_model=CourseSchema)
 async def read_course(course_id: str, db: Session = Depends(get_db), token_data: TokenData = Depends(get_token_data)):
     db_course = courseCRUD.read(db=db, id=course_id)
@@ -88,7 +93,7 @@ async def read_course(course_id: str, db: Session = Depends(get_db), token_data:
         raise HTTPException(status_code=404, detail=f"Course {course_id} not found")
     return db_course
 
-
+# delete course api
 @router.delete("/{course_id}", response_model=CourseSchema)
 async def delete_course(course_id: str, db: Session = Depends(get_db), token_data: TokenData = Depends(get_token_data)):
     if token_data.role != "admin":
